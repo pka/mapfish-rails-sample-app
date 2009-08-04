@@ -57,8 +57,12 @@ ActiveRecord::Base.class_eval do
             "#{table_name}.#{connection.quote_column_name(attr)} && ? " 
           end
         else
-          "#{table_name}.#{connection.quote_column_name(attr)} #{attribute_condition(value)}"
-        end
+        begin # this works in AR 2.3.2 and later versions, it might work in earlier versions - this way of checking avoids using version numbers
+         attribute_condition("#{table_name}.#{connection.quote_column_name(attr)}", value) 
+         rescue ArgumentError # for some earlier versions of AR it definitely breaks
+          "#{table_name}.#{connection.quote_column_name(attr)} #{attribute_condition(value)}" 
+         end 
+       end   
       end.join(' AND ')
     end
     if ActiveRecord::VERSION::STRING == "1.15.1"
@@ -67,15 +71,56 @@ ActiveRecord::Base.class_eval do
         replace_bind_variables(conditions, attrs.values)
       end
     elsif ActiveRecord::VERSION::STRING.starts_with?("1.15")
+      #For Rails >= 1.2
       def self.sanitize_sql_hash(attrs)
         conditions = get_conditions(attrs)
         replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
       end
     else
       #For Rails >= 2
-      def self.sanitize_sql_hash_for_conditions(attrs)
-        conditions = get_conditions(attrs)
-        replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+      if method(:sanitize_sql_hash_for_conditions).arity == 1
+        # Before Rails 2.3.3, the method had only one argument
+        def self.sanitize_sql_hash_for_conditions(attrs)
+          conditions = get_conditions(attrs)
+          replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+        end
+      elsif method(:sanitize_sql_hash_for_conditions).arity == -2
+        # After Rails 2.3.3, the method had only two args, the last one optional
+        def self.sanitize_sql_hash_for_conditions(attrs, table_name = quoted_table_name)
+          attrs = expand_hash_conditions_for_aggregates(attrs)
+
+          conditions = attrs.map do |attr, value|
+            unless value.is_a?(Hash)
+              attr = attr.to_s
+
+              # Extract table name from qualified attribute names.
+              if attr.include?('.')
+                table_name, attr = attr.split('.', 2)
+                table_name = connection.quote_table_name(table_name)
+              end
+
+              if columns_hash[attr].is_a?(SpatialColumn)
+                if value.is_a?(Array)
+                  attrs[attr.to_sym]= "BOX3D(" + value[0].join(" ") + "," + value[1].join(" ") + ")"
+                  "#{table_name}.#{connection.quote_column_name(attr)} && SetSRID(?::box3d, #{value[2] || DEFAULT_SRID} ) " 
+                elsif value.is_a?(Envelope)
+                  attrs[attr.to_sym]= "BOX3D(" + value.lower_corner.text_representation + "," + value.upper_corner.text_representation + ")"
+                  "#{table_name}.#{connection.quote_column_name(attr)} && SetSRID(?::box3d, #{value.srid} ) " 
+                else
+                  "#{table_name}.#{connection.quote_column_name(attr)} && ? " 
+                end
+              else
+                attribute_condition("#{table_name}.#{connection.quote_column_name(attr)}", value)
+              end
+            else
+              sanitize_sql_hash_for_conditions(value, connection.quote_table_name(attr.to_s))
+            end
+          end.join(' AND ')
+
+          replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+        end
+      else
+        raise "Spatial Adapter will not work with this version of Rails"
       end
     end
   end
@@ -102,8 +147,12 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   alias :original_tables :tables
   def tables(name = nil) #:nodoc:
+    original_tables(name) + views(name)
+  end
+  
+  def views(name = nil) #:nodoc:
     schemas = schema_search_path.split(/,/).map { |p| quote(p.strip) }.join(',')
-    original_tables(name) + query(<<-SQL, name).map { |row| row[0] }
+    query(<<-SQL, name).map { |row| row[0] }
       SELECT viewname
         FROM pg_views
         WHERE schemaname IN (#{schemas})
@@ -167,9 +216,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     if options[:spatial]
       execute "CREATE INDEX #{index_name} ON #{table_name} USING GIST (#{Array(column_name).join(", ")} GIST_GEOMETRY_OPS)"
     else
-      index_type = options[:unique] ? "UNIQUE" : ""
-      #all together
-      execute "CREATE #{index_type} INDEX #{index_name} ON #{table_name} (#{Array(column_name).join(", ")})"
+      super
     end
   end
   
@@ -243,7 +290,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     #Pete Deffendol's patch
     alias :original_disable_referential_integrity :disable_referential_integrity
     def disable_referential_integrity(&block) #:nodoc:
-      ignore_tables = %w{ geometry_columns spatial_ref_sys }
+      ignore_tables = %w{ geometry_columns spatial_ref_sys } + views
       execute(tables.select { |name| !ignore_tables.include?(name) }.collect { |name| "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" }.join(";"))
       yield
     ensure

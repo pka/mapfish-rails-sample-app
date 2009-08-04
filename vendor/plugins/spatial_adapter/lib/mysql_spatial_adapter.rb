@@ -72,7 +72,11 @@ ActiveRecord::Base.class_eval do
           else
             table_name = quoted_table_name
           end
-          "#{table_name}.#{connection.quote_column_name(attr)} #{attribute_condition(value)}"
+           begin # this works in AR 2.3.2 and later versions, it might work in earlier versions - this way of checking avoids using version numbers
+            attribute_condition("#{table_name}.#{connection.quote_column_name(attr)}", value) 
+           rescue ArgumentError # for some earlier versions of AR it definitely breaks
+             "#{table_name}.#{connection.quote_column_name(attr)} #{attribute_condition(value)}" 
+           end 
         end
       end.join(' AND ')
     end
@@ -89,9 +93,47 @@ ActiveRecord::Base.class_eval do
       end
     else
       #For Rails >= 2
-      def self.sanitize_sql_hash_for_conditions(attrs)
-        conditions = get_rails2_conditions(attrs)
-        replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+      if method(:sanitize_sql_hash_for_conditions).arity == 1
+        # Before Rails 2.3.3, the method had only one argument
+        def self.sanitize_sql_hash_for_conditions(attrs)
+          conditions = get_rails2_conditions(attrs)
+          replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+        end
+      elsif method(:sanitize_sql_hash_for_conditions).arity == -2
+        # After Rails 2.3.3, the method had only two args, the last one optional
+        def self.sanitize_sql_hash_for_conditions(attrs, table_name = quoted_table_name)
+          attrs = expand_hash_conditions_for_aggregates(attrs)
+
+          conditions = attrs.map do |attr, value|
+            unless value.is_a?(Hash)
+              attr = attr.to_s
+
+              # Extract table name from qualified attribute names.
+              if attr.include?('.')
+                table_name, attr = attr.split('.', 2)
+                table_name = connection.quote_table_name(table_name)
+              end
+
+              if columns_hash[attr].is_a?(SpatialColumn)
+                if value.is_a?(Array)
+                  #using some georuby utility : The multipoint has a bbox whose corners are the 2 points passed as parameters : [ pt1, pt2]
+                  attrs[attr.to_sym]=MultiPoint.from_coordinates(value)
+                elsif value.is_a?(Envelope)
+                  attrs[attr.to_sym]=MultiPoint.from_points([value.lower_corner,value.upper_corner])
+                end
+                "MBRIntersects(?, #{table_name}.#{connection.quote_column_name(attr)}) " 
+              else
+                attribute_condition("#{table_name}.#{connection.quote_column_name(attr)}", value)
+              end
+            else
+              sanitize_sql_hash_for_conditions(value, connection.quote_table_name(attr.to_s))
+            end
+          end.join(' AND ')
+
+          replace_bind_variables(conditions, expand_range_bind_variables(attrs.values))
+        end
+      else
+        raise "Spatial Adapter will not work with this version of Rails"
       end
     end
   end
@@ -143,9 +185,7 @@ ActiveRecord::ConnectionAdapters::MysqlAdapter.class_eval do
     if options[:spatial]
       execute "CREATE SPATIAL INDEX #{index_name} ON #{table_name} (#{Array(column_name).join(", ")})"
     else
-      index_type = options[:unique] ? "UNIQUE" : ""
-      #all together
-      execute "CREATE #{index_type} INDEX #{index_name} ON #{table_name} (#{Array(column_name).join(", ")})"
+      super
     end
   end
 

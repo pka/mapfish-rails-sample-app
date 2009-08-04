@@ -19,7 +19,7 @@ Install the required gems::
 Starting the web server
 -----------------------
 
-Startg the web server::
+Start the web server::
 
   ./script/server
 
@@ -27,4 +27,4 @@ and checkout ``http://localhost:3000/demos/``
 
 
 
-*Copyright (c) 2008 Pirmin Kalberer, Sourcepole AG*
+*Copyright (c) 2009 Pirmin Kalberer, Sourcepole AG*

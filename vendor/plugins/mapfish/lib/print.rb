@@ -107,7 +107,7 @@ module MapFish
                 temp = TEMP_PREFIX + params[:id] + TEMP_SUFFIX
                 respond_to do |format|
                     format.pdf do
-                        send_file temp, :type=>'application/x-pdf'
+                        send_file temp, :type=>'application/x-pdf', :disposition=>'attachment', :filename=>params[:id]+'.pdf'
                     end
                 end
             end

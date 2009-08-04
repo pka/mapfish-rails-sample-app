@@ -5,6 +5,7 @@
 
 /**
  * @requires OpenLayers/Layer/HTTPRequest.js
+ * @requires OpenLayers/Console.js
  */
 
 /**

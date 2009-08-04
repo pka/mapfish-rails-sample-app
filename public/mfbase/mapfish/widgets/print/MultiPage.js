@@ -18,7 +18,7 @@
  */
 
 /*
- * @requires widgets/print/Base.js
+ * @requires widgets/print/BaseWidget.js
  */
 
 Ext.namespace('mapfish.widgets');
@@ -28,8 +28,13 @@ Ext.namespace('mapfish.widgets.print');
  * Class: mapfish.widgets.print.MultiPage
  * Automatically takes the layers from the given {<OpenLayers.Map>} instance.
  *
+ * If you put this panel directly inside an {Ext.TabPanel} or an accordion, it
+ * will activate/desactivate automaticaly. But if you have more complex
+ * layouts like windows or print panel in a panel in an {Ext.TabPanel}, it's
+ * your responsability to call enable() and disable().
+ *
  * Inherits from:
- * - {<mapfish.widgets.print.Base>}
+ * - {<mapfish.widgets.print.BaseWidget>}
  */
 
 /**
@@ -39,11 +44,11 @@ Ext.namespace('mapfish.widgets.print');
  * config - {Object} Config object
  */
 
-mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
+mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.BaseWidget, {
     /**
      * APIProperty: formConfig
-     * {Object} - The configuration options passed to the form that edits the
-     *            options common to every pages.
+     * {Object} The configuration options passed to the form that edits the
+     *          options common to every pages.
      *
      * Can contain additional items for custom fields. Their values will be
      * passed to the print service
@@ -52,26 +57,26 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
 
     /**
      * APIProperty: columns
-     * {Array} - The Additionnal columns for "per page" custom fields.
+     * {Array} The Additionnal columns for "per page" custom fields.
      */
     columns: null,
 
     /**
      * APIProperty: zoomToExtentEnabled
-     * {Boolean} - If true, the map will try to always show the selected page's
-     *             extent by zooming out if necessary.
+     * {Boolean} If true, the map will try to always show the selected page's
+     *           extent by zooming out if necessary.
      */
     zoomToExtentEnabled: true,
 
     /**
      * Property: grid
-     * {Ext.grid.EditorGridPanel} - The pages.
+     * {Ext.grid.EditorGridPanel} The pages.
      */
     grid: null,
 
     /**
      * Property: printButton
-     * {Ext.Button} - The "print" button.
+     * {Ext.Button} The "print" button.
      */
     printButton: null,
 
@@ -88,6 +93,8 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
      * Called by initComponent to create the component's sub-elements.
      */
     fillComponent: function() {
+        this.columns = this.columns || [];
+
         //The inner border layout (extra level used because the
         //border layout doesn't allow to add components afterwards).
         var innerPanel = this.add({
@@ -99,7 +106,7 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
         this.createGrid(innerPanel);
     },
 
-    onShowEvent: function() {
+    setUp: function() {
         if (this.config) {
             if(Ext.isGecko3) {
                 //ugly hack to fix a FF3 bug that makes the inner panels miss-aligned
@@ -109,7 +116,7 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
                     buggyDiv.setStyle("position", "relative");
                 }, 20);
             }
-            mapfish.widgets.print.Base.prototype.onShowEvent.call(this);
+            mapfish.widgets.print.BaseWidget.prototype.setUp.call(this);
         }
     },
 
@@ -310,7 +317,7 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
             scale: scale,
             rotation: 0,
             rectangle: feature
-        }
+        };
         for (var i = 0; i < this.columns.length; ++i) {
             var cur = this.columns[i].dataIndex;
             if (newPage[cur] == null) {
@@ -437,7 +444,7 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
      * feature - {<OpenLayers.Feature.Vector>} The rotate handle.
      */
     pageRotateStart: function(feature) {
-        mapfish.widgets.print.Base.prototype.pageRotateStart.call(this, feature);
+        mapfish.widgets.print.BaseWidget.prototype.pageRotateStart.call(this, feature);
         this.grid.stopEditing();
     },
 
@@ -450,7 +457,7 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
      * feature - {<OpenLayers.Feature.Vector>} The selected page.
      */
     pageDragStart: function(feature) {
-        mapfish.widgets.print.Base.prototype.pageDragStart.call(this, feature);
+        mapfish.widgets.print.BaseWidget.prototype.pageDragStart.call(this, feature);
 
         //make sure the dragged page is selected in the grid (no zooming)
         var prev = this.zoomToExtentEnabled;
@@ -508,9 +515,11 @@ mapfish.widgets.print.MultiPage = Ext.extend(mapfish.widgets.print.Base, {
     },
 
     /**
-     * Method: fillSpec
-     * 
+     * APIMethod: fillSpec
      * Add the page definitions and set the other parameters.
+     *
+     * This method can be overriden to customise the spec sent to the printer.
+     * Don't forget to call the parent implementation.
      *
      * Parameters:
      * printCommand - {<mapfish.PrintProtocol>} The print definition to fill.

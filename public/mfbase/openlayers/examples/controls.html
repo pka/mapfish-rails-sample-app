@@ -10,8 +10,8 @@
             function init(){
                 map = new OpenLayers.Map('map', {
                     controls: [
+                        new OpenLayers.Control.Navigation(),
                         new OpenLayers.Control.PanZoomBar(),
-                        new OpenLayers.Control.MouseToolbar(),
                         new OpenLayers.Control.LayerSwitcher({'ascending':false}),
                         new OpenLayers.Control.Permalink(),
                         new OpenLayers.Control.ScaleLine(),

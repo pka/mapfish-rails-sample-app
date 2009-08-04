@@ -24,10 +24,12 @@
  * @requires OpenLayers/Map.js
  * @requires OpenLayers/Util.js
  * @requires OpenLayers/Events.js
+ * @requires OpenLayers/Control.js
  * @requires OpenLayers/Handler/Click.js
  * @requires OpenLayers/Handler/Hover.js
  * @requires OpenLayers/Handler/Box.js
  * @requires OpenLayers/Filter/Spatial.js
+ * @requires OpenLayers/Popup/FramedCloud.js
  */
 
 /**
@@ -35,6 +37,24 @@
  * Use this class to create a Map searcher. A Map searcher sends search requests
  * as the user clicks, pauses or draws boxes on the map.
  *
+ * Typical usage:
+ * (start code)
+ *         var searcher = new mapfish.Searcher.Map({
+ *             mode: mapfish.Searcher.Map.HOVER,
+ *             protocol: new mapfish.Protocol.TriggerEventDecorator({
+ *                 protocol: new mapfish.Protocol.MapFish({
+ *                     url: "countries",
+ *                     params: {
+ *                         limit: 10
+ *                     }
+ *                 })
+ *             }),
+ *             displayDefaultPopup: true,
+ *             delay: 400
+ *         });
+ *         map.addControl(searcher);
+ *         searcher.activate();
+ * (end)
  *
  * Inherits from:
  * - mapfish.Searcher
@@ -65,13 +85,22 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     searchTolerance: 3,
 
     /**
-     * APIProperty: searchTolerance
+     * APIProperty: searchToleranceUnits
      * {String} Tolerance units.
      *     Possible values are 'pixels' and 'geo'.
      *     The latter means that tolerance is given in the current
      *     map units. Defaults to pixels.
      */
     searchToleranceUnits: 'pixels',
+
+    /**
+     * APIProperty: pointAsBBOX
+     * {Boolean} If true, the filter sent to server will be of BBOX type. If
+     *     false, the filter will be of DWITHIN type.
+     *     If you're experiencing performance issues don't hesitate to set
+     *     it to true. Defaults to false.
+     */
+    pointAsBBOX: false,
 
     /**
      * APIProperty: pixelTolerance
@@ -114,7 +143,7 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     /**
      * APIProperty: displayDefaultPopup
      * {Boolean} Display a default popup with the search results,
-     *      does not apply if mode is set to <mapfish.Searcher.Map.HOVER>,
+     *      does not apply if mode is set to <mapfish.Searcher.Map.EXTENT>,
      *      defaults to false, or if the protocol used isn't of type
      *      <mapfish.Protocol.TriggerEventDecorator>.
      */
@@ -150,6 +179,18 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
      *     read call to <OpenLayers.Protocol> object.
      */
     response: null,
+    
+    /**
+     * APIProperty: projection
+     * {<OpenLayers.Projection>} When passed the bounds or point set in
+     *     the filter are reprojected. In order to reproject, a projection
+     *     transformation function for the specified projections must be
+     *     available. This support may be provided via proj4js or via a
+     *     custom transformation function. See
+     *     {<OpenLayers.Projection.addTransform>} for more information on
+     *     custom transformations.
+     */
+    projection: null,
 
     /**
      * Constructor: mapfish.Searcher.Map
@@ -296,7 +337,6 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
      */
     handleMoveend: function() {
         this.position = this.map.getExtent();
-        this.popupLonLat = this.position.getCenterLonLat();
         this.triggerSearch();
     },
 
@@ -322,17 +362,8 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
      * evt - {<OpenLayers.Event>}
      */
     cancelSearch: function(evt) {
-        // FIXME really we should rely on the protocol itself to
-        // cancel the request, the Protocol class in OpenLayers
-        // 2.7 does not expose a cancel() method
-        if (this.response) {
-            var response = this.response;
-            if (response.priv &&
-                typeof response.priv.abort == "function") {
-                response.priv.abort();
-                this.response = null;
-            }
-        }
+        this.protocol.abort(this.response);
+        this.response = null;
         if (this.mode == mapfish.Searcher.Map.HOVER) {
             this.onMouseMove();
         }
@@ -394,6 +425,22 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     },
 
     /**
+     * Method: reproject
+     * Reproject the passed object if needed.
+     *
+     * Parameters:
+     * obj - {<OpenLayers.Bounds>}|{<OpenLayers.Point>}
+     */
+    reproject: function(obj) {
+        if (this.projection &&
+            !this.projection.equals(this.map.getProjectionObject())) {
+
+            obj.transform(this.map.getProjectionObject(), this.projection);
+        }
+        return obj;
+    },
+
+    /**
      * Method: getFilter
      *      Get the search filter.
      *
@@ -402,21 +449,55 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
      */
     getFilter: function() {
         var filter = null;
+
+        // Because Extent mode doesn't really require a user action
+        // and getFilter can be called when merging filters,
+        // we need to ensure that position has a value
+        if (this.mode == mapfish.Searcher.Map.EXTENT && !this.position) {
+            this.position = this.map.getExtent();
+        }
         if (this.position) {
             if (this.position instanceof OpenLayers.Bounds) {
                 filter = new OpenLayers.Filter.Spatial({
                     type: OpenLayers.Filter.Spatial.BBOX,
-                    value: this.position
+                    value: this.reproject(this.position)
                 });
             } else {
                 var tolerance = this.searchTolerance;
                 if (tolerance && this.searchToleranceUnits == "pixels") {
                     tolerance *= this.map.getResolution();
                 }
-                var lonlat = this.map.getLonLatFromViewPortPx(this.position);
-                filter = {lon: lonlat.lon, lat: lonlat.lat};
+                var ll = this.map.getLonLatFromViewPortPx(this.position);
+                var point = this.reproject(
+                    new OpenLayers.Geometry.Point(ll.lon, ll.lat)
+                );
                 if (tolerance) {
-                    filter.tolerance = tolerance;
+                    // simulate a box around the clicked point, performances
+                    // may be better than with the DWITHIN filter in some cases
+                    if (this.pointAsBBOX) {
+                        var box = new OpenLayers.Bounds(
+                            ll.lon - tolerance / 2,
+                            ll.lat - tolerance / 2,
+                            ll.lon + tolerance / 2,
+                            ll.lat + tolerance / 2
+                        );
+                        filter = new OpenLayers.Filter.Spatial({
+                            type: OpenLayers.Filter.Spatial.BBOX,
+                            value: this.reproject(box)
+                        });
+                    } else {
+                        filter = new OpenLayers.Filter.Spatial({
+                            type: OpenLayers.Filter.Spatial.DWITHIN,
+                            value: point,
+                            distance: tolerance,
+                            distanceUnits: this.map.getUnits()
+                        });
+                    }
+                } else {
+                    filter = new OpenLayers.Filter.Spatial({
+                        type: OpenLayers.Filter.Spatial.WITHIN,
+                        value: point
+                    });
                 }
             }
             this.position = null;

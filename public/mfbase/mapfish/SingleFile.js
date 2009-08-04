@@ -25,7 +25,7 @@
 (function() {
     window.mapfish = {
         singleFile: true
-    }
+    };
 
     // If OpenLayers and MapFish are built into a single library file
     // (MapFish.js) we need to fool OpenLayers and make it believe its script
@@ -47,6 +47,6 @@
         // poor OpenLayers!
         window.OpenLayers._getScriptLocation = function() {
             return mapfish._getScriptLocation() + "../openlayers/";
-        }
+        };
     }
 })();

@@ -1,5 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <title>OpenLayers: Vector Features</title>
     <link rel="stylesheet" href="../theme/default/style.css" type="text/css" />
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script src="../lib/OpenLayers.js" type="text/javascript"></script>
@@ -61,6 +62,8 @@
             style_mark.graphicXOffset = -(style_mark.graphicWidth/2);  // this is the default value
             style_mark.graphicYOffset = -style_mark.graphicHeight;
             style_mark.externalGraphic = "../img/marker.png";
+            // graphicTitle only works in Firefox and Internet Explorer
+			style_mark.graphicTitle = "this is a test tooltip";
 
             var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {style: layer_style});
 
@@ -114,7 +117,7 @@
     Shows the use of the shows drawing simple vector features, in different styles.
 </p>
 <div style="text-align: right">
-    <div id="map" class="smallmap"></div>
+    <div dir="rtl" id="map" class="smallmap"></div>
 </div>
 <div id="docs">
     <p>This example shows drawing simple vector features -- point, line, polygon

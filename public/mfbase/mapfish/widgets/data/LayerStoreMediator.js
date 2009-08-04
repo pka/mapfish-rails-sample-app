@@ -41,6 +41,7 @@ Ext.namespace('mapfish.widgets', 'mapfish.widgets.data');
  * });
  * var mediator = new mapfish.widgets.data.LayerStoreMediator({
  *     store: store,
+ *     layer: layer,
  *     filter: function(feature) {
  *         return feature.state != OpenLayers.State.UNKNOWN;
  *     }

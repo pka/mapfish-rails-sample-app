@@ -35,7 +35,7 @@
     }
     
     function test_String_trim(t) {
-        t.plan(5);
+        t.plan(6);
         
         var str = "chickenHead";
         t.eq(OpenLayers.String.trim(str),
@@ -53,6 +53,9 @@
         t.eq(OpenLayers.String.trim(str),
              "chickenHead", "string with extra whitespace at beginning and end is trimmed correctly");
 
+        str = "chicken\nHead   ";
+        t.eq(OpenLayers.String.trim(str),
+             "chicken\nHead", "multi-line string with extra whitespace at end is trimmed correctly");
         str = " ";
         t.eq(OpenLayers.String.trim(str), "", "whitespace string is trimmed correctly");
     }
@@ -89,7 +92,7 @@
             "", "${ ", "${", " ${", "${${", "${}", "${${}}", " ${ ${",
             "}", "${${} }"
         ]
-        t.plan(6 + unchanged.length);
+        t.plan(7 + unchanged.length);
 
         var format = OpenLayers.String.format;
         
@@ -140,6 +143,23 @@
             "still works if arguments are not supplied"
         );
 
+        // test contexts where attribute values can be objects
+        var context = {
+            a: {
+                b: {
+                    c: 'd',
+                    e: function() {
+                        return 'f';
+                    }
+                }
+            }
+        };
+        t.eq(
+            format("${a.b.c} ${a.b.e} ${a.b.q} ${a} ${a...b...c}", context),
+            "d f undefined [object Object] d",
+            "attribute values that are objects are supported"
+        );
+
     }
 
     function test_String_isNumeric(t) {
@@ -177,6 +197,42 @@
             t.eq(got, exp, "'" + val + "' returns " + exp);
         }
         
+    }
+    
+    function test_Number_numericIf(t) {
+        var cases = [
+            {value: "3", expect: 3},
+            {value: "+3", expect: 3},
+            {value: "-3", expect: -3},
+            {value: "3.0", expect: 3},
+            {value: "+3.0", expect: 3},
+            {value: "-3.0", expect: -3},
+            {value: "6.02e23", expect: 6.02e23},
+            {value: "+1.0e-100", expect: 1e-100},
+            {value: "-1.0e+100", expect: -1e100},
+            {value: "1E100", expect: 1e100},
+            {value: null, expect: null},
+            {value: true, expect: true},
+            {value: false, expect: false},
+            {value: undefined, expect: undefined},
+            {value: "", expect: ""},
+            {value: "3 ", expect: "3 "},
+            {value: " 3", expect: " 3"},
+            {value: "1e", expect: "1e"},
+            {value: "1+e", expect: "1+e"},
+            {value: "1-e", expect: "1-e"}
+        ];
+        t.plan(cases.length);
+        
+        var func = OpenLayers.String.numericIf;
+        var obj, val, got, exp;
+        for(var i=0; i<cases.length; ++i) {
+            obj = cases[i];
+            val = obj.value;
+            exp = obj.expect;
+            got = func(val);
+            t.eq(got, exp, "'" + val + "' returns " + exp);
+        }
     }
    
    

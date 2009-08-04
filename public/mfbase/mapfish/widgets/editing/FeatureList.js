@@ -178,7 +178,7 @@ Ext.extend(mapfish.widgets.editing.FeatureList, Ext.grid.EditorGridPanel, {
                 }
                 self.refreshGeometryVisual(feature.data);
                 // select and show the row of the feature we are editing
-                var record = feature.data
+                var record = feature.data;
                 var row = self.getStore().findBy(function(r) {
                     return r.id == record.id;
                 });
@@ -560,7 +560,7 @@ Ext.extend(mapfish.widgets.editing.FeatureList, Ext.grid.EditorGridPanel, {
     clearLayer: function() {
         var toRemove = [];
         var layer = this.layer;
-        var edited = this.modifyFeature.feature
+        var edited = this.modifyFeature.feature;
         for (var i = 0; i < layer.features.length; ++i) {
             var cur = layer.features[i];
             if (cur != edited &&
@@ -628,4 +628,4 @@ mapfish.widgets.editing.FeatureList.createRecord = function(cols) {
         }
     }
     return Ext.data.Record.create.apply(null, arguments);
-}
+};

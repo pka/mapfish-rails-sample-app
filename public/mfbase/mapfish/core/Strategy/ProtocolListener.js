@@ -129,7 +129,7 @@ mapfish.Strategy.ProtocolListener = OpenLayers.Class(OpenLayers.Strategy, {
      */
     onCrudfinished: function(response) {
         if (response.requestType == "read") {
-            this.addFeatures(response.features)
+            this.addFeatures(response.features);
         }
     },
 
@@ -147,7 +147,7 @@ mapfish.Strategy.ProtocolListener = OpenLayers.Class(OpenLayers.Strategy, {
         if (features && features.length > 0) {
             this.layer.addFeatures(features);
             if (this.recenter) {
-                this.layer.map.zoomToExtent(this.layer.getDataExtent())
+                this.layer.map.zoomToExtent(this.layer.getDataExtent());
             }
         }
     },
@@ -157,7 +157,7 @@ mapfish.Strategy.ProtocolListener = OpenLayers.Class(OpenLayers.Strategy, {
      * Callback function called on protocol clear event.
      */
     onClear: function() {
-        this.layer.destroyFeatures()
+        this.layer.destroyFeatures();
     },
 
     CLASS_NAME: "mapfish.Strategy.ProtocolListener"

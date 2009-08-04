@@ -68,22 +68,42 @@ module MapfishCoreExtensions
             rad = params['tolerance'].to_f/2
             box = [[pnt.x+rad, pnt.y+rad], [pnt.x-rad, pnt.y-rad], srid]
           end
-          if params['box']
-            x1, y1, x2, y2 = params['box'].split(',').collect(&:to_f)
+          if params['bbox']
+            x1, y1, x2, y2 = params['bbox'].split(',').collect(&:to_f)
             box = [[x1, y1], [x2, y2], srid]
           end
           filter.merge!({geometry_column.name.to_sym => box}) if box
+          conditions = sanitize_sql_for_conditions(filter)
 
           #Add attribute filter
+          attrfilter = []
           params.each do |key, value|
-            unless %w(lat lon tolerance box maxfeatures limit offset action controller).include?(key)
-              filter.merge!({key.to_sym => value}) if value && !value.empty?
+            next if value.nil? || value.empty?
+            field, op = key.split('__')
+            case op
+            when 'eq'
+              attrfilter << ["#{field} = ?", value]
+            when 'ne'
+              attrfilter << ["#{field} <> ?", value]
+            when 'lt'
+              attrfilter << ["#{field} < ?", value]
+            when 'lte'
+              attrfilter << ["#{field} <= ?", value]
+            when 'gt'
+              attrfilter << ["#{field} > ?", value]
+            when 'gte'
+              attrfilter << ["#{field} >= ?", value]
+            when 'ilike'
+              #TODO: support wildcarded ILIKE: https://trac.mapfish.org/trac/mapfish/ticket/495
+              attrfilter << ["#{field} ILIKE ?", value]
             end
+          end
+          unless attrfilter.empty?
+            sql, sqlparams = attrfilter.transpose
+            conditions << " AND " + sanitize_sql_for_conditions([sql.join(' AND ')] + sqlparams)
           end
 
           #Create finder arguments
-          conditions = sanitize_sql_for_conditions(filter)
-          conditions << " AND " + sanitize_sql_for_conditions(args[:conditions]) if args[:conditions]
           args.merge!(:conditions => conditions)
           args.merge!({:limit => params['maxfeatures'] }) if params['maxfeatures']
           args.merge!({:limit => params['limit'] }) if params['limit']

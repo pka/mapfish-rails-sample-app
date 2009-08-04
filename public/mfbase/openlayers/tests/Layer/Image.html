@@ -37,6 +37,23 @@
         t.ok( layer.projection == null, "default layer projection correctly set");
         t.ok( layer.options instanceof Object, "layer.options correctly initialized as a non-null Object" );
     }
+    
+    function test_maxExtent(t) {
+        t.plan(2);
+        var layer;
+        
+        // test that the image extent is set as the default maxExtent
+        var extent = new OpenLayers.Bounds(1, 2, 3, 4);
+        var size = new OpenLayers.Size(2, 2);
+        layer = new OpenLayers.Layer.Image("Test", "foo", extent, size);
+        t.eq(layer.maxExtent.toString(), extent.toString(), "extent set as default maxExtent");
+        
+        // test that the maxExtent can be set explicitly
+        var maxExtent = new OpenLayers.Bounds(10, 20, 30, 40);
+        layer = new OpenLayers.Layer.Image("Test", "foo", extent, size, {maxExtent: maxExtent});
+        t.eq(layer.maxExtent.toString(), maxExtent.toString(), "maxExtent can be set explicitly");
+        
+    }
 
     function test_Layer_Image_tileTests (t) {
         t.plan(7);
@@ -106,6 +123,36 @@
         t.eq( layer.map, null, "layer.map is null after destroy" );
         t.eq( layer.options, null, "layer.options is null after destroy" );
 
+    }
+
+    function test_loadEvents(t) {
+        t.plan(3);
+
+        var map = new OpenLayers.Map('map');    
+        var layer = new OpenLayers.Layer.Image(
+            'Test', '../../img/blank.gif',
+            new OpenLayers.Bounds(-180, -88.759, 180, 88.759),
+            new OpenLayers.Size(580, 288)
+        );
+    
+        map.addLayer(layer);
+
+        layer.events.register('loadstart', null, function(obj) {
+            t.ok(obj.object.tile.isLoading, "loadstart triggered while tile is loading");
+        });
+
+        var delay = false;
+        layer.events.register('loadend', null, function(obj) {
+            delay = true;
+        });
+
+        t.delay_call(0.4,function() {
+            t.eq(delay, true, "registered for loadend");
+            t.eq(layer.tile.isLoading, false, "loadend triggered after tile is loaded");
+            map.destroy(); //tear down
+            return delay;
+        });
+        map.zoomToMaxExtent();
     }
 
   </script>

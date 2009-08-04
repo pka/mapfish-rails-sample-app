@@ -55,8 +55,8 @@ mapfish.widgets.MapComponent = function(config) {
 
 Ext.extend(mapfish.widgets.MapComponent, Ext.Panel, {
     /**
-     * Property: map
-     * {OpenLayers.Map}  
+     * APIProperty: map
+     * {<OpenLayers.Map>} A reference to the OpenLayers map object.
      */
     map: null,
 

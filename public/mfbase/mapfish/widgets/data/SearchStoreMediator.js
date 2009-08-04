@@ -47,7 +47,8 @@ Ext.namespace('mapfish.widgets', 'mapfish.widgets.data');
  *     protocol: protocol,
  *     filter: function(feature) {
  *         return feature.state != OpenLayers.State.UNKNOWN;
- *     }
+ *     },
+ *     append: false // store is cleared before new features are added into it
  * });
  * (end)
  */
@@ -95,7 +96,6 @@ mapfish.widgets.data.SearchStoreMediator.prototype = {
      */
     protocol: null,
 
-    /**
     /**
      * APIProperty: append
      * {Boolean} False if the store must be cleared before adding new
@@ -187,7 +187,7 @@ mapfish.widgets.data.SearchStoreMediator.prototype = {
     onSearchfinished: function(response) {
         if (response.requestType == "read" && response.success()) {
             var features = response.features;
-            if (features && features.length > 0) {
+            if (features) {
                 this.featureStoreMediator.addFeatures(features, {
                     append: this.append, filter: this.filter
                 });

@@ -30,10 +30,20 @@
         map.addControl(control2, new OpenLayers.Pixel(100,100));
         t.eq( control2.div.style.top, "100px", "2nd control div is located correctly");
     }
+    
+    function test_Control_PanZoom_removeButtons(t) {
+        t.plan(2);
+        map = new OpenLayers.Map("map");
+        control = new OpenLayers.Control.PanZoom();
+        map.addControl(control);
+        control.removeButtons();
+        t.eq(control.buttons.length, 0, "buttons array cleared correctly");
+        t.eq(control.div.childNodes.length, 0, "control div is empty");
+    }
 
     function test_Control_PanZoom_control_events (t) {
 
-        if ( !window.document.createEvent || OpenLayers.Util.getBrowserName() == "opera") {
+        if ( !window.document.createEvent || OpenLayers.Util.getBrowserName() == "opera" || !t.open_window) {
             //ie can't simulate mouseclicks
             t.plan(0);
             t.debug_print("FIXME: This browser does not support the PanZoom test at this time.");
@@ -126,6 +136,56 @@
                 });
             });
         }
+    }
+
+    function test_slideRatio(t) {
+        t.plan(4);
+
+        var control = new OpenLayers.Control.PanZoom({
+            slideRatio: .5
+        });
+
+        var map = new OpenLayers.Map();
+
+        map.addControl(control);
+        control.draw();
+        control.activate();
+
+        map.getSize = function() {
+            return {
+                w: 250,
+                h: 100
+            }
+        };
+
+        var delta, dir;
+        var evt = {which: 1}; // a fake left click
+        var buttons = control.buttons;
+        map.pan = function(dx, dy){
+            t.eq([dx,dy],delta,"Panning " + dir + " sets right delta with slideRatio");
+        };
+
+        //up
+        var delta = [0, -50];
+        var dir = "up";
+        control.buttonDown.call(buttons[0], evt);
+        
+        //left
+        var delta = [-125, 0];
+        var dir = "left";
+        control.buttonDown.call(buttons[1], evt);
+        
+        //right
+        var delta = [125, 0];
+        var dir = "right";
+        control.buttonDown.call(buttons[2], evt);
+        
+        //down
+        var delta = [0, 50];
+        var dir = "down";
+        control.buttonDown.call(buttons[3], evt);
+        
+        map.destroy();
     }
 
     function simulateClick(wnd, elem) {

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html debug="true">
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+
+    <script type="text/javascript" src="../../../openlayers/lib/Firebug/firebug.js"></script>
+    <script type="text/javascript" src="../../../openlayers/lib/OpenLayers.js"></script>
+
+    <script type="text/javascript" src="../../../ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../../ext/ext-all-debug.js"></script>
+
+    <script type="text/javascript">
+      // Because of a bug in Firefox 2 we need to specify the MapFish base path.
+      // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
+      var gMfLocation = "../../../mapfish/";
+    </script>
+    <script type="text/javascript" src="../../../mapfish/MapFish.js"></script>
+
+    <script type="text/javascript"><!--
+    function test_ctor(t) {
+        t.plan(3);
+
+        /*
+         * Set up
+         */
+
+        var cnt, searcher;
+        var _bind = mapfish.Searcher.prototype.bind;
+        mapfish.Searcher.prototype.bind = function() {
+            cnt++;
+        };
+
+        /*
+         * Test
+         */
+        cnt = 0;
+        searcher = new mapfish.Searcher();
+        t.eq(cnt, 1, "ctor calls bind if it is passed no option");
+
+        cnt = 0;
+        searcher = new mapfish.Searcher({autobind: 1});
+        t.eq(cnt, 1, "ctor calls bind if the autobind option is not false ");
+
+        cnt = 0;
+        searcher = new mapfish.Searcher({autobind: false});
+        t.eq(cnt, 0, "ctor does not call bind if the autobind option is false");
+
+        /*
+         * Tear down
+         */
+         mapfish.Searcher.prototype.bind = _bind;
+    }
+
+    function test_bind(t) {
+        t.plan(4);
+
+        var p, s, r;
+
+        // 1 test
+        s = new mapfish.Searcher();
+        r = s.bind();
+        t.eq(r, undefined,
+             "bind returns undefined when passed undefined");
+
+        // 1 test
+        s = new mapfish.Searcher();
+        p = new OpenLayers.Protocol();
+        r = s.bind(p);
+        t.eq(r, undefined,
+             "bind returns undefined when no merge filter in protocol chain");
+
+        // 1 test
+        s = new mapfish.Searcher();
+        p = new mapfish.Protocol.MergeFilterDecorator({
+            protocol: new OpenLayers.Protocol()
+        });
+        r = s.bind(p);
+        t.ok(p.searchers[0] == s,
+             "bind registers searcher into merge filter");
+
+        // 1 test
+        s = new mapfish.Searcher();
+        p = new mapfish.Protocol.MapFish.create();
+        r = s.bind(p);
+        t.ok(p.protocol.searchers[0] == s,
+             "bind finds merge filter in protocol chain");
+    }
+--></script>
+
+  </head>
+  <body>
+  </body>
+</html>

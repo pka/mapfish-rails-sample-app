@@ -294,7 +294,7 @@
     }
     
     function test_Layer_redraw(t) {
-        t.plan(8)
+        t.plan(11)
 
         var name = 'Test Layer';
         var url = "http://octo.metacarta.com/cgi-bin/mapserv";
@@ -325,6 +325,18 @@
         t.ok(layer.redraw(),
                 "redraw returns true even if extent has not changed");
         
+        var log = {};
+        var onMoveend = function(e) {
+            log.event = e;
+        };
+        layer.events.on({"moveend": onMoveend});
+        layer.redraw();
+        layer.events.un({"moveend": onMoveend});
+        // test that the moveend event was triggered
+        t.ok(log.event, "an event was logged");
+        t.eq(log.event.type, "moveend", "moveend was triggered");
+        t.eq(log.event.zoomChanged, true, "event says zoomChanged true - poor name");
+
         layer.moveTo = function(bounds, zoomChanged, dragging) {
             var extent = layer.map.getExtent();
             t.ok(bounds.equals(extent),
@@ -335,7 +347,6 @@
                  "redraw calls moveTo with dragging false");
         }
         layer.redraw();
-        
     }
       
     function test_layer_setIsBaseLayer(t) {
@@ -414,7 +425,7 @@
     }
     
     function test_Layer_getResolutionForZoom(t) {
-        t.plan(5);
+        t.plan(8);
         var layer = new OpenLayers.Layer("test");
         layer.map = {fractionalZoom: false};
         layer.resolutions = ["zero", "one", "two"];
@@ -427,10 +438,35 @@
         layer.map.fractionalZoom = true;
         t.eq(layer.getResolutionForZoom(1).toPrecision(6), (4).toPrecision(6),
              "(fractionalZoom true) returns resolution for integer zoom");
+
+        t.eq(layer.getResolutionForZoom(1.3).toPrecision(6), (4.6).toPrecision(6),
+             "(fractionalZoom true) for zoom 1.3 should be 4.6");
+
+        t.eq(layer.getResolutionForZoom(1.6).toPrecision(6), (5.2).toPrecision(6),
+             "(fractionalZoom true) for zoom 1.6 should be 5.2");
+
+        t.eq(layer.getResolutionForZoom(1.8).toPrecision(6), (5.6).toPrecision(6),
+             "(fractionalZoom true) for zoom 1.8 should be 5.6");
+
         t.eq(layer.getResolutionForZoom(1.5).toPrecision(6), (5).toPrecision(6),
              "(fractionalZoom true) returns resolution for float zoom");             
         t.eq(layer.getResolutionForZoom(3.5).toPrecision(6), (8).toPrecision(6),
              "(fractionalZoom true) returns resolution for zoom beyond res length - 1");
+        
+    }
+    
+    function test_afterAdd(t) {
+        
+        t.plan(1);
+        
+        var map = new OpenLayers.Map("map");
+        var layer = new OpenLayers.Layer(null, {isBaseLayer: true});
+        var hasBase = false;
+        layer.afterAdd = function() {
+            hasBase = !!(layer.map && layer.map.baseLayer);
+        }
+        map.addLayer(layer);
+        t.eq(hasBase, true, "when afterAdd is called, map has a base layer");
         
     }
 

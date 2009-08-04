@@ -87,7 +87,6 @@
   <div id="north" style="padding: 5px">
     <h1 style="font-size: 20px;">MapFish, Search demo</h1>
   </div>
-  <div id="olmap"></div>
   <div id="south"></div>
   <div id="searchform"></div>
 </body>
@@ -104,6 +103,7 @@
 <!-- debug mode -->
 <!--
 <script type="text/javascript" src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
+<script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
 <script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
 -->
 <!-- prod mode -->
@@ -132,85 +132,82 @@
           scales: scales
       };
   
-      return new OpenLayers.Map('olmap', options);
+      return new OpenLayers.Map(options);
   }
 
-  function addWMSLayers(map) {
-      var layer;
-      
-      layer = new OpenLayers.Layer.WMS("OpenLayers WMS", 
-          "http://labs.metacarta.com/wms/vmap0",
-          {layers: 'basic'}, 
-          {isBaseLayer: true}
-      );
-      layer.setVisibility(true);
-      map.addLayer(layer);
-
-      layer = new OpenLayers.Layer.WMS( "World Map", 
-          "http://world.freemap.in/cgi-bin/mapserv?", 
-          {
-              map: '/www/freemap.in/world/map/factbooktrans.map',
-              transparent: true,
-              layers: 'factbook',
-              format: 'image/png'
-          }
-      );
-      layer.setVisibility(false);
-      map.addLayer(layer);
-   
-      layer = new OpenLayers.Layer.WMS("Summits",
-          "http://demo.mapfish.org/mapfishsample/trunk/wms?",
-          {layers: ['summits'], format: 'image/png', transparent: true,
-           singleTile: true}
-      );
-      layer.setVisibility(true);
-      map.addLayer(layer);  
-  }
-
-  function addVectorLayer(map) {
-      var vectorLayer = new OpenLayers.Layer.Vector("vector", {
-          styleMap: new OpenLayers.StyleMap({
-              'default': new OpenLayers.Style({
-                  'externalGraphic': 'AQUA.png',
-                  'graphicWidth': 20,
-                  'graphicHeight': 20,
-                  'graphicYOffset': -20,
-                  'fillOpacity': 1.0
-              })
+  function createLayers() {
+      return [
+          new OpenLayers.Layer.WMS("OpenLayers WMS", 
+              "http://labs.metacarta.com/wms/vmap0",
+              {layers: 'basic'}, 
+              {isBaseLayer: true, visibility: true}
+          ),
+          new OpenLayers.Layer.WMS("World Map", 
+              "http://world.freemap.in/cgi-bin/mapserv?", {
+                  map: '/www/freemap.in/world/map/factbooktrans.map',
+                  transparent: true,
+                  layers: 'factbook',
+                  format: 'image/png'
+              }, {
+                  visibility: false
           }),
-          displayInLayerSwitcher: false
-      });
-      map.addLayer(vectorLayer);
-      return vectorLayer;
-  }
-
-  function setMapCenter() {
-      this.setCenter(new OpenLayers.LonLat(5,45), 6);
+          new OpenLayers.Layer.WMS("Summits",
+              "http://demo.mapfish.org/mapfishsample/trunk/wms?", {
+                  layers: ['summits'],
+                  format: 'image/png',
+                  transparent: true
+              }, {
+                  singleTile: true,
+                  visibility: true
+          }),
+          new OpenLayers.Layer.Vector("vector", {
+              styleMap: new OpenLayers.StyleMap({
+                  'default': new OpenLayers.Style({
+                      'externalGraphic': 'AQUA.png',
+                      'graphicWidth': 20,
+                      'graphicHeight': 20,
+                      'graphicYOffset': -20,
+                      'fillOpacity': 1.0
+                  })
+              }),
+              displayInLayerSwitcher: false
+          })
+      ];
   }
 
   Ext.onReady(function() {
       Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+      Ext.QuickTips.init();
 
       /*
-       * Set up OpenLayers map
+       * Create map and layers
        */
       var map = createMap();
-      addWMSLayers(map);
-      var vectorLayer = addVectorLayer(map);
+      var layers = createLayers();
+      var vectorLayer = layers[layers.length - 1];
 
       /*
-       * Create MapFish toolbar
+       * Create protocol
        */
-      var toolbar = new mapfish.widgets.toolbar.Toolbar({
-          map: map,
-          configurable: false,
-          id: 'toolbarid'
+      var protocol = mapfish.Protocol.MapFish.create({
+          url: "../../summits",
+          params: {
+              limit: 10
+          }
+      });
+
+      /*
+       * Create map searcher
+       */
+      var mapSearcher = new mapfish.Searcher.Map({
+          mode: mapfish.Searcher.Map.BOX,
+          protocol: protocol
       });
 
       /*
        * Create search form panel
        */
-      var formPanel = new Ext.FormPanel({
+      var formPanel = new Ext.form.FormPanel({
           title: 'Search criteria',
           region: 'center',
           items: [{
@@ -219,15 +216,15 @@
               items: [{
                   xtype: 'textfield',
                   fieldLabel: 'Name',
-                  name: 'name'
+                  name: 'name__like'
               },{
                   xtype: 'textfield',
                   fieldLabel: 'Min elevation',
-                  name: 'min'
+                  name: 'elevation__ge'
               },{
                   xtype: 'textfield',
                   fieldLabel: 'Max elevation',
-                  name: 'max'
+                  name: 'elevation__le'
               }]
           },{
             html: ['<p>', 'Help note: search criteria specified above ',
@@ -236,32 +233,22 @@
       });
 
       /*
-       * Create protocol
+       * Create form searcher
        */
-
-      // decorate protocol with a TriggerEventDecorator and
-      // a MergeFilterDecorator, the returned protocol is
-      // of type MergeFilterDecorator
-      protocol = mapfish.Protocol.decorateProtocol({
-          protocol: new mapfish.Protocol.MapFish({
-              url: "../../summits",
-              params: {
-                  maxfeatures: 10
-              }
-          }),
-          TriggerEventDecorator: null,
-          MergeFilterDecorator: null
+      var formSearcher = new mapfish.widgets.search.Form({
+          form: formPanel,
+          protocol: protocol
       });
 
       /*
        * Create a store with a feature reader for use in the grid displaying
        * the search results.
        */
-      var store = new Ext.data.Store({
-          reader: new mapfish.widgets.data.FeatureReader({}, [
+      var store = new GeoExt.data.FeatureStore({
+          fields: [
               {name: 'name', type: 'string'},
               {name: 'elevation', type: 'float'}
-          ])
+          ]
       });
 
       /*
@@ -269,23 +256,40 @@
        * resulting from the search.
        */
       var searchStoreMediator = new mapfish.widgets.data.SearchStoreMediator({
-          protocol: protocol.protocol,
+          protocol: protocol,
           store: store,
           append: false
       });
+
+      /*
+       * Create toolbar
+       */
+      var tbarItems = [];
+      tbarItems.push(new GeoExt.Action({
+          map: map,
+          control: new OpenLayers.Control.Navigation(),
+          tooltip: "Navigate",
+          toggleGroup: "map",
+          iconCls: "pan", 
+          pressed: true
+      }));
+      tbarItems.push(" ");
+      tbarItems.push("-");
+      tbarItems.push(" ");
+      tbarItems.push(new GeoExt.Action({
+          map: map,
+          control: mapSearcher,
+          tooltip: "Search on click and by box",
+          toggleGroup: "map",
+          iconCls: "infobox",
+          pressed: false
+      }));
 
       /*
        * Create Ext view port
        */
       var viewport = new Ext.Viewport({
           layout: 'border',
-          listeners: {
-              afterlayout: {
-                  fn: setMapCenter,
-                  scope: map,
-                  single: true
-              }
-          },
           items:[
               new Ext.BoxComponent({
                   region: 'north',
@@ -303,113 +307,65 @@
                     frame: true
                   },
                   layout: 'border',
-                  items: [{
-                      title: 'Layers',
-                      region: 'north',
-                      height: 180,
-                      xtype: 'layertree',
-                      map: map
-                  },
-                  formPanel,
-                  new Ext.grid.GridPanel({
-                      title: 'Search results',
-                      region: 'south',
-                      ds: store,
-                      height: 300,
-                      columns: [{
-                              header: 'name',
-                              dataIndex: 'name',
-                              width: 200
-                          },{
-                              header: 'elevation',
-                              dataIndex: 'elevation',
-                              width: 50
-                          }
-                      ],
-                      listeners: {
-                          'rowclick': {
-                              'fn': function(grid, index, evt) {
-                                  var r = grid.getStore().getAt(index);
-                                  var feature = r.get('feature');
-                                  var rendered = false;
-                                  for (var i = 0; i < vectorLayer.features.length; i++) {
-                                      if (feature == vectorLayer.features[i]) {
-                                          rendered = true;
+                  items: [
+                      formPanel,
+                      new Ext.grid.GridPanel({
+                          title: 'Search results',
+                          region: 'south',
+                          ds: store,
+                          height: 300,
+                          columns: [{
+                                  header: 'name',
+                                  dataIndex: 'name',
+                                  width: 200
+                              },{
+                                  header: 'elevation',
+                                  dataIndex: 'elevation',
+                                  width: 50
+                              }
+                          ],
+                          listeners: {
+                              'rowclick': {
+                                  'fn': function(grid, index, evt) {
+                                      var r = grid.getStore().getAt(index);
+                                      var feature = r.get('feature');
+                                      var rendered = false;
+                                      for (var i = 0; i < vectorLayer.features.length; i++) {
+                                          if (feature == vectorLayer.features[i]) {
+                                              rendered = true;
+                                          }
                                       }
-                                  }
-                                  if (rendered) {
-                                      vectorLayer.removeFeatures(feature);
-                                  } else {
-                                      vectorLayer.addFeatures(feature);
-                                  }
+                                      if (rendered) {
+                                          vectorLayer.removeFeatures(feature);
+                                      } else {
+                                          vectorLayer.addFeatures(feature);
+                                      }
+                                   }
                                }
-                           }
-                       },
-                       bbar: [{
-                           text: 'Clear markers',
-                           handler: function() {
-                               vectorLayer.removeFeatures(vectorLayer.features);
-                           }
-                       }]
-                  })]
+                           },
+                           bbar: [{
+                               text: 'Clear markers',
+                               handler: function() {
+                                   vectorLayer.removeFeatures(vectorLayer.features);
+                               }
+                           }]
+                      })
+                  ]
               },{
                   region: 'center',
                   title: 'Map',
-                  xtype: 'mapcomponent',
+                  xtype: 'gx_mappanel',
                   id: 'mapid',
                   map: map,
-                  tbar: toolbar
+                  layers: layers,
+                  zoom: 6,
+                  center: [5, 45],
+                  tbar: tbarItems
               }
            ]
       });
 
       viewport.doLayout();
-
-      /*
-       * Create MapFish searcher
-       */
-
-      var mapSearcher = new mapfish.Searcher.Map({
-          mode: mapfish.Searcher.Map.BOX,
-          protocol: protocol
-      });
-      protocol.register(mapSearcher);
-
-      var formSearcher = new mapfish.Searcher.Form({
-          form: formPanel.getForm().getEl().dom,
-          protocol: protocol
-      });
-      protocol.register(formSearcher);
-
-      /*
-       * Set up toolbar
-       */
-
-      var space = function() {
-          toolbar.add(new Ext.Toolbar.Spacer());
-          toolbar.add(new Ext.Toolbar.Separator());
-          toolbar.add(new Ext.Toolbar.Spacer());
-      }
-
-      toolbar.addText('Navigate');
-      toolbar.addControl(
-          new OpenLayers.Control.Navigation({
-              isDefault: true,
-              title: 'Navigate'
-          }), {
-              iconCls: 'pan', 
-              toggleGroup: 'map'
-          }
-      );
-      space();
-      toolbar.addText('Search on click and by box');
-      toolbar.addControl(mapSearcher, {
-              iconCls: 'infobox',
-              toggleGroup: 'map'
-          }
-      );
-
-      toolbar.activate();
 
       Ext.get('loading').fadeOut({remove: true});
   });

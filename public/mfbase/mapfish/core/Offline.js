@@ -225,7 +225,7 @@ mapfish.Offline = function() {
                                        false);
 
     if (navigator && navigator.onLine != undefined) {
-        off.isOnline = navigator.onLine
+        off.isOnline = navigator.onLine;
     }
 
     // FIXME: not accurate if gears_init.js is loaded after Offline.js

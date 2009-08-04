@@ -66,4 +66,5 @@ mapfish.Protocol = {
        }
        return protocol;
     }
+    
 };

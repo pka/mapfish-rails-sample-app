@@ -2,24 +2,7 @@ class SummitsController < ApplicationController
 
   # GET /summits
   def index
-    filter = []
-    if params['min'] && !params['min'].empty?
-      filter << ['elevation >= ?', params.delete('min')]
-    end
-    if params['max'] && !params['max'].empty?
-      filter << ['elevation <= ?', params.delete('max')]
-    end
-    if params['name'] && !params['name'].empty?
-      filter << ['name ILIKE ?', '%' + params.delete('name') + '%']
-    end
-
-    conditions = {}
-    unless filter.empty?
-      sql, sqlparams = filter.transpose
-      conditions = { :conditions => [sql.join(' AND ')] + sqlparams }
-    end
-
-    @summits = Summit.find_by_mapfish_filter(params, conditions)
+    @summits = Summit.find_by_mapfish_filter(params)
 
     render :json => @summits.to_geojson
   end

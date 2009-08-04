@@ -30,12 +30,16 @@
             map.addControl(new OpenLayers.Control.MousePosition());
             
             function report(event) {
-                OpenLayers.Console.log(event.type, event.feature.id);
+                OpenLayers.Console.log(event.type, event.feature ? event.feature.id : event.components);
             }
             vectors.events.on({
                 "beforefeaturemodified": report,
                 "featuremodified": report,
-                "afterfeaturemodified": report
+                "afterfeaturemodified": report,
+                "vertexmodified": report,
+                "sketchmodified": report,
+                "sketchstarted": report,
+                "sketchcomplete": report
             });
             controls = {
                 point: new OpenLayers.Control.DrawFeature(vectors,
@@ -68,14 +72,16 @@
             var resize = document.getElementById("resize").checked;
             if(resize) {
                 controls.modify.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+                var keepAspectRatio = document.getElementById("keepAspectRatio").checked;
+                if (keepAspectRatio) {
+                    controls.modify.mode &= ~OpenLayers.Control.ModifyFeature.RESHAPE;
+                }
             }
             var drag = document.getElementById("drag").checked;
             if(drag) {
                 controls.modify.mode |= OpenLayers.Control.ModifyFeature.DRAG;
             }
-            // disable reshape mode if at least one of modes rotate, resize,
-            // drag is enabled
-            if (rotate || resize || drag) {
+            if (rotate || drag) {
                 controls.modify.mode &= ~OpenLayers.Control.ModifyFeature.RESHAPE;
             }
             var sides = parseInt(document.getElementById("sides").value);
@@ -99,7 +105,7 @@
     </script>
   </head>
   <body onload="init()">
-    <h3 id="title">OpenLayers Modify Feature Example</h3>
+    <h1 id="title">OpenLayers Modify Feature Example</h1>
     <div id="shortdesc">A demonstration of the ModifyFeature control for editing vector features.</div>
     <div id="map" class="smallmap"></div>
     <div id="controls">
@@ -149,6 +155,9 @@
                         <input id="resize" type="checkbox"
                                name="resize" onchange="update()" />
                         <label for="resize">allow resizing</label>
+                        (<input id="keepAspectRatio" type="checkbox"
+                               name="keepAspectRatio" onchange="update()" checked="checked" />
+                        <label for="keepAspectRatio">keep aspect ratio</label>)
                     </li>
                     <li>
                         <input id="drag" type="checkbox"

@@ -24,7 +24,7 @@
 mapfish.Util = {};
 
 /**
- * APIFunction: mapfish.Util.sum
+ * APIFunction: sum
  * Return the sum of the elements of an array.
  */
 mapfish.Util.sum = function(array) {
@@ -33,7 +33,7 @@ mapfish.Util.sum = function(array) {
 };
 
 /**
- * APIFunction: mapfish.Util.max
+ * APIFunction: max
  * Return the max of the elements of an array.
  */
 mapfish.Util.max = function(array) {
@@ -41,7 +41,7 @@ mapfish.Util.max = function(array) {
 };
 
 /**
- * APIFunction: mapfish.Util.min
+ * APIFunction: min
  * Return the min of the elements of an array.
  */
 mapfish.Util.min = function(array) {
@@ -99,7 +99,7 @@ mapfish.Util.getIconUrl = function(wmsUrl, options) {
 
 
 /**
- * APIFunction: mapfish.Util.arrayEqual
+ * APIFunction: arrayEqual
  * Compare two arrays containing primitive types.
  *
  * Parameters:
@@ -137,7 +137,7 @@ mapfish.Util.isIE7 = function () {
 };
 
 /**
- * Function: relativeToAbsoluteURL
+ * APIFunction: relativeToAbsoluteURL
  *
  * Parameters:
  * source - {String} the source URL
@@ -158,3 +158,68 @@ mapfish.Util.relativeToAbsoluteURL = function(source) {
     var p = location.pathname.replace(/\/[^\/]*$/, '');
     return h + p + "/" + source;
 };
+
+/**
+ * Function: fixArray
+ *
+ * In some fields, OpenLayers allows to use a coma separated string instead
+ * of an array. This method make sure we end up with an array.
+ *
+ * Parameters:
+ * subs - {String/Array}
+ *
+ * Returns:
+ * {Array}
+ */
+mapfish.Util.fixArray = function(subs) {
+    if (subs == '' || subs == null) {
+        return [];
+    } else if (subs instanceof Array) {
+        return subs;
+    } else {
+        return subs.split(',');
+    }
+};
+
+/**
+ * Function formatURL
+ * If mapfish.PROXY_HOST is defined format the passed URL so that
+ * the resource this URL references is accessed through the
+ * http-proxy script mapfish.PROXY_HOST references.
+ *
+ * Parameters:
+ * url - {String} The URL to format.
+ *
+ * Returns:
+ * {String} The formatted URL string.
+ */
+mapfish.Util.formatURL = function(url) {
+    var proxy = mapfish.PROXY_HOST;
+    if(proxy && (url.indexOf("http") == 0)) {
+        var str = url;
+        // get protocol from URL
+        var protocol = str.match(/https?:\/\//)[0].split(':')[0];
+        str = str.slice((protocol + '://').length);
+        // get path from URL
+        var path = undefined;
+        var pathSeparatorIndex = str.indexOf('/');
+        if (pathSeparatorIndex != -1) {
+            path = str.substring(pathSeparatorIndex);
+            str = str.slice(0, pathSeparatorIndex);
+        }
+        // get host and port from URL
+        var host_port = str.split(":");
+        var host = host_port[0];
+        var port = host_port.length > 1 ? host_port[1] : undefined;
+        // build URL
+        url = protocol + ',' + host;
+        url += (port == undefined ? '' : ',' + port);
+        url += (path == undefined ? '' : path);
+        if(proxy.lastIndexOf('/') != proxy.length - 1) {
+            url = '/' + url;
+        }
+        url = proxy + url;
+    }
+    return url;
+};
+

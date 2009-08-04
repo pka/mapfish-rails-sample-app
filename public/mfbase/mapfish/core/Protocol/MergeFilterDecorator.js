@@ -20,6 +20,9 @@
 /*
  * @requires OpenLayers/Util.js
  * @requires OpenLayers/Protocol.js
+ * @requires OpenLayers/Filter/Comparison.js
+ * @requires OpenLayers/Filter/Logical.js
+ * @requires core/Protocol.js
  * @requires core/Searcher.js
  */
 
@@ -62,7 +65,9 @@ mapfish.Protocol.MergeFilterDecorator = OpenLayers.Class(OpenLayers.Protocol, {
      * Register a searcher.
      */
     register: function(searcher) {
-        this.searchers.push(searcher);
+        if (OpenLayers.Util.indexOf(this.searchers, searcher) == -1) {
+            this.searchers.push(searcher);
+        }
     },
 
     /**
@@ -70,7 +75,7 @@ mapfish.Protocol.MergeFilterDecorator = OpenLayers.Class(OpenLayers.Protocol, {
      * Unregister a searcher.
      */
     unregister: function(searcher) {
-        OpenLayers.Util.removeItem(searcher, this.searchers);
+        OpenLayers.Util.removeItem(this.searchers, searcher);
     },
 
     /**
@@ -127,6 +132,10 @@ mapfish.Protocol.MergeFilterDecorator = OpenLayers.Class(OpenLayers.Protocol, {
      */
     mergeFilters: function(filter, searcher) {
         var i, len, s;
+        // ensure that filter is an OpenLayers.Filter instance
+        if (filter && !this.isFilter(filter)) {
+            filter = this.fromObjToFilter(filter);
+        }
         for (i = 0, len = this.searchers.length; i < len; i++) {
             s = this.searchers[i];
             if (s != searcher) {
@@ -154,8 +163,6 @@ mapfish.Protocol.MergeFilterDecorator = OpenLayers.Class(OpenLayers.Protocol, {
             filter = new OpenLayers.Filter.Logical({
                 type: OpenLayers.Filter.Logical.AND
             });
-        } else if (!this.isFilter(filter)) {
-            filter = this.fromObjToFilter(filter);
         } else if (!this.isLogicalFilter(filter)) {
             filter = new OpenLayers.Filter.Logical({
                 type: OpenLayers.Filter.Logical.AND,
@@ -287,6 +294,17 @@ mapfish.Protocol.MergeFilterDecorator = OpenLayers.Class(OpenLayers.Protocol, {
      */
     commit: function(features, options) {
         return this.protocol.commit(features, options);
+    },
+
+    /**
+     * Method: abort
+     * Abort an ongoing request.
+     *
+     * Parameters:
+     * response - {<OpenLayers.Protocol.Response>}
+     */
+    abort: function(response) {
+        this.protocol.abort(response);
     },
 
     CLASS_NAME: "mapfish.Protocol.MergeFilterDecorator"

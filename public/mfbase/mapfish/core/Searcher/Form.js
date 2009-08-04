@@ -41,7 +41,7 @@ mapfish.Searcher.Form = OpenLayers.Class(mapfish.Searcher, {
     protocol: null,
 
     /**
-     * APIProperty: map
+     * APIProperty: form
      * {DOMElement} The form node.
      */
     form: null,
@@ -81,17 +81,7 @@ mapfish.Searcher.Form = OpenLayers.Class(mapfish.Searcher, {
      *      To be called to trigger search.
      */
     triggerSearch: function() {
-        // FIXME really we should rely on the protocol itself to
-        // cancel the request, the Protocol class in OpenLayers
-        // 2.7 does not expose a cancel() method
-        if (this.response) {
-            var response = this.response;
-            if (response.priv &&
-                typeof response.priv.abort == "function") {
-                response.priv.abort();
-                this.response = null;
-            }
-        }
+        this.protocol.abort(this.response);
         this.response = this.protocol.read(
             {filter: this.getFilter(), searcher: this});
     },

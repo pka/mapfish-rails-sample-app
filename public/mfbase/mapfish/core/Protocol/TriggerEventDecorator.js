@@ -20,6 +20,7 @@
 /*
  * @requires OpenLayers/Util.js
  * @requires OpenLayers/Protocol.js
+ * @requires core/Protocol.js
  */
 
 /**
@@ -206,6 +207,17 @@ mapfish.Protocol.TriggerEventDecorator = OpenLayers.Class(OpenLayers.Protocol, {
         }, options);
         this.events.triggerEvent("committriggered");
         return this.protocol.commit(features, newOptions);
+    },
+
+    /**
+     * Method: abort
+     * Abort an ongoing request.
+     *
+     * Parameters:
+     * response - {<OpenLayers.Protocol.Response>}
+     */
+    abort: function(response) {
+        this.protocol.abort(response);
     },
 
     /**

@@ -143,18 +143,18 @@ mapfish.ColorRgb = OpenLayers.Class(mapfish.Color, {
      */
     toHex: function(dec) {
         // create list of hex characters
-        var hexCharacters = "0123456789ABCDEF"
+        var hexCharacters = "0123456789ABCDEF";
         // if number is out of range return limit
         if (dec < 0 || dec > 255 ) {
             var msg = "Invalid decimal value for color level";
             OpenLayers.Console.error(msg);
         }
         // decimal equivalent of first hex character in converted number
-        var i = Math.floor(dec / 16)
+        var i = Math.floor(dec / 16);
         // decimal equivalent of second hex character in converted number
-        var j = dec % 16
+        var j = dec % 16;
         // return hexadecimal equivalent
-        return hexCharacters.charAt(i) + hexCharacters.charAt(j)
+        return hexCharacters.charAt(i) + hexCharacters.charAt(j);
     },
     
     CLASS_NAME: "mapfish.ColorRgb"

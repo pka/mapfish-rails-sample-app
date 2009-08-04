@@ -111,11 +111,16 @@
     }
     
     function test_Element_getDimensions(t) {
-        t.plan(4);
+        if (!t.open_window) { 
+            t.plan(0);
+            return;
+        } else {    
+            t.plan(4);
+        }    
         
       //shown
         t.open_window( "BaseTypes/Element.html", function( wnd ) {
-            t.delay_call( 0.5, function() {
+            t.delay_call(1, function() {
                 var elem = wnd.document.getElementById("elemID");
 
                 var dims = OpenLayers.Element.getDimensions(elem);

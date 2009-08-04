@@ -107,7 +107,7 @@
     }
 
     function test_LineString_resize(t) {
-        t.plan(7);
+        t.plan(8);
         
         var tolerance = 1e-10;
 
@@ -123,7 +123,8 @@
         var scale = 10 * Math.random();
         
         var oldLength = geometry.getLength();
-        geometry.resize(scale, origin);
+        var ret = geometry.resize(scale, origin);
+        t.ok(ret === geometry, "resize returns geometry");
         var newLength = geometry.getLength();
         t.ok((((newLength / oldLength) - scale) / scale) < tolerance,
              "resize correctly changes the length of a linestring")
@@ -148,6 +149,131 @@
         
     }
     
+    function test_split(t) {
+        var wkt = OpenLayers.Geometry.fromWKT;
+        
+        var cases = [{
+            msg: "no intersection",
+            g1: "LINESTRING(0 0, 0 1)",
+            g2: "LINESTRING(1 0, 1 1)",
+            exp: null
+        } , {
+            msg: "intersection at midpoint",
+            g1: "LINESTRING(0 0, 1 1)",
+            g2: "LINESTRING(1 0, 0 1)",
+            exp: ["LINESTRING(1 0, 0.5 0.5)", "LINESTRING(0.5 0.5, 0 1)"]
+        }, {
+            msg: "intersection at midpoint (reverse source/target)",
+            g1: "LINESTRING(1 0, 0 1)",
+            g2: "LINESTRING(0 0, 1 1)",
+            exp: ["LINESTRING(0 0, 0.5 0.5)", "LINESTRING(0.5 0.5, 1 1)"]
+        }, {
+            msg: "intersection at endpoint",
+            g1: "LINESTRING(0 0, 1 1)",
+            g2: "LINESTRING(1 0, 1 1)",
+            exp: null
+        }, {
+            msg: "midpoint intersection, no options",
+            g1: "LINESTRING(0 0, 2 2)",
+            g2: "LINESTRING(0 2, 2 0)",
+            exp: ["LINESTRING(0 2, 1 1)", "LINESTRING(1 1, 2 0)"]
+        }, {
+            msg: "midpoint intersection, edge false",
+            opt: {edge: false},
+            g1: "LINESTRING(0 0, 2 2)",
+            g2: "LINESTRING(0 2, 2 0)",
+            exp: null
+        }, {
+            msg: "midpoint intersection, mutual",
+            opt: {mutual: true},
+            g1: "LINESTRING(0 0, 2 2)",
+            g2: "LINESTRING(0 2, 2 0)",
+            exp: [["LINESTRING(0 0, 1 1)", "LINESTRING(1 1, 2 2)"], ["LINESTRING(0 2, 1 1)", "LINESTRING(1 1, 2 0)"]]
+        }, {
+            msg: "close intersection, no tolerance",
+            g1: "LINESTRING(0 0, 0.9 0.9)",
+            g2: "LINESTRING(0 2, 2 0)",
+            exp: null
+        }, {
+            msg: "close intersection, within tolerance",
+            opt: {tolerance: 0.2},
+            g1: "LINESTRING(0 0, 0.9 0.9)",
+            g2: "LINESTRING(0 2, 2 0)",
+            exp: ["LINESTRING(0 2, 0.9 0.9)", "LINESTRING(0.9 0.9, 2 0)"]
+        }];
+        
+        t.plan(cases.length);
+        var c, parts, part, midparts;
+        for(var i=0; i<cases.length; ++i) {
+            c = cases[i];
+            var g1 = wkt(c.g1);
+            var g2 = wkt(c.g2);
+            var got = g1.split(g2, c.opt);
+            var exp = c.exp;
+            if(got instanceof Array) {
+                parts = [];
+                for(var j=0; j<got.length; ++j) {
+                    part = got[j];
+                    if(part instanceof Array) {
+                        midparts = [];
+                        for(var k=0; k<part.length; ++k) {
+                            midparts.push(part[k].toString());
+                        }
+                        parts.push("[" + midparts.join(", ") + "]");
+                    } else {
+                        parts.push(got[j].toString());
+                    }
+                }
+                got = parts.join(", ");
+            }
+            if(exp instanceof Array) {
+                parts = [];
+                for(var j=0; j<exp.length; ++j) {
+                    part = exp[j];
+                    if(part instanceof Array) {
+                        midparts = [];
+                        for(var k=0; k<part.length; ++k) {
+                            midparts.push(wkt(part[k]).toString());
+                        }
+                        parts.push("[" + midparts.join(", ") + "]");
+                    } else {
+                        parts.push(wkt(exp[j]).toString());
+                    }
+                }
+                exp = parts.join(", ");
+            }
+            t.eq(got, exp, "case " + i + ": " +  c.msg);
+        }
+        
+    }
+    
+
+    function test_distanceTo(t) {
+        var wkt = OpenLayers.Geometry.fromWKT;
+        var geoms = [
+            wkt("POINT(0 0)"),
+            wkt("LINESTRING(-2 0, 0 -2, 2 -1, 2 0)")
+        ];
+
+        var cases = [{
+            got: geoms[1].distanceTo(geoms[0]),
+            expected: Math.sqrt(2)
+        }, {
+            got: geoms[1].distanceTo(geoms[0], {details: true}),
+            expected: {
+                distance: Math.sqrt(2),
+                x0: -1, y0: -1,
+                x1: 0, y1: 0
+            }
+        }];
+        
+        t.plan(cases.length);
+        for(var i=0; i<cases.length; ++i) {
+            t.eq(cases[i].got, cases[i].expected, "case " + i);
+        }
+        
+    }
+
     function test_LineString_equals(t) {
         t.plan(3);
         
@@ -172,6 +298,43 @@
         t.ok(!geometry.equals(offY),
              "equals() returns false for a geometry with offset y");
     }
+
+    
+    function test_getVertices(t) {
+        t.plan(14);
+        
+        var points = [
+            new OpenLayers.Geometry.Point(10, 20),
+            new OpenLayers.Geometry.Point(20, 30),
+            new OpenLayers.Geometry.Point(30, 40),
+            new OpenLayers.Geometry.Point(40, 50)
+        ];
+        var line = new OpenLayers.Geometry.LineString(points);
+        
+        var verts = line.getVertices();
+        t.ok(verts instanceof Array, "got back an array");
+        t.eq(verts.length, points.length, "of correct length length");
+        t.geom_eq(verts[0], points[0], "0: correct geometry");
+        t.geom_eq(verts[1], points[1], "1: correct geometry");
+        t.geom_eq(verts[2], points[2], "2: correct geometry");
+        t.geom_eq(verts[3], points[3], "3: correct geometry");
+        
+        // get nodes only
+        var nodes = line.getVertices(true);
+        t.ok(nodes instanceof Array, "[nodes only] got back an array");
+        t.eq(nodes.length, 2, "[nodes only] of correct length length");
+        t.geom_eq(nodes[0], points[0], "[nodes only] first: correct geometry");
+        t.geom_eq(nodes[1], points[points.length-1], "[nodes only] last: correct geometry");
+
+        // no nodes
+        var nodes = line.getVertices(false);
+        t.ok(nodes instanceof Array, "[no nodes] got back an array");
+        t.eq(nodes.length, 2, "[no nodes] of correct length length");
+        t.geom_eq(nodes[0], points[1], "[no nodes] first: correct geometry");
+        t.geom_eq(nodes[1], points[2], "[no nodes] last: correct geometry");
+
+    }
+    
     
     function test_LineString_clone(t) {
         t.plan(2);
@@ -188,7 +351,30 @@
              "clone() creates an OpenLayers.Geometry.LineString");
         t.ok(geometry.equals(clone), "clone has equivalent coordinates");
     }
+    
+    function test_getGeodesicLength(t) {
         
+        // expected values from http://www.movable-type.co.uk/scripts/latlong-vincenty.html
+        var cases = [{
+            wkt: "LINESTRING(0 0, -10 45)",
+            exp: 5081689.690
+        }, {
+            wkt: "LINESTRING(-10 45, 0 0)",
+            exp: 5081689.690
+        }, {
+            wkt: "LINESTRING(0 0, -10 45, -20 50)",
+            exp: 5081689.690 + 935018.062
+        }];
+        t.plan(cases.length);
+        
+        var geom, got;
+        for(var i=0; i<cases.length; ++i) {
+            geom = new OpenLayers.Geometry.fromWKT(cases[i].wkt);
+            got = geom.getGeodesicLength();
+            t.eq(Math.round(got), Math.round(cases[i].exp), "[case " + i + "] length calculated");
+        }
+        
+    }   
 
   </script>
 </head>

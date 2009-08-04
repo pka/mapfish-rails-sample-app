@@ -153,7 +153,7 @@ mapfish.widgets.geostat.Choropleth = Ext.extend(Ext.FormPanel, {
             }),
             listeners: {
                 'select': {
-                    fn: function() {this.classify(false)},
+                    fn: function() {this.classify(false);},
                     scope: this
                 }
             }
@@ -175,7 +175,7 @@ mapfish.widgets.geostat.Choropleth = Ext.extend(Ext.FormPanel, {
             }),
             listeners: {
                 'select': {
-                    fn: function() {this.classify(false)},
+                    fn: function() {this.classify(false);},
                     scope: this
                 }
             }
@@ -195,7 +195,7 @@ mapfish.widgets.geostat.Choropleth = Ext.extend(Ext.FormPanel, {
             }),
             listeners: {
                 'select': {
-                    fn: function() {this.classify(false)},
+                    fn: function() {this.classify(false);},
                     scope: this
                 }
             }
@@ -208,7 +208,7 @@ mapfish.widgets.geostat.Choropleth = Ext.extend(Ext.FormPanel, {
             value: "#FFFF00",
             listeners: {
                 'valid': {
-                    fn: function() {this.classify(false)},
+                    fn: function() {this.classify(false);},
                     scope: this
                 }
             }
@@ -221,7 +221,7 @@ mapfish.widgets.geostat.Choropleth = Ext.extend(Ext.FormPanel, {
             value: "#FF0000",
             listeners: {
                 'valid': {
-                    fn: function() {this.classify(false)},
+                    fn: function() {this.classify(false);},
                     scope: this
                 }
             }

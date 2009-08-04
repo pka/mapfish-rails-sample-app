@@ -22,6 +22,7 @@
  * @requires OpenLayers/Protocol/HTTP.js
  * @requires OpenLayers/Feature/Vector.js
  * @requires OpenLayers/Format/GeoJSON.js
+ * @requires OpenLayers/Filter/Comparison.js
  * @requires core/Protocol.js
  */
 
@@ -35,6 +36,16 @@
  */
 
 mapfish.Protocol.MapFish = OpenLayers.Class(OpenLayers.Protocol.HTTP, {
+    /**
+     * APIProperty: wildcarded.
+     * {Boolean} If true percent signs are added around values 
+     *     read from LIKE filters, for example if the protocol
+     *     read method is passed a LIKE filter whose property
+     *     is "foo" and whose value is "bar" the string
+     *     "foo__ilike=%bar%" will be sent in the query string;
+     *     defaults to false.
+     */
+    wildcarded: false,
 
     /**
      * Constructor: mapfish.Protocol.MapFish
@@ -167,31 +178,52 @@ mapfish.Protocol.MapFish = OpenLayers.Class(OpenLayers.Protocol.HTTP, {
 
         switch (filterType) {
             case "Spatial":
-                if (filter.type != OpenLayers.Filter.Spatial.BBOX) {
-                    OpenLayers.Console.error('Unsupported spatial filter type ' +
-                                             filter.type);
-                    return false;
-                }
-                if (params["box"]) {
-                    OpenLayers.Console.error('Filter contains multiple ' +
-                                             'Spatial BBOX entries');
-                    // We should merge with the old bbox, but OL does not
-                    // proving geometry merging.
-                    return false;
-                }
-                params["box"] = filter.value.toBBOX();
-                break;
-            case "Comparison":
-                // Note: the comparison type is not included in the request
-                // parameters. It is the server responsibility to deal with the
-                // appropriate comparison type from the parameter name.
-
-                if (params[filter.property]) {
-                    OpenLayers.Console.error('Filter contains multiple Comparison ' +
-                               'filters for the same property ' + filer.property);
+                var type = filter.type;
+                switch (type) {
+                    case OpenLayers.Filter.Spatial.BBOX:
+                        if (params["bbox"]) {
+                            OpenLayers.Console.error('Filter contains multiple ' +
+                                                     'Spatial BBOX entries');
+                            // We should merge with the old bbox, but OL does not
+                            // proving geometry merging.
+                            return false;
+                        }
+                        params["bbox"] = filter.value.toBBOX();
+                        break;
+                    case OpenLayers.Filter.Spatial.DWITHIN:
+                        params["tolerance"] = filter.distance;
+                    case OpenLayers.Filter.Spatial.WITHIN:
+                        if (params["lon"]) {
+                            OpenLayers.Console.error('Filter contains multiple ' +
+                                                     'Spatial *WITHIN entries');
+                            return false;
+                        }
+                        params["lon"] = filter.value.x;
+                        params["lat"] = filter.value.y;
+                        break;
+                    default:
+                        OpenLayers.Console.warn('Unknown spatial filter type ' +
+                                                type);
                         return false;
                 }
-                params[filter.property] = filter.value;
+                break;
+            case "Comparison":
+                var op = mapfish.Protocol.MapFish.COMP_TYPE_TO_OP_STR[filter.type];
+                if (op === undefined) {
+                    OpenLayers.Console.error(
+                        'Unknown comparison filter type ' + filter.type);
+                    return false;
+                }
+                var value = filter.value;
+                if (filter.type == OpenLayers.Filter.Comparison.LIKE) {
+                    value = this.regex2value(value);
+                    if (this.wildcarded) {
+                        value = "%" + value + "%";
+                    }
+                }
+                params[filter.property + "__" + op] = value;
+                params["queryable"] = params["queryable"] || [];
+                params["queryable"].push(filter.property);
                 break;
             case "Logical":
                 if (filter.type != OpenLayers.Filter.Logical.AND) {
@@ -212,9 +244,56 @@ mapfish.Protocol.MapFish = OpenLayers.Class(OpenLayers.Protocol.HTTP, {
             default:
                 OpenLayers.Console.warn("Unknown filter type " + filterType);
                 return false;
-                break;
         }
         return true;
+    },
+
+    /**
+     * Method: regex2value
+     * Convert the value from a regular expression string to a LIKE/ILIKE
+     *     string known to the MapFish web service.
+     *
+     * Parameters:
+     * value - {String} The regex string.
+     *
+     * Returns:
+     * {String} The converted string.
+     */
+    regex2value: function(value) {
+
+        // highly sensitive!! Do not change this without running the
+        // Protocol/MapFish.html unit tests
+
+        // convert % to \%
+        value = value.replace(/%/g, "\\%");
+
+        // convert \\. to \\_ (\\.* occurences converted later)
+        value = value.replace(/\\\\\.(\*)?/g, function($0, $1) {
+            return $1 ? $0 : "\\\\_";
+        });
+
+        // convert \\.* to \\%
+        value = value.replace(/\\\\\.\*/g, "\\\\%");
+
+        // convert . to _ (\. and .* occurences converted later)
+        value = value.replace(/(\\)?\.(\*)?/g, function($0, $1, $2) {
+            return $1 || $2 ? $0 : "_";
+        });
+
+        // convert .* to % (\.* occurnces converted later)
+        value = value.replace(/(\\)?\.\*/g, function($0, $1) {
+            return $1 ? $0 : "%";
+        });
+
+        // convert \. to .
+        value = value.replace(/\\\./g, ".");
+
+        // replace \* with * (watching out for \\*)
+        value = value.replace(/(\\)?\\\*/g, function($0, $1) {
+            return $1 ? $0 : "*";
+        });
+        
+        return value;
     },
 
     /**
@@ -235,8 +314,9 @@ mapfish.Protocol.MapFish = OpenLayers.Class(OpenLayers.Protocol.HTTP, {
         }
 
         var params = {};
-        if (this._filterToParams(options.filter, params))
+        if (this._filterToParams(options.filter, params)) {
             options.params = OpenLayers.Util.extend(options.params, params);
+        }
         delete options.filter;
     },
 
@@ -358,3 +438,48 @@ mapfish.Protocol.MapFish = OpenLayers.Class(OpenLayers.Protocol.HTTP, {
 
     CLASS_NAME: "mapfish.Protocol.MapFish"
 });
+
+/**
+ * Property: mapfish.Protocol.MapFish.COMP_TYPE_TO_OP_STR
+ * {Object} A private class-level property mapping the
+ *     OpenLayers.Filter.Comparison types to the operation
+ *     strings of the MapFish Protocol.
+ */
+mapfish.Protocol.MapFish.COMP_TYPE_TO_OP_STR = {};
+(function() {
+    var o = mapfish.Protocol.MapFish.COMP_TYPE_TO_OP_STR;
+    o[OpenLayers.Filter.Comparison.EQUAL_TO] = "eq";
+    o[OpenLayers.Filter.Comparison.NOT_EQUAL_TO] = "ne";
+    o[OpenLayers.Filter.Comparison.LESS_THAN] = "lt";
+    o[OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO] = "lte";
+    o[OpenLayers.Filter.Comparison.GREATER_THAN] = "gt";
+    o[OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO] = "gte";
+    o[OpenLayers.Filter.Comparison.LIKE] = "ilike";
+})();
+
+/**
+ * APIFunction: create
+ * Shortcut to create MapFish Protocol decorated with TriggerEventDecorator
+ *     and MergeFilterDecorator
+ *
+ * Example of use:
+ * (start code)
+ * var protocol = mapfish.Protocol.MapFish.create({
+ *     url: url,
+ * });
+ * (end)
+ *
+ * Parameters:
+ * config - {Object} The config of the decorated MapFish protocol
+ *
+ * Returns:
+ * {<mapfish.Protocol.MapFish>} The resulting protocol.
+ * */
+mapfish.Protocol.MapFish.create = function(config) {
+    return mapfish.Protocol.decorateProtocol({
+        protocol: new mapfish.Protocol.MapFish(config),
+        MergeFilterDecorator: null,
+        TriggerEventDecorator: null
+    });
+};
+

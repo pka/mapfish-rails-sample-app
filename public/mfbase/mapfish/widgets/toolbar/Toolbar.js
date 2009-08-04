@@ -113,7 +113,9 @@ Ext.extend(mapfish.widgets.toolbar.Toolbar, Ext.Toolbar, {
     addControl: function (control, options) {
         control.visible = true;
         this.controls.push(control);
-        this.map.addControl(control);
+        if (!control.map) {
+            this.map.addControl(control);
+        }
         var button = new Ext.Toolbar.Button(options);
         if (!button.tooltip) {
             button.tooltip = control.title;
@@ -128,22 +130,69 @@ Ext.extend(mapfish.widgets.toolbar.Toolbar, Ext.Toolbar, {
             button.on("toggle", function(button, pressed) {
                 this.toggleHandler(control, pressed);
             }, this);
-
-            //make sure the state of the control and the state of the button match
-            var self = this;
+            // make sure the state of the control and the state of the
+            // button match
             control.events.on({
-                "activate": function() {
-                    button.toggle(true);
-                },
-                "deactivate": function() {
-                    button.toggle(false);
-                    self.checkDefaultControl(button, control);
-                }
+                "activate": this.onControlActivate,
+                "deactivate": this.onControlDeactivate,
+                scope: this
             });
         }
         this.add(button);
         this._buttons.push(button);
         return button;
+    },
+
+    /**
+     * Method: removeControl
+     * Remove a control from the toolbar.
+     *
+     * Parameters:
+     * control - {<OpenLayers.Control>} The control to remove from
+     *     the toolbar.
+     */
+    removeControl: function (control) {
+        var button = this.getButtonForControl(control);
+
+        button.destroy();
+        OpenLayers.Util.removeItem(this._buttons, button);
+
+        control.events.un({
+            "activate": this.onControlActivate,
+            "deactivate": this.onControlDeactivate,
+            scope: this
+        });
+        this.map.removeControl(control);
+        OpenLayers.Util.removeItem(this.controls, control);
+    },
+
+    /**
+     * onControlActivate
+     * Called when a control is activated.
+     *
+     * Parameters:
+     * evt - {Object} An object with an object property referencing
+     *     the control.
+     */
+    onControlActivate: function(evt) {
+        var control = evt.object;
+        var button = this.getButtonForControl(control);
+        button.toggle(true);
+    },
+
+    /**
+     * onControlDeactivate
+     * Called when a control is deactivated.
+     *
+     * Parameters:
+     * evt - {Object} An object with an object property referencing
+     *     the control.
+     */
+    onControlDeactivate: function(evt) {
+        var control = evt.object;
+        var button = this.getButtonForControl(control);
+        button.toggle(false);
+        this.checkDefaultControl(button);
     },
 
     /**
@@ -312,9 +361,8 @@ Ext.extend(mapfish.widgets.toolbar.Toolbar, Ext.Toolbar, {
      *
      * Parameters:
      * button - {<Ext.Toolbar.Button>}
-     * control - {<OpenLayers.Control>}
      */
-    checkDefaultControl: function(button, control) {
+    checkDefaultControl: function(button) {
         var group = button.toggleGroup;
         if(group) {
             var defaultControl = null;

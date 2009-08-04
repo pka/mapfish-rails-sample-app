@@ -1,0 +1,2281 @@
+--- 
+world_cities_088: 
+  name: Bishkek
+  admin_code: 203
+  ufi: -2331392
+  gid: 338
+  the_geom: 0101000020E6100000F3E093F36AA652407ACB3049C06F4540
+  mgcc: 129
+  id: 2815
+  population: 824895
+  attrib: 67
+world_cities_169: 
+  name: Thimphu
+  admin_code: 203
+  ufi: -2211419
+  gid: 5556
+  the_geom: 0101000020E6100000666666666666564059912CBBBB7B3B40
+  mgcc: 35
+  id: 3108
+  population: 60189
+  attrib: 11
+world_cities_195: 
+  name: Torshavn
+  admin_code: 203
+  ufi: -2752670
+  gid: 10687
+  the_geom: 0101000020E61000009EBA4D1311111BC054B7692222024F40
+  mgcc: 81
+  id: 1274
+  population: 17278
+  attrib: 7
+world_cities_089: 
+  name: Ulaanbaatar
+  admin_code: 203
+  ufi: -2353539
+  gid: 351
+  the_geom: 0101000020E61000004375CEAAAABA5A4087EA9C5555F54740
+  mgcc: 153
+  id: 2758
+  population: 804249
+  attrib: 67
+world_cities_196: 
+  name: Brasilia de Minas
+  admin_code: 203
+  ufi: -631244
+  gid: 10716
+  the_geom: 0101000020E61000008EC3AA8B253746C00292FAFC413630C0
+  mgcc: 33
+  id: 9784
+  population: 16906
+  attrib: 5
+world_cities_197: 
+  name: Saint Peter Port
+  admin_code: 203
+  ufi: -1176826
+  gid: 10742
+  the_geom: 0101000020E61000002AF1CA3F444404C09A99999999B94840
+  mgcc: 92
+  id: 7753
+  population: 16590
+  attrib: 7
+world_cities_198: 
+  name: Godthab
+  admin_code: 203
+  ufi: -2084615
+  gid: 10934
+  the_geom: 0101000020E61000000000000000E049C023F197BBBB0B5040
+  mgcc: 93
+  id: 4302
+  population: 14057
+  attrib: 7
+world_cities_199: 
+  name: Basse-Terre
+  admin_code: 203
+  ufi: -1202432
+  gid: 11034
+  the_geom: 0101000020E6100000ED5003BCBBDB4EC00000000000003040
+  mgcc: 96
+  id: 7642
+  population: 12937
+  attrib: 7
+world_cities_010: 
+  name: Cairo
+  admin_code: 203
+  ufi: -290692
+  gid: 16
+  the_geom: 0101000020E61000000000000000403F40CDCCCCCCCC0C3E40
+  mgcc: 67
+  id: 10696
+  population: 7937654
+  attrib: 131
+world_cities_011: 
+  name: Tehran
+  admin_code: 203
+  ufi: -3087341
+  gid: 17
+  the_geom: 0101000020E6100000347CB03154B649407C5D2B4602D64140
+  mgcc: 116
+  id: 679
+  population: 7893721
+  attrib: 131
+world_cities_012: 
+  name: London
+  admin_code: 203
+  ufi: -2601889
+  gid: 18
+  the_geom: 0101000020E61000001741086DDEDDBDBF0000000000C04940
+  mgcc: 240
+  id: 2066
+  population: 7417688
+  attrib: 131
+world_cities_200: 
+  name: Palikir
+  admin_code: 203
+  ufi: -3740223
+  gid: 11135
+  the_geom: 0101000020E6100000CDCCCCCCCCC463403854E7ACAAAA1B40
+  mgcc: 80
+  id: 205
+  population: 11589
+  attrib: 5
+world_cities_013: 
+  name: Bogota
+  admin_code: 203
+  ufi: -578472
+  gid: 19
+  the_geom: 0101000020E6100000BD8A3155558552C06666666666661240
+  mgcc: 52
+  id: 10024
+  population: 6837844
+  attrib: 129
+world_cities_120: 
+  name: The Hague
+  admin_code: 203
+  ufi: -2152921
+  gid: 665
+  the_geom: 0101000020E61000003333333333331140791563AAAA0A4A40
+  mgcc: 175
+  id: 3276
+  population: 465859
+  attrib: 35
+world_cities_201: 
+  name: Basseterre
+  admin_code: 203
+  ufi: -1358943
+  gid: 11146
+  the_geom: 0101000020E6100000ED5003BCBB5B4FC0CDCCCCCCCC4C3140
+  mgcc: 205
+  id: 7127
+  population: 11489
+  attrib: 7
+world_cities_014: 
+  name: Beijing
+  admin_code: 203
+  ufi: -1898541
+  gid: 20
+  the_geom: 0101000020E6100000A8DCE973DA185D40078FDBD4E5F64340
+  mgcc: 46
+  id: 5560
+  population: 6618987
+  attrib: 131
+world_cities_040: 
+  name: Bucharest
+  admin_code: 203
+  ufi: -1153951
+  gid: 106
+  the_geom: 0101000020E61000009A99999999193A4046E22F7777374640
+  mgcc: 197
+  id: 7826
+  population: 1906827
+  attrib: 129
+world_cities_121: 
+  name: Macau
+  admin_code: 203
+  ufi: -1204094
+  gid: 690
+  the_geom: 0101000020E61000003333333333635C403333333333333640
+  mgcc: 150
+  id: 7621
+  population: 457137
+  attrib: 35
+world_cities_202: 
+  name: Koror
+  admin_code: 203
+  ufi: -3738771
+  gid: 11193
+  the_geom: 0101000020E6100000C52BFF1011CF6040EEE0719BBA5C1D40
+  mgcc: 193
+  id: 210
+  population: 11072
+  attrib: 7
+world_cities_041: 
+  name: Damascus
+  admin_code: 203
+  ufi: -2541260
+  gid: 108
+  the_geom: 0101000020E610000066666666662642400000000000C04040
+  mgcc: 221
+  id: 2518
+  population: 1861924
+  attrib: 131
+world_cities_122: 
+  name: Skopje
+  admin_code: 203
+  ufi: -95841
+  gid: 703
+  the_geom: 0101000020E61000008CC45FEEEE6E35400000000000004540
+  mgcc: 156
+  id: 11768
+  population: 452545
+  attrib: 35
+world_cities_203: 
+  name: Avarua
+  admin_code: 203
+  ufi: -1204668
+  gid: 11260
+  the_geom: 0101000020E6100000D56D9A8888F863C033333333333335C0
+  mgcc: 59
+  id: 7608
+  population: 10474
+  attrib: 7
+world_cities_015: 
+  name: Bangkok
+  admin_code: 203
+  ufi: -3250083
+  gid: 21
+  the_geom: 0101000020E6100000AADB3411112159400000000000802B40
+  mgcc: 225
+  id: 411
+  population: 6610764
+  attrib: 131
+world_cities_042: 
+  name: Sanaa
+  admin_code: 203
+  ufi: -3191442
+  gid: 114
+  the_geom: 0101000020E61000000CD6EE0D741A46409154F0259EB52E40
+  mgcc: 259
+  id: 502
+  population: 1778894
+  attrib: 131
+world_cities_123: 
+  name: Panama
+  admin_code: 203
+  ufi: -168008
+  gid: 732
+  the_geom: 0101000020E61000008957FE2122E253C0B5430DF0EEEE2140
+  mgcc: 190
+  id: 11309
+  population: 438213
+  attrib: 35
+world_cities_204: 
+  name: Road Town
+  admin_code: 203
+  ufi: -1305987
+  gid: 11398
+  the_geom: 0101000020E610000010429B77772750C00ED539ABAA6A3240
+  mgcc: 248
+  id: 7502
+  population: 9091
+  attrib: 7
+world_cities_016: 
+  name: Kinshasa
+  admin_code: 203
+  ufi: -2049111
+  gid: 22
+  the_geom: 0101000020E6100000E17A14AE47A12E40890F47B2A25111C0
+  mgcc: 45
+  id: 4418
+  population: 6541264
+  attrib: 131
+world_cities_124: 
+  name: Bratislava
+  admin_code: 203
+  ufi: -840999
+  gid: 751
+  the_geom: 0101000020E610000041086DDEDD1D31403333333333134840
+  mgcc: 142
+  id: 8748
+  population: 428809
+  attrib: 35
+world_cities_150: 
+  name: Abuja
+  admin_code: 203
+  ufi: -1997013
+  gid: 2197
+  the_geom: 0101000020E61000009578E51F22221E40E4558CA9AA2A2240
+  mgcc: 174
+  id: 4663
+  population: 165741
+  attrib: 19
+world_cities_205: 
+  name: Belmopan
+  admin_code: 203
+  ufi: -1148793
+  gid: 11445
+  the_geom: 0101000020E6100000AADB3411113156C00000000000403140
+  mgcc: 25
+  id: 7846
+  population: 8713
+  attrib: 5
+world_cities_017: 
+  name: Baghdad
+  admin_code: 203
+  ufi: -3103581
+  gid: 24
+  the_geom: 0101000020E6100000F3E093F36A3246400348C89B57AB4040
+  mgcc: 120
+  id: 612
+  population: 5772039
+  attrib: 131
+world_cities_043: 
+  name: Budapest
+  admin_code: 203
+  ufi: -850553
+  gid: 115
+  the_geom: 0101000020E6100000F22AC654551533400000000000C04740
+  mgcc: 109
+  id: 8719
+  population: 1769459
+  attrib: 131
+world_cities_070: 
+  name: Brazzaville
+  admin_code: 203
+  ufi: -2205356
+  gid: 219
+  the_geom: 0101000020E6100000EDE3B21BC7912E4056D9D2FE620911C0
+  mgcc: 44
+  id: 3146
+  population: 1169918
+  attrib: 131
+world_cities_125: 
+  name: Asmara
+  admin_code: 203
+  ufi: -604780
+  gid: 803
+  the_geom: 0101000020E610000046E22F7777774340E4558CA9AAAA2E40
+  mgcc: 71
+  id: 9906
+  population: 399981
+  attrib: 35
+world_cities_151: 
+  name: Wellington
+  admin_code: 203
+  ufi: -1521348
+  gid: 2205
+  the_geom: 0101000020E6100000C52BFF1011D965406666666666A644C0
+  mgcc: 182
+  id: 6572
+  population: 165091
+  attrib: 19
+world_cities_206: 
+  name: Valletta
+  admin_code: 203
+  ufi: -19310
+  gid: 11634
+  the_geom: 0101000020E6100000E30C0FAB89072D401A3ED8182AF34140
+  mgcc: 163
+  id: 11948
+  population: 6909
+  attrib: 7
+world_cities_018: 
+  name: Santiago
+  admin_code: 203
+  ufi: -901202
+  gid: 31
+  the_geom: 0101000020E61000004375CEAAAAAA51C09A99999999B940C0
+  mgcc: 47
+  id: 8627
+  population: 4372781
+  attrib: 131
+world_cities_044: 
+  name: Minsk
+  admin_code: 203
+  ufi: -1946324
+  gid: 116
+  the_geom: 0101000020E6100000743BA01111913B403333333333F34A40
+  mgcc: 30
+  id: 4804
+  population: 1769452
+  attrib: 131
+world_cities_126: 
+  name: Tallinn
+  admin_code: 203
+  ufi: -2625660
+  gid: 853
+  the_geom: 0101000020E61000006FAB0FDA61BA384078CCE5AB89B74D40
+  mgcc: 70
+  id: 1848
+  population: 379043
+  attrib: 35
+world_cities_152: 
+  name: Manama
+  admin_code: 203
+  ufi: -784833
+  gid: 2443
+  the_geom: 0101000020E6100000F5DFDE90A14A4940FBB8ECC6713C3A40
+  mgcc: 18
+  id: 8905
+  population: 149927
+  attrib: 19
+world_cities_207: 
+  name: Saint-Pierre
+  admin_code: 203
+  ufi: -1187328
+  gid: 11716
+  the_geom: 0101000020E610000046E22F7777174CC054B7692222624740
+  mgcc: 204
+  id: 7683
+  population: 5926
+  attrib: 7
+world_cities_019: 
+  name: Rangoon
+  admin_code: 203
+  ufi: -440623
+  gid: 32
+  the_geom: 0101000020E61000004375CEAAAA0A5840255EF98788C83040
+  mgcc: 28
+  id: 10350
+  population: 4344054
+  attrib: 131
+world_cities_045: 
+  name: Conakry
+  admin_code: 203
+  ufi: -1178387
+  gid: 117
+  the_geom: 0101000020E610000068F86063A86C2BC0AB6C697FB1042340
+  mgcc: 100
+  id: 7749
+  population: 1767184
+  attrib: 131
+world_cities_071: 
+  name: Phnom Penh
+  admin_code: 203
+  ufi: -1033783
+  gid: 220
+  the_geom: 0101000020E61000004375CEAAAA3A5A409A99999999192740
+  mgcc: 41
+  id: 8234
+  population: 1169796
+  attrib: 131
+world_cities_127: 
+  name: Bloemfontein
+  admin_code: 203
+  ufi: -1211814
+  gid: 856
+  the_geom: 0101000020E61000003333333333333A40BFF7922122223DC0
+  mgcc: 207
+  id: 7593
+  population: 378039
+  attrib: 35
+world_cities_153: 
+  name: Port Louis
+  admin_code: 203
+  ufi: -1355419
+  gid: 2555
+  the_geom: 0101000020E61000000000000000C04C400ED539ABAA2A34C0
+  mgcc: 160
+  id: 7138
+  population: 143786
+  attrib: 19
+world_cities_208: 
+  name: Vaduz
+  admin_code: 203
+  ufi: -1187190
+  gid: 11767
+  the_geom: 0101000020E61000004FDDA68988082340DF7BC91011914740
+  mgcc: 144
+  id: 7695
+  population: 5271
+  attrib: 7
+world_cities_046: 
+  name: Algiers
+  admin_code: 203
+  ufi: -458371
+  gid: 119
+  the_geom: 0101000020E61000008A09C5B189670840CC834FCEAB614240
+  mgcc: 5
+  id: 10330
+  population: 1742794
+  attrib: 131
+world_cities_072: 
+  name: Prague
+  admin_code: 203
+  ufi: -553173
+  gid: 221
+  the_geom: 0101000020E6100000B5430DF0EEEE2C40791563AAAA0A4940
+  mgcc: 75
+  id: 10125
+  population: 1169758
+  attrib: 131
+world_cities_128: 
+  name: Tirana
+  admin_code: 203
+  ufi: -108649
+  gid: 916
+  the_geom: 0101000020E6100000B38EF4B3A2D1334052B81E85EBA94440
+  mgcc: 7
+  id: 11683
+  population: 353378
+  attrib: 35
+world_cities_154: 
+  name: Saint-Denis
+  admin_code: 203
+  ufi: -1331362
+  gid: 2582
+  the_geom: 0101000020E6100000ED5003BCBBBB4B4041086DDEDDDD34C0
+  mgcc: 196
+  id: 7316
+  population: 142562
+  attrib: 19
+world_cities_180: 
+  name: Kuwait
+  admin_code: 203
+  ufi: -789552
+  gid: 8556
+  the_geom: 0101000020E61000003C0B8C063AFD4740EC9A351DA65E3D40
+  mgcc: 135
+  id: 8875
+  population: 32583
+  attrib: 7
+world_cities_209: 
+  name: Funafuti
+  admin_code: 203
+  ufi: -1322267
+  gid: 11768
+  the_geom: 0101000020E61000003BD400EFEE6666404FDDA689880821C0
+  mgcc: 235
+  id: 7375
+  population: 5264
+  attrib: 7
+world_cities_047: 
+  name: Caracas
+  admin_code: 203
+  ufi: -938457
+  gid: 120
+  the_geom: 0101000020E61000004375CEAAAABA50C00000000000002540
+  mgcc: 247
+  id: 8431
+  population: 1741408
+  attrib: 131
+world_cities_073: 
+  name: Yaounde
+  admin_code: 203
+  ufi: -3160026
+  gid: 224
+  the_geom: 0101000020E61000004FDDA68988082740094268F3EEEE0E40
+  mgcc: 50
+  id: 541
+  population: 1154362
+  attrib: 131
+world_cities_155: 
+  name: Bern
+  admin_code: 203
+  ufi: -2551235
+  gid: 2931
+  the_geom: 0101000020E61000006B871AE0DDDD1D4087EA9C5555754740
+  mgcc: 222
+  id: 2500
+  population: 122740
+  attrib: 19
+world_cities_181: 
+  name: Papeete
+  admin_code: 203
+  ufi: -1310968
+  gid: 9028
+  the_geom: 0101000020E61000006F07342222B262C0255EF987888831C0
+  mgcc: 82
+  id: 7451
+  population: 30161
+  attrib: 7
+world_cities_048: 
+  name: Accra
+  admin_code: 203
+  ufi: -2067935
+  gid: 127
+  the_geom: 0101000020E610000058ED5003BCBBCBBF3333333333331640
+  mgcc: 89
+  id: 4372
+  population: 1661380
+  attrib: 131
+world_cities_074: 
+  name: Managua
+  admin_code: 203
+  ufi: -1113265
+  gid: 227
+  the_geom: 0101000020E610000060FB6E5F2C9155C0A74BB5053A4D2840
+  mgcc: 181
+  id: 7989
+  population: 1145975
+  attrib: 131
+world_cities_129: 
+  name: San Jose
+  admin_code: 203
+  ufi: -1109108
+  gid: 971
+  the_geom: 0101000020E6100000BD8A3155550555C01789BFDCDDDD2340
+  mgcc: 55
+  id: 8015
+  population: 337167
+  attrib: 35
+world_cities_156: 
+  name: Sri Jayewardenepura Kotte
+  admin_code: 203
+  ufi: -2224883
+  gid: 3048
+  the_geom: 0101000020E61000008957FE2122FA534025389AC8719C1B40
+  mgcc: 43
+  id: 3084
+  population: 118339
+  attrib: 17
+world_cities_182: 
+  name: George Town
+  admin_code: 203
+  ufi: -1187463
+  gid: 9178
+  the_geom: 0101000020E6100000F0BD6488885854C0CDCCCCCCCC4C3340
+  mgcc: 48
+  id: 7681
+  population: 29448
+  attrib: 7
+world_cities_049: 
+  name: Rabat
+  admin_code: 203
+  ufi: -43376
+  gid: 129
+  the_geom: 0101000020E6100000544A19822D581BC04C288E4D3C034140
+  mgcc: 159
+  id: 11927
+  population: 1636603
+  attrib: 131
+world_cities_075: 
+  name: Guatemala
+  admin_code: 203
+  ufi: -1133206
+  gid: 233
+  the_geom: 0101000020E6100000DD330175B9A156C07C5D2B46023E2D40
+  mgcc: 99
+  id: 7919
+  population: 1128791
+  attrib: 131
+world_cities_183: 
+  name: Gibraltar
+  admin_code: 203
+  ufi: -1205055
+  gid: 9190
+  the_geom: 0101000020E610000066666666666615C0DF7BC91011114240
+  mgcc: 90
+  id: 7603
+  population: 29369
+  attrib: 5
+world_cities_076: 
+  name: Port-au-Prince
+  admin_code: 203
+  ufi: -70311
+  gid: 238
+  the_geom: 0101000020E61000003D0AD7A3701552C09D972FD4068A3240
+  mgcc: 103
+  id: 11900
+  population: 1119014
+  attrib: 131
+world_cities_157: 
+  name: Reykjavik
+  admin_code: 203
+  ufi: -2651804
+  gid: 3133
+  the_geom: 0101000020E61000003333333333F335C09A99999999095040
+  mgcc: 110
+  id: 1802
+  population: 114798
+  attrib: 19
+world_cities_184: 
+  name: Saint Helier
+  admin_code: 203
+  ufi: -1187128
+  gid: 9343
+  the_geom: 0101000020E6100000CDCCCCCCCCCC00C046E22F7777974840
+  mgcc: 122
+  id: 7708
+  population: 28625
+  attrib: 7
+world_cities_077: 
+  name: Maputo
+  admin_code: 203
+  ufi: -319029
+  gid: 241
+  the_geom: 0101000020E610000035327ED0694B4040098E26721CF739C0
+  mgcc: 168
+  id: 10641
+  population: 1113974
+  attrib: 131
+world_cities_158: 
+  name: Malabo
+  admin_code: 203
+  ufi: -2065429
+  gid: 3183
+  the_geom: 0101000020E61000001CAA735655552140CDCCCCCCCCCC0A40
+  mgcc: 69
+  id: 44
+  population: 112839
+  attrib: 19
+world_cities_078: 
+  name: Copenhagen
+  admin_code: 203
+  ufi: -2745636
+  gid: 248
+  the_geom: 0101000020E6100000E4558CA9AA2A294087EA9C5555D54B40
+  mgcc: 61
+  id: 1291
+  population: 1094421
+  attrib: 131
+world_cities_159: 
+  name: Praia
+  admin_code: 203
+  ufi: -1313468
+  gid: 3562
+  the_geom: 0101000020E6100000A76ED344448437C01CAA735655D52D40
+  mgcc: 58
+  id: 7423
+  population: 99437
+  attrib: 11
+world_cities_185: 
+  name: Bairiki
+  admin_code: 203
+  ufi: -1352464
+  gid: 9781
+  the_geom: 0101000020E61000003BD400EFEE9E654045B7031A1111F53F
+  mgcc: 132
+  id: 7184
+  population: 26642
+  attrib: 7
+world_cities_079: 
+  name: Sofia
+  admin_code: 203
+  ufi: -838489
+  gid: 250
+  the_geom: 0101000020E6100000743BA0111151374046E22F7777574540
+  mgcc: 36
+  id: 8763
+  population: 1088685
+  attrib: 131
+world_cities_186: 
+  name: Douglas
+  admin_code: 203
+  ufi: -1186980
+  gid: 10115
+  the_geom: 0101000020E61000006245B2ECEEEE11C03333333333134B40
+  mgcc: 112
+  id: 7715
+  population: 25382
+  attrib: 7
+world_cities_187: 
+  name: Nuku`alofa
+  admin_code: 203
+  ufi: -2778310
+  gid: 10247
+  the_geom: 0101000020E61000006666666666E665C0BFF79221222235C0
+  mgcc: 229
+  id: 1146
+  population: 24513
+  attrib: 7
+world_cities_188: 
+  name: Saint John's
+  admin_code: 203
+  ufi: -1323514
+  gid: 10304
+  the_geom: 0101000020E6100000CDCCCCCCCCEC4EC041086DDEDD1D3140
+  mgcc: 2
+  id: 7354
+  population: 23521
+  attrib: 7
+world_cities_189: 
+  name: Andorra la Vella
+  admin_code: 203
+  ufi: -1394439
+  gid: 10333
+  the_geom: 0101000020E610000078EA364D4444F83F0000000000404540
+  mgcc: 9
+  id: 7036
+  population: 22989
+  attrib: 7
+world_cities_001: 
+  name: Buenos Aires
+  admin_code: 203
+  ufi: -979186
+  gid: 1
+  the_geom: 0101000020E6100000AE47E17A14564DC033333333334B41C0
+  mgcc: 12
+  id: 8338
+  population: 12116379
+  attrib: 131
+world_cities_002: 
+  name: Manila
+  admin_code: 203
+  ufi: -2437894
+  gid: 3
+  the_geom: 0101000020E6100000EE9980BADC3E5E401CAA735655352D40
+  mgcc: 198
+  id: 2616
+  population: 10232924
+  attrib: 131
+world_cities_003: 
+  name: Seoul
+  admin_code: 203
+  ufi: -716583
+  gid: 5
+  the_geom: 0101000020E61000007385D272FBBF5F40A128756E7FC84240
+  mgcc: 133
+  id: 9181
+  population: 9630586
+  attrib: 131
+world_cities_110: 
+  name: Helsingfors
+  admin_code: 203
+  ufi: -1364995
+  gid: 503
+  the_geom: 0101000020E61000002283818C25EF384099501C9B78164E40
+  mgcc: 77
+  id: 7089
+  population: 582615
+  attrib: 67
+world_cities_004: 
+  name: Dhaka
+  admin_code: 203
+  ufi: -2737683
+  gid: 8
+  the_geom: 0101000020E610000016D22BAF269A56408D30FB2B1AB93740
+  mgcc: 24
+  id: 1350
+  population: 8942250
+  attrib: 131
+world_cities_030: 
+  name: Dakar
+  admin_code: 203
+  ufi: -2266494
+  gid: 75
+  the_geom: 0101000020E610000064D46B69247031C0B122597677572D40
+  mgcc: 208
+  id: 3020
+  population: 2476372
+  attrib: 131
+world_cities_111: 
+  name: Sarajevo
+  admin_code: 203
+  ufi: -94996
+  gid: 506
+  the_geom: 0101000020E6100000BFF7922122623240CDCCCCCCCCEC4540
+  mgcc: 26
+  id: 11774
+  population: 581537
+  attrib: 67
+world_cities_005: 
+  name: Jakarta
+  admin_code: 203
+  ufi: -2679652
+  gid: 9
+  the_geom: 0101000020E61000006CF6F69D15B55A40A1E1838DA1B218C0
+  mgcc: 111
+  id: 1663
+  population: 8827879
+  attrib: 131
+world_cities_031: 
+  name: Rome
+  admin_code: 203
+  ufi: -126693
+  gid: 76
+  the_geom: 0101000020E6100000B122597677F728403333333333F34440
+  mgcc: 118
+  id: 11417
+  population: 2455596
+  attrib: 129
+world_cities_112: 
+  name: Lisbon
+  admin_code: 203
+  ufi: -2167973
+  gid: 530
+  the_geom: 0101000020E61000007EEF2543444422C0ED5003BCBB5B4340
+  mgcc: 191
+  id: 3212
+  population: 559429
+  attrib: 67
+world_cities_006: 
+  name: Mexico
+  admin_code: 203
+  ufi: -1658079
+  gid: 10
+  the_geom: 0101000020E610000035571701DFC858C02283818C256F3340
+  mgcc: 166
+  id: 6382
+  population: 8681360
+  attrib: 131
+world_cities_032: 
+  name: Nairobi
+  admin_code: 203
+  ufi: -2258072
+  gid: 77
+  the_geom: 0101000020E6100000BA1DD0888868424055E2957F8888F4BF
+  mgcc: 128
+  id: 3039
+  population: 2411939
+  attrib: 131
+world_cities_113: 
+  name: Monrovia
+  admin_code: 203
+  ufi: -2134012
+  gid: 546
+  the_geom: 0101000020E6100000F8BA568C049C25C0CF5B8649023E1940
+  mgcc: 141
+  id: 3400
+  population: 550247
+  attrib: 67
+world_cities_220: 
+  name: The Valley
+  admin_code: 203
+  ufi: -1393191
+  gid: 12295
+  the_geom: 0101000020E61000006666666666864FC0DBA1067877373240
+  mgcc: 16
+  id: 7049
+  population: 851
+  attrib: 5
+world_cities_007: 
+  name: Moscow
+  admin_code: 203
+  ufi: -2960561
+  gid: 11
+  the_geom: 0101000020E6100000516FA186CACE42409F292AD148E04B40
+  mgcc: 201
+  id: 931
+  population: 8368162
+  attrib: 131
+world_cities_033: 
+  name: Havana
+  admin_code: 203
+  ufi: -1628751
+  gid: 83
+  the_geom: 0101000020E6100000B4B2D8814E9754C0EDE3B21BC7213740
+  mgcc: 57
+  id: 6449
+  population: 2343651
+  attrib: 131
+world_cities_114: 
+  name: Djibouti
+  admin_code: 203
+  ufi: -2034412
+  gid: 555
+  the_geom: 0101000020E6100000ADFE637CF3924540713D0AD7A3302740
+  mgcc: 62
+  id: 4458
+  population: 547090
+  attrib: 67
+world_cities_140: 
+  name: Georgetown
+  admin_code: 203
+  ufi: -919880
+  gid: 1532
+  the_geom: 0101000020E610000087EA9C5555154DC03333333333331B40
+  mgcc: 101
+  id: 8510
+  population: 227719
+  attrib: 17
+world_cities_221: 
+  name: Alofi
+  admin_code: 203
+  ufi: -1187196
+  gid: 12340
+  the_geom: 0101000020E6100000A23A6755553D65C0A76ED344440433C0
+  mgcc: 170
+  id: 7694
+  population: 588
+  attrib: 5
+world_cities_008: 
+  name: Tokyo
+  admin_code: 203
+  ufi: -246227
+  gid: 13
+  the_geom: 0101000020E61000007A02BC600B78614048E17A14AED74140
+  mgcc: 121
+  id: 10786
+  population: 8240088
+  attrib: 131
+world_cities_034: 
+  name: Luanda
+  admin_code: 203
+  ufi: -2866283
+  gid: 84
+  the_geom: 0101000020E6100000EF75AD1809782A40A74BB5053AAD21C0
+  mgcc: 10
+  id: 1129
+  population: 2297182
+  attrib: 131
+world_cities_060: 
+  name: Lusaka
+  admin_code: 203
+  ufi: -2291861
+  gid: 194
+  the_geom: 0101000020E6100000255EF98788483C401CAA735655D52EC0
+  mgcc: 261
+  id: 2923
+  population: 1264954
+  attrib: 131
+world_cities_115: 
+  name: Vilnius
+  admin_code: 203
+  ufi: -2620663
+  gid: 557
+  the_geom: 0101000020E6100000743BA0111151394046E22F7777574B40
+  mgcc: 140
+  id: 1870
+  population: 543451
+  attrib: 67
+world_cities_141: 
+  name: Nassau
+  admin_code: 203
+  ufi: -1543832
+  gid: 1575
+  the_geom: 0101000020E610000066666666665653C0F22AC65455153940
+  mgcc: 23
+  id: 6557
+  population: 222185
+  attrib: 19
+world_cities_222: 
+  name: Adamstown
+  admin_code: 203
+  ufi: -1307105
+  gid: 12444
+  the_geom: 0101000020E61000005EC598AAAA4260C0743BA011111139C0
+  mgcc: 184
+  id: 7497
+  population: 43
+  attrib: 7
+world_cities_223: 
+  name: Koror
+  admin_code: 203
+  ufi: 226830
+  gid: 12515
+  the_geom: 0101000020E61000002B92657777CF6040C8AB185355551D40
+  mgcc: 193
+  id: 12413
+  population: 0
+  attrib: 1
+world_cities_009: 
+  name: Lima
+  admin_code: 203
+  ufi: -352647
+  gid: 14
+  the_geom: 0101000020E610000033333333334353C09A999999991928C0
+  mgcc: 185
+  id: 10587
+  population: 8113023
+  attrib: 131
+world_cities_035: 
+  name: Santo Domingo
+  admin_code: 203
+  ufi: -3366242
+  gid: 88
+  the_geom: 0101000020E61000009A999999997951C0DBA1067877773240
+  mgcc: 65
+  id: 306
+  population: 2252446
+  attrib: 131
+world_cities_061: 
+  name: Stockholm
+  admin_code: 203
+  ufi: -2524279
+  gid: 196
+  the_geom: 0101000020E6100000CDCCCCCCCC0C3240791563AAAAAA4D40
+  mgcc: 219
+  id: 2541
+  population: 1251924
+  attrib: 131
+world_cities_116: 
+  name: Abu Dhabi
+  admin_code: 203
+  ufi: -782066
+  gid: 561
+  the_geom: 0101000020E6100000218436EFEE2E4B40DBA1067877773840
+  mgcc: 3
+  id: 8913
+  population: 539827
+  attrib: 67
+world_cities_142: 
+  name: Windhoek
+  admin_code: 203
+  ufi: -2587496
+  gid: 1583
+  the_geom: 0101000020E610000024157C896715314052B81E85EB9136C0
+  mgcc: 252
+  id: 2285
+  population: 220979
+  attrib: 19
+world_cities_224: 
+  name: Krung Thep
+  admin_code: 203
+  ufi: -3414440
+  gid: 12536
+  the_geom: 0101000020E6100000AADB3411112159400000000000802B40
+  mgcc: 225
+  id: 12192
+  population: 0
+  attrib: 1
+world_cities_036: 
+  name: Kabul
+  admin_code: 203
+  ufi: -3378435
+  gid: 90
+  the_geom: 0101000020E610000023F197BBBB4B514054B7692222424140
+  mgcc: 4
+  id: 290
+  population: 2206295
+  attrib: 131
+world_cities_062: 
+  name: Tegucigalpa
+  admin_code: 203
+  ufi: -1130280
+  gid: 198
+  the_geom: 0101000020E610000077A801DEDDCD55C03333333333332C40
+  mgcc: 106
+  id: 7931
+  population: 1249963
+  attrib: 131
+world_cities_117: 
+  name: Asuncion
+  admin_code: 203
+  ufi: -910015
+  gid: 575
+  the_geom: 0101000020E610000087EA9C5555D54CC0A76ED344444439C0
+  mgcc: 183
+  id: 8581
+  population: 525059
+  attrib: 67
+world_cities_143: 
+  name: Paramaribo
+  admin_code: 203
+  ufi: -914899
+  gid: 1612
+  the_geom: 0101000020E610000087EA9C5555954BC0C8AB185355551740
+  mgcc: 179
+  id: 8531
+  population: 217324
+  attrib: 19
+world_cities_225: 
+  name: Hong Kong
+  admin_code: 203
+  ufi: -1353149
+  gid: 12588
+  the_geom: 0101000020E61000009A99999999895C40255EF98788483640
+  mgcc: 104
+  id: 12285
+  population: 0
+  attrib: 1
+world_cities_037: 
+  name: Tashkent
+  admin_code: 203
+  ufi: -2579372
+  gid: 93
+  the_geom: 0101000020E61000000000000000505140BA1DD08888A84440
+  mgcc: 245
+  id: 2319
+  population: 2155382
+  attrib: 131
+world_cities_063: 
+  name: Pretoria
+  admin_code: 203
+  ufi: -1273769
+  gid: 199
+  the_geom: 0101000020E6100000164042DEBC3A3C402117E64EFAB439C0
+  mgcc: 207
+  id: 7537
+  population: 1249689
+  attrib: 129
+world_cities_090: 
+  name: Oslo
+  admin_code: 203
+  ufi: -273837
+  gid: 357
+  the_geom: 0101000020E6100000000000000080254087EA9C5555F54D40
+  mgcc: 176
+  id: 152
+  population: 787447
+  attrib: 67
+world_cities_118: 
+  name: San Salvador
+  admin_code: 203
+  ufi: -1148082
+  gid: 611
+  the_geom: 0101000020E61000004251EADCFE4C56C0492AF812CF6A2B40
+  mgcc: 72
+  id: 7860
+  population: 504663
+  attrib: 67
+world_cities_144: 
+  name: Sucre
+  admin_code: 203
+  ufi: -701781
+  gid: 1732
+  the_geom: 0101000020E6100000952DED2F965050C0DFE819B1050B33C0
+  mgcc: 27
+  id: 9236
+  population: 204204
+  attrib: 19
+world_cities_170: 
+  name: Moroni
+  admin_code: 203
+  ufi: -2087938
+  gid: 5557
+  the_geom: 0101000020E6100000387A466CC19E45404FDDA689886827C0
+  mgcc: 51
+  id: 4280
+  population: 60171
+  attrib: 11
+world_cities_226: 
+  name: Tarawa
+  admin_code: 203
+  ufi: -1352731
+  gid: 12589
+  the_geom: 0101000020E6100000C52BFF1011316540DDF75E324444ECBF
+  mgcc: 132
+  id: 12286
+  population: 0
+  attrib: 1
+world_cities_038: 
+  name: Paris
+  admin_code: 203
+  ufi: -1456928
+  gid: 95
+  the_geom: 0101000020E6100000915731A6AAAA0240218436EFEE6E4840
+  mgcc: 84
+  id: 6803
+  population: 2110420
+  attrib: 131
+world_cities_064: 
+  name: Kampala
+  admin_code: 203
+  ufi: -1728891
+  gid: 201
+  the_geom: 0101000020E6100000791563AAAA4A404013DD0E684444D43F
+  mgcc: 239
+  id: 6089
+  population: 1243984
+  attrib: 131
+world_cities_091: 
+  name: Niamey
+  admin_code: 203
+  ufi: -1084956
+  gid: 375
+  the_geom: 0101000020E6100000094268F3EEEE00404FDDA68988082B40
+  mgcc: 172
+  id: 8084
+  population: 748647
+  attrib: 67
+world_cities_119: 
+  name: Lilongwe
+  admin_code: 203
+  ufi: -1482799
+  gid: 624
+  the_geom: 0101000020E610000013AFFC4344E44040B122597677F72BC0
+  mgcc: 155
+  id: 6702
+  population: 499200
+  attrib: 35
+world_cities_145: 
+  name: Gaborone
+  admin_code: 203
+  ufi: -1397372
+  gid: 1828
+  the_geom: 0101000020E610000035C52D3075E9394057FF31BE79A538C0
+  mgcc: 20
+  id: 7025
+  population: 194999
+  attrib: 19
+world_cities_171: 
+  name: Muscat
+  admin_code: 203
+  ufi: -787987
+  gid: 5964
+  the_geom: 0101000020E61000005A907758F24B4D403A0C4169039D3740
+  mgcc: 164
+  id: 8887
+  population: 54764
+  attrib: 9
+world_cities_227: 
+  name: Plymouth
+  admin_code: 203
+  ufi: -1204294
+  gid: 12591
+  the_geom: 0101000020E6100000ED5003BCBB1B4FC03333333333B33040
+  mgcc: 154
+  id: 12287
+  population: 0
+  attrib: 1
+world_cities_039: 
+  name: Harare
+  admin_code: 203
+  ufi: -2312291
+  gid: 105
+  the_geom: 0101000020E6100000B96702EA720B3F401465CAE259D131C0
+  mgcc: 262
+  id: 2889
+  population: 1919683
+  attrib: 131
+world_cities_065: 
+  name: Tbilisi
+  admin_code: 203
+  ufi: -2330077
+  gid: 204
+  the_geom: 0101000020E61000003C0B8C063A654640CDCCCCCCCCDC4440
+  mgcc: 88
+  id: 2823
+  population: 1240174
+  attrib: 131
+world_cities_146: 
+  name: Vientiane
+  admin_code: 203
+  ufi: -2669740
+  gid: 1844
+  the_geom: 0101000020E61000006666666666A65940DBA1067877F73140
+  mgcc: 137
+  id: 1777
+  population: 194155
+  attrib: 19
+world_cities_172: 
+  name: Honiara
+  admin_code: 203
+  ufi: -1546211
+  gid: 5973
+  the_geom: 0101000020E61000006666666666FE63401789BFDCDDDD22C0
+  mgcc: 31
+  id: 6547
+  population: 54637
+  attrib: 11
+world_cities_228: 
+  name: Brasilia
+  admin_code: 203
+  ufi: -631243
+  gid: 12633
+  the_geom: 0101000020E610000087EA9C5555F547C04BBCF20F11912FC0
+  mgcc: 33
+  id: 12322
+  population: 0
+  attrib: 1
+world_cities_066: 
+  name: Baku
+  admin_code: 203
+  ufi: -2705195
+  gid: 205
+  the_geom: 0101000020E6100000106734A8ECF04840DCEA837698324440
+  mgcc: 6
+  id: 1406
+  population: 1235362
+  attrib: 131
+world_cities_092: 
+  name: Athens
+  admin_code: 203
+  ufi: -814876
+  gid: 376
+  the_geom: 0101000020E610000059912CBBBBBB3740AC4896DDDDFD4240
+  mgcc: 98
+  id: 8840
+  population: 747269
+  attrib: 67
+world_cities_147: 
+  name: Yamoussoukro
+  admin_code: 203
+  ufi: -2129107
+  gid: 1944
+  the_geom: 0101000020E61000009578E51F222215C0D1ED804644441B40
+  mgcc: 119
+  id: 3411
+  population: 185556
+  attrib: 19
+world_cities_173: 
+  name: Sao Tome
+  admin_code: 203
+  ufi: -1312812
+  gid: 6064
+  the_geom: 0101000020E61000006245B2ECEEEE1A4087BC8A315555D53F
+  mgcc: 231
+  id: 7431
+  population: 53305
+  attrib: 11
+world_cities_067: 
+  name: Khartoum
+  admin_code: 203
+  ufi: -1987
+  gid: 206
+  the_geom: 0101000020E61000005E8E0D935F4440409675A49F152D2F40
+  mgcc: 217
+  id: 11999
+  population: 1228840
+  attrib: 129
+world_cities_093: 
+  name: Amsterdam
+  admin_code: 203
+  ufi: -2140479
+  gid: 379
+  the_geom: 0101000020E61000003854E7ACAAAA1340CDCCCCCCCC2C4A40
+  mgcc: 175
+  id: 3378
+  population: 737949
+  attrib: 65
+world_cities_148: 
+  name: Suva
+  admin_code: 203
+  ufi: -1195133
+  gid: 2036
+  the_geom: 0101000020E6100000A23A6755554D6640BFF79221222232C0
+  mgcc: 78
+  id: 7670
+  population: 177296
+  attrib: 19
+world_cities_174: 
+  name: Banjul
+  admin_code: 203
+  ufi: -1199434
+  gid: 6659
+  the_geom: 0101000020E6100000A4703D0AD79330C0118A52E7F6E72A40
+  mgcc: 86
+  id: 7665
+  population: 46737
+  attrib: 7
+world_cities_068: 
+  name: Mogadishu
+  admin_code: 203
+  ufi: -3227437
+  gid: 211
+  the_geom: 0101000020E6100000218436EFEEAE4640A2DB018D88880040
+  mgcc: 214
+  id: 447
+  population: 1208769
+  attrib: 131
+world_cities_094: 
+  name: Kathmandu
+  admin_code: 203
+  ufi: -1022136
+  gid: 386
+  the_geom: 0101000020E6100000DD0E684444545540DBA1067877B73B40
+  mgcc: 177
+  id: 8255
+  population: 729022
+  attrib: 67
+world_cities_149: 
+  name: Maseru
+  admin_code: 203
+  ufi: -1405824
+  gid: 2090
+  the_geom: 0101000020E610000059912CBBBB7B3B40743BA01111513DC0
+  mgcc: 145
+  id: 6985
+  population: 173700
+  attrib: 19
+world_cities_175: 
+  name: Nicosia
+  admin_code: 203
+  ufi: -2738616
+  gid: 6754
+  the_geom: 0101000020E6100000218436EFEEAE404087EA9C5555954140
+  mgcc: 60
+  id: 1316
+  population: 45797
+  attrib: 5
+world_cities_069: 
+  name: Beirut
+  admin_code: 203
+  ufi: -801546
+  gid: 217
+  the_geom: 0101000020E6100000C885B9933EC1414015F7C4DF9BEF4040
+  mgcc: 138
+  id: 8852
+  population: 1170952
+  attrib: 131
+world_cities_095: 
+  name: Asgabat
+  admin_code: 203
+  ufi: -2557812
+  gid: 389
+  the_geom: 0101000020E6100000DF7BC91011314D409A99999999F94240
+  mgcc: 237
+  id: 2428
+  population: 727704
+  attrib: 67
+world_cities_176: 
+  name: Mamoudzou
+  admin_code: 203
+  ufi: -2087895
+  gid: 6763
+  the_geom: 0101000020E61000006CF6F69D159D4640C6191E56138F29C0
+  mgcc: 152
+  id: 4282
+  population: 45704
+  attrib: 7
+world_cities_096: 
+  name: Chisinau
+  admin_code: 203
+  ufi: -2276223
+  gid: 400
+  the_geom: 0101000020E6100000EC51B81E85DB3C40A327C00BB6804740
+  mgcc: 151
+  id: 2971
+  population: 709860
+  attrib: 67
+world_cities_177: 
+  name: Port-of-Spain
+  admin_code: 203
+  ufi: -1360612
+  gid: 6793
+  the_geom: 0101000020E610000054B7692222C24EC0CDCCCCCCCC4C2540
+  mgcc: 223
+  id: 7103
+  population: 45343
+  attrib: 7
+world_cities_097: 
+  name: Riga
+  admin_code: 203
+  ufi: -3212216
+  gid: 402
+  the_geom: 0101000020E61000009A999999991938409A99999999794C40
+  mgcc: 139
+  id: 475
+  population: 706220
+  attrib: 67
+world_cities_178: 
+  name: Apia
+  admin_code: 203
+  ufi: -1307163
+  gid: 8007
+  the_geom: 0101000020E61000002B926577777765C0E4558CA9AAAA2BC0
+  mgcc: 257
+  id: 7496
+  population: 35875
+  attrib: 7
+world_cities_098: 
+  name: Tunis
+  admin_code: 203
+  ufi: -731701
+  gid: 406
+  the_geom: 0101000020E6100000F8BA568C045C2440387A466CC1664240
+  mgcc: 232
+  id: 9144
+  population: 699693
+  attrib: 67
+world_cities_179: 
+  name: Port-Vila
+  admin_code: 203
+  ufi: -2138939
+  gid: 8102
+  the_geom: 0101000020E61000006F073422220A654059912CBBBBBB31C0
+  mgcc: 173
+  id: 3386
+  population: 35341
+  attrib: 7
+world_cities_099: 
+  name: Zagreb
+  admin_code: 203
+  ufi: -101579
+  gid: 413
+  the_geom: 0101000020E610000000000000000030406666666666E64640
+  mgcc: 108
+  id: 11727
+  population: 685473
+  attrib: 67
+world_cities_100: 
+  name: Lome
+  admin_code: 203
+  ufi: -1497972
+  gid: 424
+  the_geom: 0101000020E6100000B36554747F90F33FB68FCB6E1C871840
+  mgcc: 230
+  id: 6652
+  population: 676365
+  attrib: 67
+world_cities_020: 
+  name: Riyadh
+  admin_code: 203
+  ufi: -3093009
+  gid: 38
+  the_geom: 0101000020E610000094090962EA62474011B0B1A60DA43840
+  mgcc: 203
+  id: 663
+  population: 3724075
+  attrib: 131
+world_cities_101: 
+  name: Bangui
+  admin_code: 203
+  ufi: -1339562
+  gid: 427
+  the_geom: 0101000020E6100000F22AC654559532400421B47977771140
+  mgcc: 56
+  id: 7243
+  population: 669775
+  attrib: 67
+world_cities_021: 
+  name: Ankara
+  admin_code: 203
+  ufi: -735338
+  gid: 46
+  the_geom: 0101000020E6100000EC9A351DA66E404006909037AFF64340
+  mgcc: 234
+  id: 9126
+  population: 3456076
+  attrib: 131
+world_cities_102: 
+  name: Libreville
+  admin_code: 203
+  ufi: -1326612
+  gid: 434
+  the_geom: 0101000020E61000006666666666E62240BAEFBD648888D83F
+  mgcc: 87
+  id: 7341
+  population: 661590
+  attrib: 67
+world_cities_210: 
+  name: Grand Turk
+  admin_code: 203
+  ufi: -1312165
+  gid: 11796
+  the_geom: 0101000020E6100000F0BD648888C851C0DBA1067877773540
+  mgcc: 227
+  id: 7434
+  population: 5010
+  attrib: 7
+world_cities_022: 
+  name: Singapore
+  admin_code: 203
+  ufi: -73635
+  gid: 47
+  the_geom: 0101000020E6100000FA9408F9C5F65940F58D9E115BB0F43F
+  mgcc: 213
+  id: 11895
+  population: 3438556
+  attrib: 129
+world_cities_103: 
+  name: Nouakchott
+  admin_code: 203
+  ufi: -1402901
+  gid: 435
+  the_geom: 0101000020E610000098079F9C57F32FC0C73C3C951D163240
+  mgcc: 162
+  id: 6991
+  population: 661413
+  attrib: 67
+world_cities_211: 
+  name: Saint George's
+  admin_code: 203
+  ufi: -1202232
+  gid: 11860
+  the_geom: 0101000020E61000000000000000E04EC09A99999999192840
+  mgcc: 91
+  id: 7648
+  population: 4345
+  attrib: 7
+world_cities_023: 
+  name: Berlin
+  admin_code: 203
+  ufi: -1746443
+  gid: 52
+  the_geom: 0101000020E6100000CDCCCCCCCCCC2A4054B7692222424A40
+  mgcc: 94
+  id: 5987
+  population: 3274468
+  attrib: 131
+world_cities_104: 
+  name: Colombo
+  admin_code: 203
+  ufi: -2214877
+  gid: 438
+  the_geom: 0101000020E61000009751D1FD41F65340E9C2FEA14FBA1B40
+  mgcc: 43
+  id: 3099
+  population: 656094
+  attrib: 67
+world_cities_130: 
+  name: Bujumbura
+  admin_code: 203
+  ufi: 6034031
+  gid: 996
+  the_geom: 0101000020E610000050262488A95B3D40F399A2128D040BC0
+  mgcc: 39
+  id: 12128
+  population: 331657
+  attrib: 35
+world_cities_024: 
+  name: Madrid
+  admin_code: 203
+  ufi: -390625
+  gid: 54
+  the_geom: 0101000020E61000005E24FE7277770DC03333333333334440
+  mgcc: 215
+  id: 10481
+  population: 3169379
+  attrib: 131
+world_cities_050: 
+  name: Warsaw
+  admin_code: 203
+  ufi: -534433
+  gid: 131
+  the_geom: 0101000020E610000000000000000035400000000000204A40
+  mgcc: 189
+  id: 10171
+  population: 1607603
+  attrib: 131
+world_cities_105: 
+  name: N'Djamena
+  admin_code: 203
+  ufi: -1101785
+  gid: 470
+  the_geom: 0101000020E6100000C01AB1602C192E406242716CE2392840
+  mgcc: 42
+  id: 8040
+  population: 609619
+  attrib: 67
+world_cities_131: 
+  name: Canberra
+  admin_code: 203
+  ufi: -1563952
+  gid: 1009
+  the_geom: 0101000020E61000003BD400EFEEA6624013AFFC4344A441C0
+  mgcc: 13
+  id: 6514
+  population: 327726
+  attrib: 35
+world_cities_212: 
+  name: San Marino
+  admin_code: 203
+  ufi: -127864
+  gid: 11862
+  the_geom: 0101000020E6100000B5430DF0EEEE284087EA9C5555F54540
+  mgcc: 212
+  id: 11402
+  population: 4337
+  attrib: 7
+world_cities_025: 
+  name: Pyongyang
+  admin_code: 203
+  ufi: -183459
+  gid: 59
+  the_geom: 0101000020E61000002CA4575E4D705F40900B73277D824340
+  mgcc: 130
+  id: 11286
+  population: 2767885
+  attrib: 131
+world_cities_051: 
+  name: Vienna
+  admin_code: 203
+  ufi: -1995499
+  gid: 137
+  the_geom: 0101000020E610000041086DDEDD5D30409A99999999194840
+  mgcc: 15
+  id: 4670
+  population: 1523593
+  attrib: 131
+world_cities_106: 
+  name: Islamabad
+  admin_code: 203
+  ufi: -2762812
+  gid: 479
+  the_geom: 0101000020E61000004375CEAAAA4A52409A99999999D94040
+  mgcc: 188
+  id: 1238
+  population: 601568
+  attrib: 67
+world_cities_132: 
+  name: Port Moresby
+  admin_code: 203
+  ufi: -2198538
+  gid: 1018
+  the_geom: 0101000020E61000005C8FC2F5286662404A737511F0ED22C0
+  mgcc: 192
+  id: 3154
+  population: 324865
+  attrib: 35
+world_cities_213: 
+  name: Lobamba
+  admin_code: 203
+  ufi: -1331600
+  gid: 11874
+  the_geom: 0101000020E61000003333333333333F40DBA1067877773AC0
+  mgcc: 258
+  id: 7295
+  population: 4243
+  attrib: 7
+world_cities_026: 
+  name: Cape Town
+  admin_code: 203
+  ufi: -1217214
+  gid: 62
+  the_geom: 0101000020E61000000ED539ABAA6A324087EA9C5555F540C0
+  mgcc: 207
+  id: 7586
+  population: 2732971
+  attrib: 131
+world_cities_052: 
+  name: Quito
+  admin_code: 203
+  ufi: -932573
+  gid: 151
+  the_geom: 0101000020E61000000000000000A053C058ED5003BCBBCBBF
+  mgcc: 66
+  id: 8455
+  population: 1443905
+  attrib: 131
+world_cities_107: 
+  name: Kingston
+  admin_code: 203
+  ufi: -3752438
+  gid: 491
+  the_geom: 0101000020E610000033333333333353C00000000000003240
+  mgcc: 123
+  id: 192
+  population: 590489
+  attrib: 67
+world_cities_133: 
+  name: Doha
+  admin_code: 203
+  ufi: -785169
+  gid: 1037
+  the_geom: 0101000020E610000013AFFC4344C449402D5A25FD62493940
+  mgcc: 195
+  id: 8900
+  population: 318502
+  attrib: 35
+world_cities_214: 
+  name: Stanley
+  admin_code: 203
+  ufi: -1176538
+  gid: 12111
+  the_geom: 0101000020E6100000CDCCCCCCCCEC4CC09A99999999D949C0
+  mgcc: 79
+  id: 7754
+  population: 2121
+  attrib: 7
+world_cities_027: 
+  name: Addis Ababa
+  admin_code: 203
+  ufi: -603097
+  gid: 63
+  the_geom: 0101000020E61000009A999999995943404BBCF20F11112240
+  mgcc: 73
+  id: 9911
+  population: 2716242
+  attrib: 131
+world_cities_053: 
+  name: Kuala Lumpur
+  admin_code: 203
+  ufi: -2403010
+  gid: 158
+  the_geom: 0101000020E6100000CDCCCCCCCC6C59406FA8CE5955550940
+  mgcc: 167
+  id: 2732
+  population: 1403395
+  attrib: 131
+world_cities_080: 
+  name: Freetown
+  admin_code: 203
+  ufi: -1315606
+  gid: 258
+  the_geom: 0101000020E6100000DE9F9CB2E4772AC07B14AE47E1FA2040
+  mgcc: 211
+  id: 7397
+  population: 1051016
+  attrib: 131
+world_cities_108: 
+  name: Dushanbe
+  admin_code: 203
+  ufi: -2555530
+  gid: 492
+  the_geom: 0101000020E6100000320F4F658731514048E17A14AE474340
+  mgcc: 226
+  id: 2456
+  population: 590283
+  attrib: 67
+world_cities_134: 
+  name: New Delhi
+  admin_code: 203
+  ufi: -2106102
+  gid: 1088
+  the_geom: 0101000020E6100000CDCCCCCCCC4C53409A99999999993C40
+  mgcc: 113
+  id: 3733
+  population: 306381
+  attrib: 33
+world_cities_160: 
+  name: Bridgetown
+  admin_code: 203
+  ufi: -1393285
+  gid: 3574
+  the_geom: 0101000020E6100000218436EFEECE4DC03333333333332A40
+  mgcc: 19
+  id: 7046
+  population: 98930
+  attrib: 11
+world_cities_215: 
+  name: Jamestown
+  admin_code: 203
+  ufi: -1205453
+  gid: 12186
+  the_geom: 0101000020E61000006B871AE0DDDD16C01789BFDCDDDD2FC0
+  mgcc: 209
+  id: 7601
+  population: 1526
+  attrib: 7
+world_cities_028: 
+  name: Kiev
+  admin_code: 203
+  ufi: -1044367
+  gid: 71
+  the_geom: 0101000020E6100000A76ED34444843E4046E22F7777374940
+  mgcc: 241
+  id: 8191
+  population: 2588395
+  attrib: 131
+world_cities_054: 
+  name: Hanoi
+  admin_code: 203
+  ufi: -3714993
+  gid: 159
+  the_geom: 0101000020E61000006666666666765A40255EF98788083540
+  mgcc: 249
+  id: 257
+  population: 1396462
+  attrib: 131
+world_cities_109: 
+  name: T'ai-pei
+  admin_code: 203
+  ufi: -2637882
+  gid: 493
+  the_geom: 0101000020E6100000CDCCCCCCCC5C5E40A76ED34444043940
+  mgcc: 236
+  id: 1822
+  population: 589701
+  attrib: 67
+world_cities_135: 
+  name: Kigali
+  admin_code: 203
+  ufi: -2181358
+  gid: 1134
+  the_geom: 0101000020E6100000F4966192800F3E4031A479B6FD41FFBF
+  mgcc: 202
+  id: 3186
+  population: 298060
+  attrib: 35
+world_cities_161: 
+  name: Fort-de-France
+  admin_code: 203
+  ufi: -1554082
+  gid: 3655
+  the_geom: 0101000020E6100000791563AAAA8A4EC03333333333332D40
+  mgcc: 149
+  id: 6541
+  population: 96371
+  attrib: 11
+world_cities_216: 
+  name: Monaco
+  admin_code: 203
+  ufi: -1451964
+  gid: 12202
+  the_geom: 0101000020E61000003854E7ACAAAA1D40AC4896DDDDDD4540
+  mgcc: 158
+  id: 6831
+  population: 1448
+  attrib: 5
+world_cities_029: 
+  name: Dar es Salaam
+  admin_code: 203
+  ufi: -2562166
+  gid: 73
+  the_geom: 0101000020E610000013AFFC4344A443403333333333331BC0
+  mgcc: 238
+  id: 2395
+  population: 2489826
+  attrib: 131
+world_cities_055: 
+  name: Montevideo
+  admin_code: 203
+  ufi: -907764
+  gid: 169
+  the_geom: 0101000020E6100000AC4896DDDD154CC0281312C4D46D41C0
+  mgcc: 244
+  id: 8597
+  population: 1347584
+  attrib: 131
+world_cities_081: 
+  name: Baile Atha Cliath
+  admin_code: 203
+  ufi: -1502554
+  gid: 266
+  the_geom: 0101000020E6100000835957BBDCFE18C0F5DFDE90A1AA4A40
+  mgcc: 68
+  id: 6627
+  population: 1018500
+  attrib: 131
+world_cities_136: 
+  name: Bissau
+  admin_code: 203
+  ufi: -1488412
+  gid: 1143
+  the_geom: 0101000020E6100000E4558CA9AA2A2FC03333333333B32740
+  mgcc: 194
+  id: 6679
+  population: 296885
+  attrib: 35
+world_cities_162: 
+  name: Noumea
+  admin_code: 203
+  ufi: -1713609
+  gid: 4004
+  the_geom: 0101000020E61000006666666666CE6440A76ED344444436C0
+  mgcc: 169
+  id: 6162
+  population: 86401
+  attrib: 9
+world_cities_217: 
+  name: Longyearbyen
+  admin_code: 203
+  ufi: -2463292
+  gid: 12262
+  the_geom: 0101000020E61000007EEF254344442F4077A801DEDD8D5340
+  mgcc: 218
+  id: 2568
+  population: 1104
+  attrib: 7
+world_cities_056: 
+  name: Amman
+  admin_code: 203
+  ufi: -970362
+  gid: 178
+  the_geom: 0101000020E610000046E22F7777F741403333333333F33F40
+  mgcc: 125
+  id: 8355
+  population: 1293164
+  attrib: 131
+world_cities_082: 
+  name: Brussels
+  admin_code: 203
+  ufi: -1955538
+  gid: 286
+  the_geom: 0101000020E6100000C8AB185355551140791563AAAA6A4940
+  mgcc: 22
+  id: 4768
+  population: 981191
+  attrib: 67
+world_cities_137: 
+  name: Astana
+  admin_code: 203
+  ufi: -2334218
+  gid: 1186
+  the_geom: 0101000020E61000001C3D23B660DB5140A7B805A62E974940
+  mgcc: 136
+  id: 2787
+  population: 288154
+  attrib: 35
+world_cities_163: 
+  name: Male
+  admin_code: 203
+  ufi: -1306876
+  gid: 4200
+  the_geom: 0101000020E610000000000000006052403854E7ACAAAA1040
+  mgcc: 165
+  id: 7498
+  population: 81644
+  attrib: 11
+world_cities_190: 
+  name: Victoria
+  admin_code: 203
+  ufi: -1322723
+  gid: 10335
+  the_geom: 0101000020E61000009A99999999B94B400421B479777712C0
+  mgcc: 206
+  id: 7366
+  population: 22970
+  attrib: 5
+world_cities_218: 
+  name: Hamilton
+  admin_code: 203
+  ufi: -1394089
+  gid: 12277
+  the_geom: 0101000020E6100000A24C593C2B3250C03F092241A7254040
+  mgcc: 21
+  id: 7038
+  population: 974
+  attrib: 7
+world_cities_057: 
+  name: Belgrade
+  admin_code: 203
+  ufi: -74897
+  gid: 182
+  the_geom: 0101000020E6100000ACB5E67DD277344040529F3FC8684640
+  mgcc: 260
+  id: 11892
+  population: 1285224
+  attrib: 131
+world_cities_083: 
+  name: Ouagadougou
+  admin_code: 203
+  ufi: -1721728
+  gid: 292
+  the_geom: 0101000020E610000043C3071B4365F8BFA2DE420D95BD2840
+  mgcc: 243
+  id: 6114
+  population: 962074
+  attrib: 67
+world_cities_138: 
+  name: Ljubljana
+  admin_code: 203
+  ufi: -87271
+  gid: 1342
+  the_geom: 0101000020E61000007F38A34165072D40F098CB5713074740
+  mgcc: 210
+  id: 11825
+  population: 258020
+  attrib: 35
+world_cities_164: 
+  name: Luxembourg
+  admin_code: 203
+  ufi: -1736191
+  gid: 4353
+  the_geom: 0101000020E610000085EB51B81E851840B0462C184BCE4840
+  mgcc: 146
+  id: 6044
+  population: 78761
+  attrib: 11
+world_cities_219: 
+  name: Flying Fish Cove
+  admin_code: 203
+  ufi: -779059
+  gid: 12280
+  the_geom: 0101000020E610000077A801DEDD6D5A401CAA735655D524C0
+  mgcc: 134
+  id: 8948
+  population: 931
+  attrib: 7
+world_cities_058: 
+  name: Tripoli
+  admin_code: 203
+  ufi: -3178767
+  gid: 191
+  the_geom: 0101000020E61000005C8FC2F5285C2A400AD7A3703D724040
+  mgcc: 147
+  id: 522
+  population: 1269708
+  attrib: 131
+world_cities_084: 
+  name: Bamako
+  admin_code: 203
+  ufi: -1064708
+  gid: 302
+  the_geom: 0101000020E610000000000000000020C0CDCCCCCCCC4C2940
+  mgcc: 157
+  id: 8138
+  population: 935428
+  attrib: 67
+world_cities_139: 
+  name: Porto-Novo
+  admin_code: 203
+  ufi: -1335726
+  gid: 1495
+  the_geom: 0101000020E6100000094268F3EEEE04406245B2ECEEEE1940
+  mgcc: 29
+  id: 7258
+  population: 231621
+  attrib: 19
+world_cities_165: 
+  name: Bandar Seri Begawan
+  admin_code: 203
+  ufi: -1337176
+  gid: 4400
+  the_geom: 0101000020E610000023F197BBBBBB5C40FCDE4B8688881340
+  mgcc: 38
+  id: 7252
+  population: 78030
+  attrib: 11
+world_cities_191: 
+  name: Oranjestad
+  admin_code: 203
+  ufi: -1307825
+  gid: 10484
+  the_geom: 0101000020E61000008957FE21228251C04FDDA68988082940
+  mgcc: 1
+  id: 7486
+  population: 20698
+  attrib: 5
+world_cities_059: 
+  name: Yerevan
+  admin_code: 203
+  ufi: -2325645
+  gid: 192
+  the_geom: 0101000020E610000069AE2E02BE414640A7B805A62E174440
+  mgcc: 8
+  id: 2844
+  population: 1267576
+  attrib: 131
+world_cities_085: 
+  name: Antananarivo
+  admin_code: 203
+  ufi: -207091
+  gid: 313
+  the_geom: 0101000020E610000054B7692222C247400ED539ABAAEA32C0
+  mgcc: 148
+  id: 11272
+  population: 895307
+  attrib: 67
+world_cities_166: 
+  name: Mbabane
+  admin_code: 203
+  ufi: -1331673
+  gid: 4876
+  the_geom: 0101000020E6100000BFF7922122223F40743BA01111513AC0
+  mgcc: 258
+  id: 7290
+  population: 69001
+  attrib: 9
+world_cities_192: 
+  name: Majuro
+  admin_code: 203
+  ufi: 227187
+  gid: 10501
+  the_geom: 0101000020E6100000F85E3244446C65406666666666661C40
+  mgcc: 200
+  id: 12050
+  population: 20468
+  attrib: 7
+world_cities_086: 
+  name: Ottawa
+  admin_code: 203
+  ufi: -570760
+  gid: 325
+  the_geom: 0101000020E6100000CDCCCCCCCCEC52C087EA9C5555B54640
+  mgcc: 40
+  id: 10071
+  population: 852069
+  attrib: 65
+world_cities_167: 
+  name: Cayenne
+  admin_code: 203
+  ufi: -916118
+  gid: 5523
+  the_geom: 0101000020E6100000791563AAAA2A4AC02F127FB9BBBB1340
+  mgcc: 76
+  id: 8527
+  population: 60540
+  attrib: 11
+world_cities_193: 
+  name: Roseau
+  admin_code: 203
+  ufi: -1352344
+  gid: 10523
+  the_geom: 0101000020E61000003333333333B34EC09A99999999992E40
+  mgcc: 63
+  id: 7192
+  population: 20018
+  attrib: 7
+world_cities_087: 
+  name: La Paz
+  admin_code: 203
+  ufi: -693412
+  gid: 336
+  the_geom: 0101000020E61000009A999999990951C000000000008030C0
+  mgcc: 27
+  id: 9257
+  population: 830498
+  attrib: 67
+world_cities_168: 
+  name: Castries
+  admin_code: 203
+  ufi: -1313781
+  gid: 5544
+  the_geom: 0101000020E61000000000000000804EC00000000000002C40
+  mgcc: 216
+  id: 7412
+  population: 60301
+  attrib: 11
+world_cities_194: 
+  name: Kingstown
+  admin_code: 203
+  ufi: -1204477
+  gid: 10660
+  the_geom: 0101000020E6100000ED5003BCBB9B4EC07EEF254344442A40
+  mgcc: 246
+  id: 7614
+  population: 17591
+  attrib: 7

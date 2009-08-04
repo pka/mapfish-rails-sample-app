@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    #allfiles {
+      display: none;
+    }
+    a {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<!-- 
+to generate the list:
+<grep -rl MapFish.js . | grep -v svn-base | sort> under this directory
+and
+<grep -rl MapFish.js . | grep -v svn-base | sort | sed 's/\.\//.\/examples\//'>
+under MapFish/client/examples directory
+ -->
+<pre id="allfiles">
+./demos/c2corg/search.html
+./demos/geostat/geostat.html
+./demos/routing/epfl.html
+./examples/editing/list.html
+./examples/geostat/choropleths.html
+./examples/geostat/proportionalSymbols.html
+./examples/map/layout.html
+./examples/map/layout_spherical_mercator.html
+./examples/map/multiple_maps.html
+./examples/map/toolbar.html
+./examples/map/window.html
+./examples/print/simple.html
+./examples/search/c2corg.html
+./examples/shortcuts/layout.html
+./examples/shortcuts/shortcuts.html
+./examples/tree/tree_automatic.html
+./examples/tree/tree_reorder.html
+./examples/tree/tree_standalone.html
+./examples/tree/tree_user_model_complex.html
+./examples/tree/tree_user_model.html
+</pre>
+<script>
+var files = document.getElementById("allfiles").innerHTML.split("\n");
+var body = document.body;
+for (var i = 0; i < files.length; i++) {
+  var f = files[i];
+  if (!f)
+    continue;
+  var a = document.createElement("a");
+  a.setAttribute("href", f);
+  a.appendChild(document.createTextNode(f));
+  body.appendChild(a);
+}
+</script>
+</body>
+</html>

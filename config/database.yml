@@ -1,0 +1,26 @@
+development:
+  adapter: postgresql
+  database: mapfishsample
+  encoding: UTF8
+  username: mapfish
+  password:
+  template: template_postgis
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  adapter: postgresql
+  database: mapfish_test
+  encoding: UTF8
+  username: postgres
+  password:
+  template: template_postgis
+
+production:
+  adapter: postgresql
+  database: mapfishsample
+  encoding: UTF8
+  username: mapfish
+  password:
+  template: template_postgis

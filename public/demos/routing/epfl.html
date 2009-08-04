@@ -1,0 +1,198 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Routing</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="../../mfbase/ext/resources/css/ext-all.css" />
+
+    <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../mfbase/ext/ext-all.js"></script>
+
+    <script type="text/javascript" src="../../mfbase/release/mapfish/MapFish.js"></script>
+
+    <script type="text/javascript">
+
+    function epflCreateMap(mapDiv) {
+
+        var options = {
+            projection: "EPSG:21781",
+            units: "m",
+            maxExtent: new OpenLayers.Bounds(526000, 147000, 543000, 161000),
+            scales: [1/100, 1/500, 1/1500, 1/3000, 1/5000]
+         };
+
+        var map = new OpenLayers.Map(mapDiv, options);
+
+        var epfl = new OpenLayers.Layer.WMS("EPFL Background",
+                            "http://demo.mapfish.org/mapfishsample/trunk/tilecache?",
+                            {layers: 'epfl',
+                             format: 'image/png'});
+        map.addLayer(epfl);
+
+        map.addControl(new OpenLayers.Control.MousePosition({numdigits: 0}));
+
+        map.zoomToExtent(new OpenLayers.Bounds(532661, 152125, 533612, 152837));
+        return map;
+    }
+
+    Ext.onReady(function() {
+        Ext.QuickTips.init();
+
+        var map = epflCreateMap('map');
+
+        var EPFLRouting = OpenLayers.Class(mapfish.Routing, {
+            onFailure: function() {
+                this.showMessage("An error occured");
+            },
+            showMessage: function(msg) {
+                Ext.getCmp('routingMsg').setVisible(true);
+                Ext.getCmp('routingMsg').el.dom.innerHTML = msg;
+            },
+            resetMessage: function() {
+                Ext.getCmp('routingMsg').setVisible(false);
+                Ext.getCmp('routingMsg').el.dom.innerHTML = "";
+            },
+            fetchRoute: function() {
+                this.resetMessage();
+                var form = Ext.getCmp('routingPanel').getForm();
+                if (!form.isValid())
+                    return;
+
+                var values = form.getValues();
+
+                // Convert parameters to match the routing API
+                // (ticket https://trac.mapfish.org/trac/mapfish/ticket/78
+                // may also be of interest).
+                var params = {
+                    // XXX apparently getValues() returns the label instead
+                    // of the combo value
+                    disabled: (values.mode == "Disabled") ? 1 : 0,
+                    from: values.source,
+                    to: values.target
+                };
+
+                mapfish.Routing.prototype.fetchRoute.call(this, params);
+            }
+        });
+
+        var routing = new EPFLRouting("../../epfl/routing", map);
+        
+        var store = new Ext.data.JsonStore({
+            url: '../../epfl/room',
+            root: "results",
+            id: "id",
+            fields: ['id', 'title']
+        });
+
+        new Ext.FormPanel({
+            labelAlign: 'top',
+            buttonAlign: 'left',
+            frame: true,
+            title: 'Routing',
+            bodyStyle: 'padding: 5px 5px 0',
+            width: 200,
+            id: 'routingPanel',
+            defaults: {
+                width: 150,
+                allowBlank: false,
+                msgTarget: 'side'
+            },
+            defaultType: 'textfield',
+            renderTo: 'routingPanel',
+            items: [
+                    new Ext.form.ComboBox({
+                        fieldLabel: 'Departure',
+                        name: 'source',
+                        value: 'AAD 1 31',
+                        displayField: 'title',
+                               
+                        mode: 'remote',
+                        minChars: 2,
+                        typeAhead: true,
+                        valueField: 'id',
+                        store: store
+                    }),
+                    new Ext.form.ComboBox({
+                        fieldLabel: 'Arrival',
+                        name: 'target',
+                        value: 'BS 112',
+                        displayField: 'title',
+
+                        mode: 'remote',
+                        minChars: 2,
+                        typeAhead: true,
+                        valueField: 'id',
+                        store: store
+                    }),{
+                        xtype: 'panel',
+                        bodyStyle: 'padding-bottom: 15px; font-size: xx-small;',
+                        html: 'Other valid values are BM 4133 or CH H4 554'
+                    },{
+                        id: 'mode',
+                        fieldLabel: 'Transport mode',
+                        editable: false,
+                        name: 'mode',
+                        store: new Ext.data.SimpleStore({
+                            fields: ['id', 'label'],
+                            id: 0,
+                            data : [
+                                ['pedestrian', 'Pedestrian'],
+                                ['disabled', 'Disabled']
+                            ]
+                        }),
+                        value: 'pedestrian',
+                        displayField: 'label',
+                        valueField: 'id',
+                        mode: 'local',
+                        triggerAction: 'all',
+                        xtype: 'combo'
+                    },{
+                        xtype: 'panel',
+                        cls: 'x-form-invalid-msg',
+                        html: '',
+                        id: 'routingMsg',
+                        hidden: true
+                    }
+            ],
+            buttons: [{
+                text: 'Show Itinerary',
+                handler: routing.fetchRoute,
+                scope: routing
+            }]
+        });
+
+    });
+
+     </script>
+     <style type="text/css">
+          @import "../../base.css";
+
+          #map {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #999;
+          }
+
+          #right {
+            position: absolute;
+            left: 680px;
+          }
+     </style>
+  </head>
+
+  <body class="tundra">
+    <div id="header"><a href="../../"><img id="header-logo" src="../../mapfish.png"/></a></div>
+     <h1 class="page-title">Routing Demo</h1>
+
+      <div id="content">
+        <div id="right">
+          <div id="routingPanel">
+          </div>
+        </div>
+        <div id="map"></div>
+      </div>
+  </body>
+</html>

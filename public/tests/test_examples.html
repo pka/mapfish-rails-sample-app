@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html><head><script type="text/javascript">
+<!--
+
+function test_examples_tree(t) {
+    
+    t.debug_print("Warning: this tests is not very reliable on some browsers. " +
+                  "It may pass only after a few iterations");
+    
+    var testPages = [
+        //"../examples/map/single_map.html",
+        "../examples/map/multiple_maps.html",
+        //"../examples/tree/tree_standalone.html", no map to test here
+        "../examples/tree/tree_automatic.html",
+        "../examples/tree/tree_user_model.html",
+        "../examples/geostat/choropleths.html",
+        "../examples/geostat/proportionalSymbols.html",
+        "../examples/routing/epfl.html",
+        "../examples/search/c2corg.html"
+        ];    
+    
+    var TEST_PER_PAGES = 1;
+
+    var TIMEOUT = 4;
+    var TIMEOUT_OPEN_WIN = 2;
+    var TIMEOUT_NEXT_TEST = 2;
+    
+    t.plan(testPages.length * TEST_PER_PAGES);
+    
+    function _testPage(url) {
+        t.open_window(url, function(wnd) {
+            t.debug_print("Testing page: " + url);
+
+            // Use a delay_call here as the timeout on open_window is not working as expected
+            t.delay_call(TIMEOUT, function() {
+        
+                var maps = [];
+                wnd.dijit.registry.forEach(function(widget) {
+                    // Can't use instanceof here, as IE has troubles 
+                    //  with instanceof when objects are from external frames
+                    if (widget.declaredClass == "mapfish.widgets.Map")
+                        maps.push(widget.map);
+                });
+    
+                t.ok(maps.length > 0, "at least a map is available");
+        
+                for (var j = 0; j < maps.length; j++) {
+                    if (maps[j].layers.length <= 0)
+                        t.fail("One map has no layers")
+                    
+                    var isIE = window.ActiveXObject;
+                    
+                    // FIXME: there are some troubles on Map destroy with IE
+                    // This is a very bad hack for the moment
+                    if (isIE)
+                        maps[j].unloadDestroy = null;
+                }
+
+                // close window now, otherwise all windows 
+                //  would be closed at the end of tests
+                wnd.close();
+                doNextTest();
+            });
+            
+            return true;
+        }, TIMEOUT_OPEN_WIN);
+    }
+
+    var testIndex = -1;
+    
+    function doNextTest() {
+        t.delay_call(TIMEOUT_NEXT_TEST, function() {
+            testIndex++;
+            if (testPages[testIndex]) {
+                _testPage(testPages[testIndex]);
+            }
+        });
+    }
+
+    doNextTest();
+}
+
+// -->
+</script></head><body></body></html>

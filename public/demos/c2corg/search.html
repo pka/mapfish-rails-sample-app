@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Search demo</title>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="../../mfbase/ext/resources/css/ext-all.css"/>
+
+  <style type="text/css">
+    html, body {
+      font: normal 12px verdana;
+      margin: 0;
+      padding: 0;
+      border: 0 none;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+    ul.list {
+      list-style-type: disc;
+      font-size: 11px;
+      padding: 0 0 0 16px;
+    }
+    #loading{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 20001;
+    }
+    #loading a {
+        color: #225588;
+    }
+    #loading .loading-mask {
+        padding: 2px;
+        width: 100%;
+        height: 100%;
+        -moz-opacity: 0.5;
+        opacity: .50;
+        filter: alpha(opacity=50);
+        background-color: white;
+    }
+    #loading .loading-container {
+        position: absolute;
+        left: 45%;
+        top: 40%;
+        height: auto;
+        border: 1px solid #ccc;
+    }
+    #loading .loading-indicator {
+        background: white;
+        color: #444;
+        font: bold 13px tahoma,arial,helvetica;
+        padding: 10px;
+        margin: 0;
+        height: auto;
+    }
+    #loading-msg {
+        font: normal 10px arial,tahoma,sans-serif;
+    }
+    .pan {
+        background-image: url(../../mfbase/mapfish/img/icon_pan.png) !important;
+        height: 20px !important;
+        width: 20px !important;
+    }
+    .infobox {
+        background-image: url(information-box.png) !important;
+        height: 20px !important;
+        width: 20px !important;
+    }
+  </style>
+  
+  <!-- EXT colorField Extent -->
+  <link rel="stylesheet" type="text/css" href="../../mfbase/ext-community-extensions/color-field.css" />
+</head>
+
+<body>
+  <div id="loading">
+    <div class="loading-mask"></div>
+    <div class="loading-container">
+      <div class="loading-indicator">
+        <img src="../../mfbase/ext/resources/images/default/shared/large-loading.gif"
+             width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>MapFish - Search
+         <br />
+         <span id="loading-msg">Loading ...</span>
+      </div>
+    </div>
+  </div>
+  <div id="north" style="padding: 5px">
+    <h1 style="font-size: 20px;">MapFish, Search demo</h1>
+  </div>
+  <div id="olmap"></div>
+  <div id="south"></div>
+  <div id="searchform"></div>
+</body>
+
+<script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
+<!-- debug mode -->
+<!--
+<script type="text/javascript" src="../../mfbase/ext/ext-core-debug.js"></script>
+<script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+-->
+<!-- prod mode -->
+<script type="text/javascript" src="../../mfbase/ext/ext-all.js"></script>
+
+<!-- debug mode -->
+<!--
+<script type="text/javascript" src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
+<script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
+-->
+<!-- prod mode -->
+<script type="text/javascript" src="../../mfbase/release/mapfish/MapFish.js"></script>
+
+<!-- EXT colorField Extent -->
+<script type="text/javascript" src="../../mfbase/ext-community-extensions/color-field.js" ></script>
+
+<script type="text/javascript">
+
+  // reference local blank image
+  Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
+
+  function createMap() {
+      var scales = [
+          442943842.5, 221471921.25, 110735960.625, 55367980.3125, 27683990.15625,
+          13841995.078125, 6920997.5390625, 3460498.76953125, 1730249.384765625,
+          865124.6923828125, 432562.34619140625, 216281.17309570312, 108140.58654785156,
+          54070.29327392578
+      ];
+  
+      var options = {
+          projection: "EPSG:4326",
+          controls: [new OpenLayers.Control.PanZoomBar()],
+          maxExtent: new OpenLayers.Bounds(-180, -90, 180, 90),
+          scales: scales
+      };
+  
+      return new OpenLayers.Map('olmap', options);
+  }
+
+  function addWMSLayers(map) {
+      var layer;
+      
+      layer = new OpenLayers.Layer.WMS("OpenLayers WMS", 
+          "http://labs.metacarta.com/wms/vmap0",
+          {layers: 'basic'}, 
+          {isBaseLayer: true}
+      );
+      layer.setVisibility(true);
+      map.addLayer(layer);
+
+      layer = new OpenLayers.Layer.WMS( "World Map", 
+          "http://world.freemap.in/cgi-bin/mapserv?", 
+          {
+              map: '/www/freemap.in/world/map/factbooktrans.map',
+              transparent: true,
+              layers: 'factbook',
+              format: 'image/png'
+          }
+      );
+      layer.setVisibility(false);
+      map.addLayer(layer);
+   
+      layer = new OpenLayers.Layer.WMS("Summits",
+          "http://demo.mapfish.org/mapfishsample/trunk/wms?",
+          {layers: ['summits'], format: 'image/png', transparent: true,
+           singleTile: true}
+      );
+      layer.setVisibility(true);
+      map.addLayer(layer);  
+  }
+
+  function addVectorLayer(map) {
+      var vectorLayer = new OpenLayers.Layer.Vector("vector", {
+          styleMap: new OpenLayers.StyleMap({
+              'default': new OpenLayers.Style({
+                  'externalGraphic': 'AQUA.png',
+                  'graphicWidth': 20,
+                  'graphicHeight': 20,
+                  'graphicYOffset': -20,
+                  'fillOpacity': 1.0
+              })
+          }),
+          displayInLayerSwitcher: false
+      });
+      map.addLayer(vectorLayer);
+      return vectorLayer;
+  }
+
+  function setMapCenter() {
+      this.setCenter(new OpenLayers.LonLat(5,45), 6);
+  }
+
+  Ext.onReady(function() {
+      Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+
+      /*
+       * Set up OpenLayers map
+       */
+      var map = createMap();
+      addWMSLayers(map);
+      var vectorLayer = addVectorLayer(map);
+
+      /*
+       * Create MapFish toolbar
+       */
+      var toolbar = new mapfish.widgets.toolbar.Toolbar({
+          map: map,
+          configurable: false,
+          id: 'toolbarid'
+      });
+
+      /*
+       * Create search form panel
+       */
+      var formPanel = new Ext.FormPanel({
+          title: 'Search criteria',
+          region: 'center',
+          items: [{
+              columnWidth: 0.5,
+              layout: 'form',
+              items: [{
+                  xtype: 'textfield',
+                  fieldLabel: 'Name',
+                  name: 'name'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: 'Min elevation',
+                  name: 'min'
+              },{
+                  xtype: 'textfield',
+                  fieldLabel: 'Max elevation',
+                  name: 'max'
+              }]
+          },{
+            html: ['<p>', 'Help note: search criteria specified above ',
+                   'are used in conjunction with map queries.', '</p>'].join('')
+          }]
+      });
+
+      /*
+       * Create protocol
+       */
+
+      // decorate protocol with a TriggerEventDecorator and
+      // a MergeFilterDecorator, the returned protocol is
+      // of type MergeFilterDecorator
+      protocol = mapfish.Protocol.decorateProtocol({
+          protocol: new mapfish.Protocol.MapFish({
+              url: "../../summits",
+              params: {
+                  maxfeatures: 10
+              }
+          }),
+          TriggerEventDecorator: null,
+          MergeFilterDecorator: null
+      });
+
+      /*
+       * Create a store with a feature reader for use in the grid displaying
+       * the search results.
+       */
+      var store = new Ext.data.Store({
+          reader: new mapfish.widgets.data.FeatureReader({}, [
+              {name: 'name', type: 'string'},
+              {name: 'elevation', type: 'float'}
+          ])
+      });
+
+      /*
+       * Create a search store mediator for adding to the store the features
+       * resulting from the search.
+       */
+      var searchStoreMediator = new mapfish.widgets.data.SearchStoreMediator({
+          protocol: protocol.protocol,
+          store: store,
+          append: false
+      });
+
+      /*
+       * Create Ext view port
+       */
+      var viewport = new Ext.Viewport({
+          layout: 'border',
+          listeners: {
+              afterlayout: {
+                  fn: setMapCenter,
+                  scope: map,
+                  single: true
+              }
+          },
+          items:[
+              new Ext.BoxComponent({
+                  region: 'north',
+                  el: 'north',
+                  height: 32
+              }),{
+                  region: 'east',
+                  title: ' ',
+                  width: 300,
+                  collapsible: true,
+                  collapsed: false,
+                  margins: '0 0 0 5',
+                  defaults: {
+                    border: true,
+                    frame: true
+                  },
+                  layout: 'border',
+                  items: [{
+                      title: 'Layers',
+                      region: 'north',
+                      height: 180,
+                      xtype: 'layertree',
+                      map: map
+                  },
+                  formPanel,
+                  new Ext.grid.GridPanel({
+                      title: 'Search results',
+                      region: 'south',
+                      ds: store,
+                      height: 300,
+                      columns: [{
+                              header: 'name',
+                              dataIndex: 'name',
+                              width: 200
+                          },{
+                              header: 'elevation',
+                              dataIndex: 'elevation',
+                              width: 50
+                          }
+                      ],
+                      listeners: {
+                          'rowclick': {
+                              'fn': function(grid, index, evt) {
+                                  var r = grid.getStore().getAt(index);
+                                  var feature = r.get('feature');
+                                  var rendered = false;
+                                  for (var i = 0; i < vectorLayer.features.length; i++) {
+                                      if (feature == vectorLayer.features[i]) {
+                                          rendered = true;
+                                      }
+                                  }
+                                  if (rendered) {
+                                      vectorLayer.removeFeatures(feature);
+                                  } else {
+                                      vectorLayer.addFeatures(feature);
+                                  }
+                               }
+                           }
+                       },
+                       bbar: [{
+                           text: 'Clear markers',
+                           handler: function() {
+                               vectorLayer.removeFeatures(vectorLayer.features);
+                           }
+                       }]
+                  })]
+              },{
+                  region: 'center',
+                  title: 'Map',
+                  xtype: 'mapcomponent',
+                  id: 'mapid',
+                  map: map,
+                  tbar: toolbar
+              }
+           ]
+      });
+
+      viewport.doLayout();
+
+      /*
+       * Create MapFish searcher
+       */
+
+      var mapSearcher = new mapfish.Searcher.Map({
+          mode: mapfish.Searcher.Map.BOX,
+          protocol: protocol
+      });
+      protocol.register(mapSearcher);
+
+      var formSearcher = new mapfish.Searcher.Form({
+          form: formPanel.getForm().getEl().dom,
+          protocol: protocol
+      });
+      protocol.register(formSearcher);
+
+      /*
+       * Set up toolbar
+       */
+
+      var space = function() {
+          toolbar.add(new Ext.Toolbar.Spacer());
+          toolbar.add(new Ext.Toolbar.Separator());
+          toolbar.add(new Ext.Toolbar.Spacer());
+      }
+
+      toolbar.addText('Navigate');
+      toolbar.addControl(
+          new OpenLayers.Control.Navigation({
+              isDefault: true,
+              title: 'Navigate'
+          }), {
+              iconCls: 'pan', 
+              toggleGroup: 'map'
+          }
+      );
+      space();
+      toolbar.addText('Search on click and by box');
+      toolbar.addControl(mapSearcher, {
+              iconCls: 'infobox',
+              toggleGroup: 'map'
+          }
+      );
+
+      toolbar.activate();
+
+      Ext.get('loading').fadeOut({remove: true});
+  });
+</script>
+</html>

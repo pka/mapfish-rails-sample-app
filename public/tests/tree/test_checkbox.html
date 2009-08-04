@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      // There's a bug in Firefox 2.0 (and less?) which will prevent dojo from
+      // loading parameters from the script element, and guessing the baseUrl
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=351282
+      var djConfig = {baseUrl: "../../cwbase/dojo/",
+                      isDebug: true, debugAtAllCosts: true,
+                      parseOnLoad: true};
+    </script>
+
+    <script type="text/javascript" src="../../cwbase/dojo/dojo.js"></script>
+    <script type="text/javascript" src="../../cwbase/dijit/dijit.js"></script>
+    
+    <script type="text/javascript"><!--
+        dojo.require("mapfish.widgets.Map");
+        dojo.require("mapfish.widgets.tree.TreeContainer");
+
+        dojo.addOnLoad(function () {
+
+            var treeDiv = dijit.byId("treeDiv");
+            
+            var model = 
+               {name: "root",
+                    children: [
+                        {label: "label 1",
+                         expanded: true,
+                         icon: "icons/img1.png",
+                         url: "http://www.camptocamp.com",
+                         children: [
+                            {label: "label 1.1",
+                             children: [
+                                {label: "nested 3"}
+                             ]   
+                            },
+                            {label: "label 1.2",
+                             checked: true,
+                             expanded: true,
+                             icon: "icons/img2.png",
+                             children: [
+                                {label: "label 1.2.1"},
+                                {label: "label 1.2.2",
+                                 expanded: true,
+                                 children: [
+                                    {label: "label 1.2.2.1"}
+                                 ]   
+                                }
+                             ]   
+                            }
+                         ]
+                        },
+                        {label: "label 2",
+                         icon: "icons/img2.png",
+                         children: [
+                            {label: "label 2.1"},
+                            {label: "label 2.2",
+                             icon: "icons/img3.png",
+                             children: [
+                                {label: "label 2.2.1"}
+                             ]   
+                            }
+                         ]
+                        }
+                    ]
+            };            
+            treeDiv.initWithModel(model);
+        });
+
+        function test_descendants_state_propagation(t) {
+            t.plan(4);
+
+            // Opera needs delay
+            t.delay_call(1, function() {
+
+                var tree = dijit.byId("treeDiv").tree;
+                
+                function simulateClick(domNode, checked) {
+                    domNode.checked = checked;
+                    tree._onClick({target: domNode});    
+                }
+
+                function checkDescendants(nodeWid, nodeItem, checked) {
+                
+                    var domNode = dojo.query("[widgetid=" + nodeWid + "] input")[0];
+                    simulateClick(domNode, checked)
+        
+                    var allOk = dojo.every(dojo.query("[widgetid=" + nodeWid + "] input"), function(node) {
+                        return node.checked == checked;
+                    });
+                    t.ok(allOk, "All dom checkboxes are in the right state, for wid " + nodeWid);
+                    
+                    var descendantsAndSelf = mapfish.widgets.tree.TreeUtils.descendantsAndSelf(nodeItem);
+                    var allOk = dojo.every(descendantsAndSelf, function(item) {
+                        return item.checked == checked;
+                    }); 
+                    t.ok(allOk, "All model items are in the right state, for wid " + nodeWid);
+                }
+            
+                var tree = dijit.byId("treeDiv").tree;
+                t.debug_print(tree);
+                var label1Wid = "mapfish_widgets_tree__TreeNode_0";
+                var label1Item = tree.model.children[0];
+                
+                checkDescendants(label1Wid, label1Item, true);
+                checkDescendants(label1Wid, label1Item, false);
+    
+                // TODO: other tests
+            });
+        }
+        
+        /* debugging
+        dojo.addOnLoad(function () {
+            var dummyT = {
+                plan: function() {},
+                ok: function(cond, msg) { if (!cond) console.warn("Cond failure", msg); }
+            };
+            test_descendants_state_propagation(dummyT);
+        });
+        */
+                
+     --></script>
+     <style type="text/css">
+          @import "../../cwbase/dijit/themes/tundra/tundra.css";
+          @import "../../cwbase/mapfish/widgets/tree/Tree.css";
+     
+          #treeContainer {
+            border: 1px solid #ccc;
+            height: 15em;
+          }
+     </style>
+  </head>
+
+  <body class="tundra">
+    <div id="treeContainer">
+      <div id="treeDiv" dojoType="mapfish.widgets.tree.TreeContainer"></div>
+    </div>
+  </body>
+</html>

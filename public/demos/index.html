@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MapFish Demos</title>
+    <link rel="stylesheet" href="../base.css" type="text/css" />
+    <style type="text/css">
+      .demo {
+        min-height: 180px;
+        max-width: 700px;
+      }
+      .demo h2 {
+          margin-top: 20px;
+          clear: left;
+      }
+      .demo img {
+        border: solid 1px #ccc;
+        /* float: left;
+          FIXME: i.e. 6 does not display the text if the images are left floated
+        */
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header"><a href=""><img id="header-logo" src="../mapfish.png"/></a></div>
+    <h1 class="page-title">MapFish Demos</h1>
+    <div id="content">
+      <div class="demo">
+        <h2>World Fact Book demo (GeoStat)</h2>
+        <a href="geostat/geostat.html" style="border: none">
+          <img src="world_factbk.png"/>
+        </a>
+        <p>
+          This demo demonstrates the geographical statistic module of MapFish.
+          Different set of data can be displayed on map using chrolopleth or
+          proportional symbols. The data classification can be modified dynamically
+          directly from the page.
+        </p>
+        <p>
+          <a href="geostat/geostat.html">Click here to see the GeoStat demo</a>
+        </p>
+      </div>
+      
+      <div class="demo">
+        <h2>Camptocamp.org (Search)</h2>
+        <a href="c2corg/search.html" style="border: none">
+          <img src="c2corg.png"/>
+        </a>
+        <p>
+          This demo shows the search module. Several different ways of performing
+          searches are available.
+        </p>
+        <p>
+          The layer tree widget can also be seen on that page.
+        </p>
+        <p>
+          <a href="c2corg/search.html">Click here to see the Search demo</a>
+        </p>
+      </div>
+
+      <div class="demo">
+        <h2>EPFL Campus demo (Routing)</h2>
+        <a href="routing/epfl.html" style="border: none">
+          <img src="epfl.png"/>
+        </a>
+        <p>
+          This demo shows the routing module of MapFish.
+        </p>
+        <p>
+          <a href="routing/epfl.html">Click here to see the Routing demo</a>
+        </p>
+      </div>
+      <div style="margin-top: 40px">
+        Other examples (targetted for developpers) are available <a href="../">in the examples page</a>
+      </div>
+    </div>
+  </body>
+</html>
+

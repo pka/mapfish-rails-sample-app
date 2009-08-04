@@ -5,8 +5,8 @@
 # Make sure the secret is at least 30 characters and all random, 
 # no regular words or you'll be exposed to dictionary attacks.
 ActionController::Base.session = {
-  :key         => '_skel_session',
-  :secret      => '4bda5a1831febf72e8f4a4c47c846a2106bf85ff64f17843cd7511f99d35022353bdca49fff9eb4d473bc9963c25ac7888b9c17dfb6a84276783c5c3631c8586'
+  :key         => '_mapfish-rails-sample-app_session',
+  :secret      => '9d2315fa6f2b373efafc662dba36577e988c2655bc76ab7f4a3f8513a453ba6b3dc185ed159a69c63de1c7ebe3ffca0c98276de58ff16bada0bc9fa0fc31294e'
 }
 
 # Use the database for sessions instead of the cookie-based default,

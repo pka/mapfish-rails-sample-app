@@ -15,17 +15,17 @@ class CityTest < ActiveSupport::TestCase
     assert_equal 'Bern', cities.first.name
     
     #box
-    cities = City.find_by_mapfish_filter("name"=>"", "box"=>"9.449463,46.593018,10.460205,47.93335", "max"=>"", "action"=>"index", "maxfeatures"=>"10", "controller"=>"summits", "min"=>"")
+    cities = City.find_by_mapfish_filter("name"=>"", "bbox"=>"9.449463,46.593018,10.460205,47.93335", "max"=>"", "action"=>"index", "maxfeatures"=>"10", "controller"=>"summits", "min"=>"")
     assert_equal 1, cities.size
     assert_equal 'Vaduz', cities.first.name
     
     #Attribute filter
-    cities = City.find_by_mapfish_filter("name"=>"Vaduz", "lon"=>"6.021728515625", "max"=>"", "action"=>"index", "maxfeatures"=>"10", "tolerance"=>"10.06591796875", "controller"=>"summits", "min"=>"", "lat"=>"46.07666015625")
+    cities = City.find_by_mapfish_filter("name__eq"=>"Vaduz", "lon"=>"6.021728515625", "max"=>"", "action"=>"index", "maxfeatures"=>"10", "tolerance"=>"10.06591796875", "controller"=>"summits", "min"=>"", "lat"=>"46.07666015625")
     assert_equal 1, cities.size
     assert_equal 'Vaduz', cities.first.name
     
-    #Custom filter
-    cities = City.find_by_mapfish_filter({"lon"=>"6.021728515625", "lat"=>"46.07666015625", "tolerance"=>"10.06591796875"}, :conditions => "name LIKE 'V%'")
+    #ilike filter
+    cities = City.find_by_mapfish_filter({"name__ilike" => "vaduz", "lon"=>"6.021728515625", "lat"=>"46.07666015625", "tolerance"=>"10.06591796875"})
     assert_equal 1, cities.size
     assert_equal 'Vaduz', cities.first.name
     

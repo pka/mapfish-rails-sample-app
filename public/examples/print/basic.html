@@ -49,7 +49,10 @@
         "OpenLayers WMS": {overview: true}
     };
 
-    var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+    //var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+    var printConfigUrl = '/print/info';
+    OpenLayers.ProxyHost = null;
+
 
     var toolbar = new mapfish.widgets.toolbar.Toolbar({
         map: map,

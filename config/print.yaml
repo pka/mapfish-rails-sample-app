@@ -32,9 +32,9 @@ hosts:
   - !localMatch
     dummy: true
   - !ipMatch
-    ip: www.camptocamp.org
+    ip: demo.mapfish.org
   - !dnsMatch
-    host: osm.wheregroup.com
+    host: labs.metacarta.com
     port: 80
 
 

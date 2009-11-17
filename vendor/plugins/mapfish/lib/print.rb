@@ -20,6 +20,8 @@
 require 'popen4'
 require 'tmpdir'
 
+Mime::Type.register 'application/pdf', :pdf
+
 module MapFish
     module Print
         class JavaError < Exception
@@ -59,7 +61,7 @@ module MapFish
                     result = stdout.readlines().join("\n")
                     errors = stderr.readlines().join("\n")
                 end
-                if status != 0
+                if status.nil? || status.exitstatus != 0
                     raise JavaError.new(cmd, errors)
                 else
                     info = ActiveSupport::JSON.decode(result)
@@ -92,7 +94,7 @@ module MapFish
                     result = stdout.readlines().join("\n")
                     errors = stderr.readlines().join("\n")
                 end
-                if status != 0
+                if status.nil? || status.exitstatus != 0
                     raise JavaError.new(cmd, errors)
                 else
                     respond_to do |format|

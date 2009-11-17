@@ -69,8 +69,10 @@
         Countries: { format: 'image/svg+xml' }
     };
 
-    var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+    //var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+    var printConfigUrl = '/print/info';
     //var printConfigUrl = '/tomcat/print-servlet-1.1-SNAPSHOT/pdf/info.json';
+    OpenLayers.ProxyHost = null;
 
     var toolbar = new mapfish.widgets.toolbar.Toolbar({
         map: map,

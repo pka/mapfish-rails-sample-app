@@ -9,6 +9,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :weather_stations
 
+  map.connect 'print/info.:format', :controller=>'print', :action=>'info', :method=>:get
+  map.connect 'print/create.:format', :controller=>'print', :action=>'create', :method=>:po
+  map.connect 'print/:id.:format', :controller=>'print', :action=>'show', :method=>:get
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

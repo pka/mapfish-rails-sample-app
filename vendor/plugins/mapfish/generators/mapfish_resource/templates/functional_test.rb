@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class <%= controller_class_name %>ControllerTest < ActionController::TestCase
-  def setup
-    login_as :pascale
-  end
 
   test "should get index" do
     get :index

@@ -4,6 +4,7 @@
 
 /**
  * @requires OpenLayers/Layer/Grid.js
+ * @requires OpenLayers/Tile/Image.js
  */
 
 /** 
@@ -28,7 +29,7 @@ OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.Grid, {
     sphericalMercator: false,
 
     /**
-     * Constructor: OpenLayers.Layer.OSM
+     * Constructor: OpenLayers.Layer.XYZ
      *
      * Parameters:
      * name - {String}

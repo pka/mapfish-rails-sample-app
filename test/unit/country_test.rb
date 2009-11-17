@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CountryTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  def test_truth
+  test "the truth" do
     assert true
   end
 end

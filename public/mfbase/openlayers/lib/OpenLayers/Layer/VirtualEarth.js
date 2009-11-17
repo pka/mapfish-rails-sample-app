@@ -4,6 +4,7 @@
 
 
 /**
+ * @requires OpenLayers/Layer/SphericalMercator.js
  * @requires OpenLayers/Layer/EventPane.js
  * @requires OpenLayers/Layer/FixedZoomLevels.js
  */
@@ -69,7 +70,15 @@ OpenLayers.Layer.VirtualEarth = OpenLayers.Class(
      *     projection, which allows support for vector drawing, overlaying
      *     other maps, etc. 
      */
-    sphericalMercator: false, 
+    sphericalMercator: false,
+    
+    /**
+     * APIProperty: animationEnabled
+     * {Boolean} If set to true, the transition between zoom levels will be
+     *     animated. Set to false to match the zooming experience of other
+     *     layer types. Default is true.
+     */
+    animationEnabled: true, 
 
     /** 
      * Constructor: OpenLayers.Layer.VirtualEarth
@@ -112,10 +121,13 @@ OpenLayers.Layer.VirtualEarth = OpenLayers.Class(
                 // http://blogs.msdn.com/virtualearth/archive/2007/09/28/locking-a-virtual-earth-map.aspx
                 //
                 this.mapObject.LoadMap(null, null, this.type, true);
-                this.mapObject.AttachEvent("onmousedown", function() {return true; });
+                this.mapObject.AttachEvent("onmousedown", OpenLayers.Function.True);
 
             } catch (e) { }
             this.mapObject.HideDashboard();
+            if(typeof this.mapObject.SetAnimationEnabled == "function") {
+                this.mapObject.SetAnimationEnabled(this.animationEnabled);
+            }
         }
 
         //can we do smooth panning? this is an unpublished method, so we need 
@@ -128,6 +140,13 @@ OpenLayers.Layer.VirtualEarth = OpenLayers.Class(
             this.dragPanMapObject = null;
         }
 
+    },
+
+    /**
+     * Method: onMapResize
+     */
+    onMapResize: function() {
+        this.mapObject.Resize(this.map.size.w, this.map.size.h);
     },
 
     /** 

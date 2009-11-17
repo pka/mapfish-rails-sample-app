@@ -25,7 +25,10 @@ Ext.namespace("GeoExt.tree");
  * 
  *     A layer container that will collect all base layers of an OpenLayers
  *     map. Only layers that have displayInLayerSwitcher set to true will be
- *     included.
+ *     included. The childrens' iconCls defaults to "gx-tree-baselayer-icon".
+ *     
+ *     Children will be rendered with a radio button instead of a checkbox,
+ *     showing the user that only one base layer can be active at a time.
  * 
  *     To use this node type in ``TreePanel`` config, set nodeType to
  *     "gx_baselayercontainer".
@@ -36,36 +39,24 @@ GeoExt.tree.BaseLayerContainer = Ext.extend(GeoExt.tree.LayerContainer, {
      *  Private constructor override.
      */
     constructor: function(config) {
-        config.text = config.text || "Base Layer";
-        GeoExt.tree.BaseLayerContainer.superclass.constructor.apply(this, arguments);
-    },
+        config = Ext.applyIf(config || {}, {
+            text: "Base Layer",
+            loader: {}
+        });
+        config.loader = Ext.applyIf(config.loader, {
+            baseAttrs: Ext.applyIf(config.loader.baseAttrs || {}, {
+                iconCls: 'gx-tree-baselayer-icon',
+                checkedGroup: 'baselayer'
+            }),
+            filter: function(record) {
+                var layer = record.get("layer");
+                return layer.displayInLayerSwitcher === true &&
+                    layer.isBaseLayer === true;
+            }
+        });
 
-    /** private: method[addLayerNode]
-     *  :param layerRecord: ``Ext.data.Record`` the layer record to add a node
-     *      for
-     * 
-     *  Adds a child node representing a base layer of the map.
-     */
-    addLayerNode: function(layerRecord) {
-        var layer = layerRecord.get("layer");
-        if (layer.isBaseLayer == true) {
-            GeoExt.tree.BaseLayerContainer.superclass.addLayerNode.call(this,
-                layerRecord);
-        }
-    },
-    
-    /** private: method[removeLayerNode]
-     *  :param layerRecord: ``Ext.data.Record`` the layer record to remove the
-     *      node for
-     *
-     *  Removes a child node representing a base layer of the map.
-     */
-    removeLayerNode: function(layerRecord) {
-        var layer = layerRecord.get("layer");
-        if (layer.isBaseLayer == true) {
-            GeoExt.tree.BaseLayerContainer.superclass.removeLayerNode.call(this,
-                layerRecord);
-    	}
+        GeoExt.tree.BaseLayerContainer.superclass.constructor.call(this,
+            config);
     }
 });
 

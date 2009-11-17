@@ -35,6 +35,22 @@
 
 
     }    
+    
+    function test_Control_Attribution_no_duplicates(t) {
+        t.plan(2);
+        
+        map = new OpenLayers.Map("map");
+        map.addLayer(new OpenLayers.Layer("Company A: 1",{'attribution':'company A'}));
+        map.addLayer(new OpenLayers.Layer("Company A: 2",{'attribution':'company A'}));
+
+        control = new OpenLayers.Control.Attribution();
+        map.addControl(control);
+        t.eq(control.div.innerHTML, 'company A', "Attribution not duplicated.");
+                
+        map.addLayer(new OpenLayers.Layer("Company B: 1",{'attribution':'company B'}));
+        map.addLayer(new OpenLayers.Layer("Company A: 3",{'attribution':'company A'}));
+        t.eq(control.div.innerHTML, 'company A, company B', "Attribution correct with four layers (3 with same attribution).");
+    }
   </script>
 </head>
 <body>

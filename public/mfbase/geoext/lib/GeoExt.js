@@ -64,6 +64,8 @@
      */
     if(!singleFile) {
         var jsfiles = new Array(
+            "GeoExt/data/AttributeReader.js",
+            "GeoExt/data/AttributeStore.js",
             "GeoExt/data/FeatureRecord.js",
             "GeoExt/data/FeatureReader.js",
             "GeoExt/data/FeatureStore.js",
@@ -73,6 +75,11 @@
             "GeoExt/data/ScaleStore.js",
             "GeoExt/data/WMSCapabilitiesReader.js",
             "GeoExt/data/WMSCapabilitiesStore.js",
+            "GeoExt/data/WFSCapabilitiesReader.js",
+            "GeoExt/data/WFSCapabilitiesStore.js",
+            "GeoExt/data/WMSDescribeLayerReader.js",
+            "GeoExt/data/WMSDescribeLayerStore.js",
+            "GeoExt/data/WMCReader.js",
             "GeoExt/widgets/Action.js",
             "GeoExt/data/ProtocolProxy.js",
             "GeoExt/widgets/MapPanel.js",
@@ -82,15 +89,21 @@
             "GeoExt/widgets/form/BasicForm.js",
             "GeoExt/widgets/form/FormPanel.js",
             "GeoExt/widgets/tips/SliderTip.js",
+            "GeoExt/widgets/tips/LayerOpacitySliderTip.js",
             "GeoExt/widgets/tips/ZoomSliderTip.js",
             "GeoExt/widgets/tree/LayerNode.js",
+            "GeoExt/widgets/tree/LayerLoader.js",
             "GeoExt/widgets/tree/LayerContainer.js",
             "GeoExt/widgets/tree/BaseLayerContainer.js",
             "GeoExt/widgets/tree/OverlayLayerContainer.js",
+            "GeoExt/widgets/tree/LayerParamNode.js",
+            "GeoExt/widgets/tree/LayerParamLoader.js",
+            "GeoExt/widgets/LayerOpacitySlider.js",
             "GeoExt/widgets/LegendImage.js",
             "GeoExt/widgets/LegendWMS.js",
             "GeoExt/widgets/LegendPanel.js",
-            "GeoExt/widgets/ZoomSlider.js"
+            "GeoExt/widgets/ZoomSlider.js",
+            "GeoExt/widgets/grid/FeatureSelectionModel.js"
         );
 
         var agent = navigator.userAgent;

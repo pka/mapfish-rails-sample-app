@@ -43,7 +43,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      * Property: layers
      * {Array(<OpenLayers.Layer.WMS>)} The layers to query for feature info.
      *     If omitted, all map WMS layers with a url that matches this <url> or
-     *     <layerUrl> will be considered.
+     *     <layerUrls> will be considered.
      */
     layers: null,
 
@@ -131,6 +131,9 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      * Constant: EVENT_TYPES
      *
      * Supported event types (in addition to those from <OpenLayers.Control>):
+     * beforegetfeatureinfo - Triggered before the request is sent.
+     *      The event object has an *xy* property with the position of the 
+     *      mouse click or hover event that triggers the request.
      * getfeatureinfo - Triggered when a GetFeatureInfo response is received.
      *      The event object has a *text* property with the body of the
      *      response (String), a *features* property with an array of the
@@ -138,7 +141,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      *      click or hover event that triggered the request, and a *request*
      *      property with the request itself.
      */
-    EVENT_TYPES: ["getfeatureinfo"],
+    EVENT_TYPES: ["beforegetfeatureinfo", "getfeatureinfo"],
 
     /**
      * Constructor: <OpenLayers.Control.WMSGetFeatureInfo>
@@ -216,6 +219,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      * evt - {<OpenLayers.Event>} 
      */
     getInfoForClick: function(evt) {
+        this.events.triggerEvent("beforegetfeatureinfo", {xy: evt.xy});
         // Set the cursor to "wait" to tell the user we're working on their
         // click.
         OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
@@ -230,6 +234,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
      * evt - {Object}
      */
     getInfoForHover: function(evt) {
+        this.events.triggerEvent("beforegetfeatureinfo", {xy: evt.xy});
         this.request(evt.xy, {hover: true});
     },
 
@@ -352,6 +357,7 @@ OpenLayers.Control.WMSGetFeatureInfo = OpenLayers.Class(OpenLayers.Control, {
                     y: clickPosition.y,
                     height: this.map.getSize().h,
                     width: this.map.getSize().w,
+                    format: layers[0].params.FORMAT,
                     info_format: this.infoFormat 
                 }, this.vendorParams), 
                 callback: function(request) {

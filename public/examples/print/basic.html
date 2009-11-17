@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Map printing with a simple form</title>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css"
+      href="../../mfbase/ext/resources/css/ext-all.css"/>
+<link rel="stylesheet" type="text/css"
+      href="../../mfbase/mapfish/mapfish.css"/>
+
+<script type="text/javascript"
+        src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
+
+<script type="text/javascript"
+        src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+
+<script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
+
+<script type="text/javascript">
+  // Because of a bug in Firefox 2 we need to specify the MapFish base path.
+  // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
+  var gMfLocation = "../../mfbase/mapfish/";
+</script>
+<script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
+<script type="text/javascript" src="../examples.js"></script>
+
+<style type="text/css">
+  html, body {
+    font: normal 12px verdana;
+    margin: 0;
+    padding: 0;
+    border: 0 none;
+    overflow: hidden;
+    height: 100%;
+  }
+</style>
+<script type="text/javascript">
+  // reference local blank image
+  Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
+  Ext.onReady(function() {
+
+    var map = new OpenLayers.Map();
+
+    var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
+            "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
+
+    var layerOverrides={
+        "OpenLayers WMS": {overview: true}
+    };
+
+    var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+
+    var toolbar = new mapfish.widgets.toolbar.Toolbar({
+        map: map,
+        configurable: false,
+        items: [new mapfish.widgets.print.PrintAction({
+            map: map,
+            configUrl: printConfigUrl,
+            overrides: layerOverrides
+        })]
+    });
+
+    var viewport = new Ext.Viewport({
+      layout:'border',
+      items:[
+        new Ext.BoxComponent({ // raw
+          region: 'north',
+          el: 'north',
+          height: 32,
+          margins: {left: 5,top: 5}
+        }),
+        {
+          region: 'west',
+          id: 'west-panel',
+          title: 'West',
+          split: true,
+          width: 280,
+          minSize: 175,
+          maxSize: 400,
+          collapsible: true,
+          margins: '0 0 0 5',
+          layout: 'accordion',
+          defaults: {
+            collapsed: true
+          },
+          layoutConfig:{
+            animate: true,
+            activeOnTop: false
+          },
+          items: [
+            {
+              xtype: 'print-simple',
+              title: 'Print single page',
+              bodyStyle: 'padding: 7px;',
+	      collapsed: false,
+              formConfig: {
+                labelWidth: 65,
+                defaults: {
+                  width: 140,
+                  listWidth: 140
+                },
+                items: [
+                  {
+                    xtype: 'textfield',
+                    fieldLabel: OpenLayers.Lang.translate('mf.print.mapTitle'),
+                    name: 'mapTitle',
+                    value: 'Map title'
+                  },
+                  {
+                    xtype: 'textarea',
+                    fieldLabel: OpenLayers.Lang.translate('mf.print.comment'),
+                    name: 'comment',
+                    height: 100,
+                    value: 'Some comments'
+                  }
+                ]
+              },
+              border: false,
+              map: map,
+              configUrl: printConfigUrl,
+              overrides: layerOverrides
+            }
+          ]
+        },{
+            region: 'center',
+            title: 'Map',
+            layout: 'fit',
+            xtype: 'gx_mappanel',
+            map: map,
+            layers: [wms],
+            tbar: toolbar,
+            zoom: 3,
+            center:new OpenLayers.LonLat(8.5, 0)
+        }]
+    });
+  });
+</script>
+</head>
+<body>
+  <div id="west"></div>
+   <div id="north">
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: print</p>
+  </div>
+  <div id="center"></div>
+</body>
+</html>

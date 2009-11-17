@@ -85,6 +85,13 @@ Ext.extend(mapfish.widgets.recenter.DataField, mapfish.widgets.recenter.Base, {
     limit: 10,
 
     /**
+     * APIProperty: minChars
+     * {Number} An integer specifying the minimum number of chars the
+     *     combobox should wait the user to type before triggering the search.
+     */
+    minChars: 2,
+    
+    /**
      * APIProperty: fieldLabel
      * {String} The label used in front of the combo box, defaults to
      *     null.
@@ -124,7 +131,7 @@ Ext.extend(mapfish.widgets.recenter.DataField, mapfish.widgets.recenter.Base, {
             fieldLabel: this.fieldLabel,
             name: this.displayField,
             mode: 'remote',
-            minChars: 2,
+            minChars: this.minChars,
             typeAhead: true,
             forceSelection: true,
             hideTrigger: true,

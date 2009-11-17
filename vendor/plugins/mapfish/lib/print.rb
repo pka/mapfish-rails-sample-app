@@ -17,7 +17,8 @@
 # along with MapFish Server.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-require 'open4'
+require 'popen4'
+require 'tmpdir'
 
 module MapFish
     module Print
@@ -35,14 +36,12 @@ module MapFish
         end
 
         # To have a controller for the print module, just mix-in this module to
-        # one of your controllers. This controller must have two attributes
-        # defined: @classPath and @configFile. 
+        # one of your controllers. This controller must have an attribute @configFile.
         # For example:
         # class PrintController < ApplicationController
         #     include MapFish::Print::Controller
         #
         #     def initialize()
-        #         @classPath = "/home/toto/rails/Test/vendor/java/print/print-standalone/target/print-standalone.jar"
         #         @configFile = "/home/toto/rails/Test/vendor/java/print/print-standalone/samples/config.yaml"
         #     end
         # end 
@@ -55,7 +54,8 @@ module MapFish
                 cmd = baseCmd() + " --clientConfig"
                 result = ""
                 errors = ""
-                status = Open4.popen4(cmd) do |pid, stdin, stdout, stderr|
+                status = POpen4::popen4(cmd) do |stdout, stderr, stdin, pid|
+
                     result = stdout.readlines().join("\n")
                     errors = stderr.readlines().join("\n")
                 end
@@ -78,13 +78,13 @@ module MapFish
 
             def create
                 cleanupTempFiles
-                
+
                 tempId = rand(2**31) #TODO: not secure enough
                 temp = TEMP_PREFIX + tempId.to_s + TEMP_SUFFIX
                 cmd = baseCmd() + " --output=" + temp
                 result = ""
                 errors = ""
-                status = Open4.popen4(cmd) do |pid, stdin, stdout, stderr|
+                status = POpen4::popen4(cmd) do |stdout, stderr, stdin, pid|
                     body = request.body
                     FileUtils.copy_stream(body, stdin)
                     body.close()
@@ -115,7 +115,7 @@ module MapFish
         protected
 
             def baseCmd
-                return "java -cp " + @classPath + " org.mapfish.print.ShellMapPrinter --config='" + @configFile + "'"
+                return "java -cp #{File.dirname(__FILE__)}/../print/print-standalone.jar org.mapfish.print.ShellMapPrinter --config=#{@configFile}"
             end
 
             def cleanupTempFiles

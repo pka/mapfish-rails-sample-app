@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -62,7 +62,8 @@ mapfish.widgets.data.FeatureStoreMediator = function(config){
         OpenLayers.Console.error(
             "store is missing in the config");
     }
-    if (!(this.store.reader instanceof mapfish.widgets.data.FeatureReader)) {
+    if (!(this.store.reader instanceof mapfish.widgets.data.FeatureReader ||
+          this.store.reader instanceof GeoExt.data.FeatureReader)) {
         OpenLayers.Console.error(
             "store does not use a FeatureReader");
     }

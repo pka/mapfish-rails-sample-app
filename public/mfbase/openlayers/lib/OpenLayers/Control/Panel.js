@@ -21,6 +21,13 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
      */
     controls: null,    
     
+    /**
+     * APIProperty: autoActivate
+     * {Boolean} Activate the control when it is added to a map.  Default is
+     *     true.
+     */
+    autoActivate: true,
+
     /** 
      * APIProperty: defaultControl
      * {<OpenLayers.Control>} The control which is activated when the control is
@@ -107,7 +114,6 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
                 scope: this
             });
         }
-        this.activate();
         return this.div;
     },
 
@@ -183,13 +189,14 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
         // since they need to pass through.
         for (var i=0, len=controls.length; i<len; i++) {
             var element = document.createElement("div");
-            var textNode = document.createTextNode(" ");
             controls[i].panel_div = element;
             if (controls[i].title != "") {
                 controls[i].panel_div.title = controls[i].title;
             }
             OpenLayers.Event.observe(controls[i].panel_div, "click", 
                 OpenLayers.Function.bind(this.onClick, this, controls[i]));
+            OpenLayers.Event.observe(controls[i].panel_div, "dblclick", 
+                OpenLayers.Function.bind(this.onDoubleClick, this, controls[i]));
             OpenLayers.Event.observe(controls[i].panel_div, "mousedown", 
                 OpenLayers.Function.bindAsEventListener(OpenLayers.Event.stop));
         }    
@@ -214,6 +221,13 @@ OpenLayers.Control.Panel = OpenLayers.Class(OpenLayers.Control, {
     onClick: function (ctrl, evt) {
         OpenLayers.Event.stop(evt ? evt : window.event);
         this.activateControl(ctrl);
+    },
+
+    /**
+     * Method: onDoubleClick
+     */
+    onDoubleClick: function(ctrl, evt) {
+        OpenLayers.Event.stop(evt ? evt : window.event);
     },
 
     /**

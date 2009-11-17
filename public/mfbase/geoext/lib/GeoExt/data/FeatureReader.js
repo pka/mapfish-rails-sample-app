@@ -101,7 +101,9 @@ Ext.extend(GeoExt.data.FeatureReader, Ext.data.DataReader, {
                         else {
                             v = feature.attributes[field.mapping || field.name] || field.defaultValue;
                         }
-                        v = field.convert(v);
+                        if (field.convert) {
+                            v = field.convert(v);
+                        }
                         values[field.name] = v;
                     }
                 }
@@ -109,7 +111,9 @@ Ext.extend(GeoExt.data.FeatureReader, Ext.data.DataReader, {
                 values.state = feature.state;
                 values.fid = feature.fid;
 
-                records[records.length] = new recordType(values, feature.id);
+                // newly inserted features need to be made into phantom records
+                var id = (feature.state === OpenLayers.State.INSERT) ? undefined : feature.id;
+                records[records.length] = new recordType(values, id);
             }
         }
 

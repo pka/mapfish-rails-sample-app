@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -75,6 +75,12 @@ Ext.extend(mapfish.widgets.print.BaseWidget, Ext.Panel, {
      */
     layer: null,
 
+    /**
+     * APIProperty: styleMap
+     * {<OpenLayers.StyleMap>} An optional map style for the vector layer containing the print rectangle.
+     */
+    styleMap: null,
+
     layout: 'fit',
 
     /**
@@ -99,6 +105,9 @@ Ext.extend(mapfish.widgets.print.BaseWidget, Ext.Panel, {
         //for manual enable/disable
         this.on('enable', this.setUp, this);
         this.on('disable', this.tearDown, this);
+
+        //for use in an Ext.Window with closeAction close
+        this.on('destroy', this.tearDown, this);
 
         this.on('render', function() {
             var mask = this.mask = new Ext.LoadMask(this.body, {
@@ -197,6 +206,7 @@ Ext.extend(mapfish.widgets.print.BaseWidget, Ext.Panel, {
 
             this.layer = new OpenLayers.Layer.Vector("_Print" + this.getId(), {
                 displayInLayerSwitcher: false,
+                styleMap: this.styleMap,
                 calculateInRange: function() {
                     return true;
                 }

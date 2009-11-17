@@ -31,6 +31,20 @@ OpenLayers.Util.getElement = function() {
     return elements;
 };
 
+/**
+ * Function: isElement
+ * A cross-browser implementation of "e instanceof Element".
+ *
+ * Parameters:
+ * o - {Object} The object to test.
+ *
+ * Returns:
+ * {Boolean}
+ */
+OpenLayers.Util.isElement = function(o) {
+    return !!(o && o.nodeType === 1);
+};
+
 /** 
  * Maintain existing definition of $.
  */
@@ -342,17 +356,9 @@ OpenLayers.Util.onImageLoad = function() {
     //
     if (!this.viewRequestID ||
         (this.map && this.viewRequestID == this.map.viewRequestID)) { 
-        this.style.backgroundColor ="transparent";
         this.style.display = "";  
     }
 };
-
-/**
- * Property: onImageLoadErrorColor
- * {String} The color tiles with load errors will turn.
- *          Default is "pink"
- */
-OpenLayers.Util.onImageLoadErrorColor = "pink";
 
 /**
  * Property: IMAGE_RELOAD_ATTEMPTS
@@ -388,7 +394,7 @@ OpenLayers.Util.onImageLoadError = function() {
             this.src = this.src;
         }
     } else {
-        this.style.backgroundColor = OpenLayers.Util.onImageLoadErrorColor;
+        OpenLayers.Element.addClass(this, "olImageLoadError");
     }
     this.style.display = "";
 };
@@ -608,8 +614,12 @@ OpenLayers.Util.getParameterString = function(params) {
         if (typeof value == 'object' && value.constructor == Array) {
           /* value is an array; encode items and separate with "," */
           var encodedItemArray = [];
+          var item;
           for (var itemIndex=0, len=value.length; itemIndex<len; itemIndex++) {
-            encodedItemArray.push(encodeURIComponent(value[itemIndex]));
+            item = value[itemIndex];
+            encodedItemArray.push(encodeURIComponent(
+                (item === null || item === undefined) ? "" : item)
+            );
           }
           encodedValue = encodedItemArray.join(",");
         }
@@ -622,6 +632,30 @@ OpenLayers.Util.getParameterString = function(params) {
     }
     
     return paramsArray.join("&");
+};
+
+/**
+ * Function: urlAppend
+ * Appends a parameter string to a url. This function includes the logic for
+ * using the appropriate character (none, & or ?) to append to the url before
+ * appending the param string.
+ * 
+ * Parameters:
+ * url - {String} The url to append to
+ * paramStr - {String} The param string to append
+ * 
+ * Returns:
+ * {String} The new url
+ */
+OpenLayers.Util.urlAppend = function(url, paramStr) {
+    var newUrl = url;
+    if(paramStr) {
+        var parts = (url + " ").split(/[?&]/);
+        newUrl += (parts.pop() === " " ?
+            paramStr :
+            parts.length ? "&" + paramStr : "?" + paramStr);
+    }
+    return newUrl;
 };
 
 /**
@@ -930,6 +964,8 @@ OpenLayers.Util.getParameters = function(url) {
         var end = OpenLayers.String.contains(url, "#") ?
                     url.indexOf('#') : url.length;
         paramsString = url.substring(start, end);
+    } else {
+        paramsString = url;
     }
         
     var parameters = {};
@@ -1614,3 +1650,61 @@ OpenLayers.Util.getScrollbarWidth = function() {
 
     return scrollbarWidth;
 };
+
+/**
+ * APIFunction: getFormattedLonLat
+ * This function will return latitude or longitude value formatted as 
+ *
+ * Parameters:
+ * coordinate - {Float} the coordinate value to be formatted
+ * axis - {String} value of either 'lat' or 'lon' to indicate which axis is to
+ *          to be formatted (default = lat)
+ * dmsOption - {String} specify the precision of the output can be one of:
+ *           'dms' show degrees minutes and seconds
+ *           'dm' show only degrees and minutes
+ *           'd' show only degrees
+ * 
+ * Returns:
+ * {String} the coordinate value formatted as a string
+ */
+OpenLayers.Util.getFormattedLonLat = function(coordinate, axis, dmsOption) {
+    if (!dmsOption) {
+        dmsOption = 'dms';    //default to show degree, minutes, seconds
+    }
+    var abscoordinate = Math.abs(coordinate)
+    var coordinatedegrees = Math.floor(abscoordinate);
+
+    var coordinateminutes = (abscoordinate - coordinatedegrees)/(1/60);
+    var tempcoordinateminutes = coordinateminutes;
+    coordinateminutes = Math.floor(coordinateminutes);
+    var coordinateseconds = (tempcoordinateminutes - coordinateminutes)/(1/60);
+    coordinateseconds =  Math.round(coordinateseconds*10);
+    coordinateseconds /= 10;
+
+    if( coordinatedegrees < 10 ) {
+        coordinatedegrees = "0" + coordinatedegrees;
+    }
+    var str = coordinatedegrees + " ";  //get degree symbol here somehow for SVG/VML labelling
+
+    if (dmsOption.indexOf('dm') >= 0) {
+        if( coordinateminutes < 10 ) {
+            coordinateminutes = "0" + coordinateminutes;
+        }
+        str += coordinateminutes + "'";
+  
+        if (dmsOption.indexOf('dms') >= 0) {
+            if( coordinateseconds < 10 ) {
+                coordinateseconds = "0" + coordinateseconds;
+            }
+            str += coordinateseconds + '"';
+        }
+    }
+    
+    if (axis == "lon") {
+        str += coordinate < 0 ? OpenLayers.i18n("W") : OpenLayers.i18n("E");
+    } else {
+        str += coordinate < 0 ? OpenLayers.i18n("S") : OpenLayers.i18n("N");
+    }
+    return str;
+};
+

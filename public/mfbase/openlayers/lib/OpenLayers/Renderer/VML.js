@@ -296,7 +296,7 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         // additional rendering for rotated graphics or symbols
         if (typeof style.rotation != "undefined") {
             if (style.externalGraphic) {
-                this.graphicRotate(node, xOffset, yOffset);
+                this.graphicRotate(node, xOffset, yOffset, style);
                 // make the fill fully transparent, because we now have
                 // the graphic as imagedata element. We cannot just remove
                 // the fill, because this is part of the hack described
@@ -354,8 +354,9 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      * node    - {DOMElement}
      * xOffset - {Number} rotation center relative to image, x coordinate
      * yOffset - {Number} rotation center relative to image, y coordinate
+     * style   - {Object}
      */
-    graphicRotate: function(node, xOffset, yOffset) {
+    graphicRotate: function(node, xOffset, yOffset, style) {
         var style = style || node._style;
         var options = node._options;
         
@@ -373,7 +374,7 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
                     xOffset = xOffset * aspectRatio;
                     style.graphicWidth = size * aspectRatio;
                     style.graphicHeight = size;
-                    this.graphicRotate(node, xOffset, yOffset);
+                    this.graphicRotate(node, xOffset, yOffset, style);
                 }
             }, this);
             img.src = style.externalGraphic;
@@ -553,7 +554,7 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         // IE hack to make elements unselectable, to prevent 'blue flash'
         // while dragging vectors; #1410
         node.unselectable = 'on';
-        node.onselectstart = function() { return(false); };
+        node.onselectstart = OpenLayers.Function.False;
         
         return node;    
     },
@@ -818,6 +819,12 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         if (style.fontWeight) {
             textbox.style.fontWeight = style.fontWeight;
         }
+        if(style.labelSelect === true) {
+            label._featureId = featureId;
+            textbox._featureId = featureId;
+            textbox._geometry = location;
+            textbox._geometryClass = location.CLASS_NAME;
+        }
         textbox.style.whiteSpace = "nowrap";
         // fun with IE: IE7 in standards compliant mode does not display any
         // text with a left inset of 0. So we set this to 1px and subtract one
@@ -836,6 +843,7 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             (OpenLayers.Renderer.VML.LABEL_SHIFT[align.substr(1,1)]);
         label.style.left = parseInt(label.style.left)-xshift-1+"px";
         label.style.top = parseInt(label.style.top)+yshift+"px";
+        
     },
 
     /**
@@ -947,8 +955,8 @@ OpenLayers.Renderer.VML = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             symbolExtent.bottom = symbolExtent.bottom - diff;
             symbolExtent.top = symbolExtent.top + diff;
         } else {
-            symbolExtent.left = symbolExtent.left - diff;
-            symbolExtent.right = symbolExtent.right + diff;
+            symbolExtent.left = symbolExtent.left + diff;
+            symbolExtent.right = symbolExtent.right - diff;
         }
         
         cache = {

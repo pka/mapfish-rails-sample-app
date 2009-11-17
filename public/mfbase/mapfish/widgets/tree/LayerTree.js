@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -871,8 +871,9 @@ Ext.extend(mapfish.widgets.LayerTree, Ext.tree.TreePanel, {
                     // have changed
                     var layerParamName = layer.params.LAYERS ? "LAYERS" : "layers";
                     if (!mapfish.Util.arrayEqual(layer.params[layerParamName], sublayers)) {
-                        layer.params[layerParamName] = sublayers;
-                        layer.redraw();
+                        var p = {};
+                        p[layerParamName] = sublayers;
+                        layer.mergeNewParams(p);
                     }
 
                     layer.setVisibility(true, true);

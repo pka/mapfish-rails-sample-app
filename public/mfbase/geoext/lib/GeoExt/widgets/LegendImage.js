@@ -9,7 +9,7 @@
 /** api: (define)
  *  module = GeoExt
  *  class = LegendImage
- *  base_link = `Ext.Panel <http://extjs.com/deploy/dev/docs/?class=Ext.Panel>`_
+ *  base_link = `Ext.BoxComponent <http://extjs.com/deploy/dev/docs/?class=Ext.BoxComponent>`_
  */
 
 Ext.namespace('GeoExt');
@@ -17,8 +17,8 @@ Ext.namespace('GeoExt');
 /** api: constructor
  *  .. class:: LegendImage(config)
  *
- *  Show a legend image in a BoxComponent and make sure load errors are dealt
- *  with.
+ *      Show a legend image in a BoxComponent and make sure load errors are 
+ *      dealt with.
  */
 GeoExt.LegendImage = Ext.extend(Ext.BoxComponent, {
 
@@ -53,12 +53,12 @@ GeoExt.LegendImage = Ext.extend(Ext.BoxComponent, {
         };
     },
 
-    /** api: method[setUrl]
-     *  :param url: ``String`` The new url of the image.
+    /** api: method[updateLegend]
+     *  :param url: ``String`` The new URL.
      *  
      *  Sets the url of the image.
      */
-    setUrl: function(url) {
+    updateLegend: function(url) {
         this.url = url;
         var el = this.getEl();
         if (el) {
@@ -75,7 +75,7 @@ GeoExt.LegendImage = Ext.extend(Ext.BoxComponent, {
     onRender: function(ct, position) {
         GeoExt.LegendImage.superclass.onRender.call(this, ct, position);
         if(this.url) {
-            this.setUrl(this.url);
+            this.updateLegend(this.url);
         }
     },
 

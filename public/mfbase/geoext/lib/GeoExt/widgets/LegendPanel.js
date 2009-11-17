@@ -56,6 +56,28 @@ GeoExt.LegendPanel = Ext.extend(Ext.Panel, {
      *  container. If not provided it will be taken from the MapPanel.
      */
     layerStore: null,
+    
+    /** api: config[legendOptions]
+     *  ``Object``
+     *  Config options for the legend generator, i.e. the panel that provides
+     *  the legend image.
+     */
+
+    /** api: config[filter]
+     *  ``Function``
+     *  A function, called in the scope of the legend panel, with a layer record
+     *  as argument. Is expected to return true for layers to be displayed, false
+     *  otherwise. By default, all layers will be displayed.
+     *
+     *  .. code-block:: javascript
+     *
+     *      filter: function(record) {
+     *          return record.get("layer").isBaseLayer;
+     *      }
+     */
+    filter: function(record) {
+        return true;
+    },
 
     /** private: method[initComponent]
      *  Initializes the legend panel.
@@ -128,21 +150,20 @@ GeoExt.LegendPanel = Ext.extend(Ext.Panel, {
      */
     onStoreUpdate: function(store, record, operation) {
         var layer = record.get('layer');
-        var legend = this.getComponent(layer.id);
+        var legend = this.items ? this.getComponent(layer.id) : null;
         if ((this.showTitle && !record.get('hideTitle')) && 
-            (legend.items.get(0).text !== record.get('title'))) {
+            (legend && legend.items.get(0).text !== record.get('title'))) {
                 // we need to update the title
                 legend.items.get(0).setText(record.get('title'));
         }
         if (legend) {
-            legend.setVisible(layer.getVisibility() && 
+            legend.setVisible(layer.getVisibility() && layer.inRange &&
                 layer.displayInLayerSwitcher && !record.get('hideInLegend'));
-            if (record.get('legendURL')) {
-                var items = legend.findByType('gx_legendimage');
-                for (var i=0, len=items.length; i<len; i++) {
-                    items[i].setUrl(record.get('legendURL'));
-                }
-            }
+            var url = record.get("legendURL") != null ?
+                      record.get("legendURL") : undefined;
+            // the actual legend panel is the second item in
+            // the main panel
+            legend.items.get(1).updateLegend(url);
         }
     },
 
@@ -212,7 +233,10 @@ GeoExt.LegendPanel = Ext.extend(Ext.Panel, {
                     "Legend" + layer.CLASS_NAME.split(".").pop()
                 ];
                 if (legendGenerator) {
-                    legend = new legendGenerator({layer: layer});
+                    legend = new legendGenerator(Ext.applyIf({
+                        layer: layer,
+                        record: record
+                    }, this.legendOptions));
                     mainPanel.add(legend);
                 }
             }
@@ -228,12 +252,14 @@ GeoExt.LegendPanel = Ext.extend(Ext.Panel, {
      *  :param index: ``Integer`` The position at which to add the legend.
      */
     addLegend: function(record, index) {
-        index = index || 0;
-        var layer = record.get('layer');
-        var legendSubpanel = this.createLegendSubpanel(record);
-        if (legendSubpanel !== null) {
-           legendSubpanel.setVisible(layer.getVisibility());
-           this.insert(index, legendSubpanel);
+        if (this.filter(record) === true) {
+            index = index || 0;
+            var layer = record.get('layer');
+            var legendSubpanel = this.createLegendSubpanel(record);
+            if (legendSubpanel !== null) {
+                legendSubpanel.setVisible(layer.getVisibility() && layer.inRange);
+                this.insert(index, legendSubpanel);
+            }
         }
     },
 
@@ -257,6 +283,7 @@ GeoExt.LegendPanel = Ext.extend(Ext.Panel, {
                 id: layer.id,
                 border: false,
                 bodyBorder: false,
+                hideMode: 'offsets',
                 bodyStyle: this.bodyStyle,
                 items: [
                     new Ext.form.Label({

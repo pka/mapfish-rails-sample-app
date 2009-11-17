@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *

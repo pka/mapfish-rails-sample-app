@@ -6,6 +6,12 @@
  * of the license.
  */
 
+/** api: example[mappanel-viewport]
+ *  Map Panel (in a Viewport)
+ *  -------------------------
+ *  Render a map panel in a viewport.
+ */
+
 var mapPanel;
 
 Ext.onReady(function() {
@@ -40,8 +46,8 @@ Ext.onReady(function() {
     } else {
         layer = new OpenLayers.Layer.WMS(
             "Global Imagery",
-            "http://demo.opengeo.org/geoserver/wms",
-            {layers: 'bluemarble'},
+            "http://maps.opengeo.org/geowebcache/service/wms",
+            {layers: "bluemarble"},
             {isBaseLayer: true}
         );
     }

@@ -131,6 +131,14 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
     features: null,
     
     /** 
+     * Property: filter
+     * {<OpenLayers.Filter>} The filter set in this layer,
+     *     a strategy launching read requests can combined
+     *     this filter with its own filter.
+     */
+    filter: null,
+    
+    /** 
      * Property: selectedFeatures
      * {Array(<OpenLayers.Feature.Vector>)} 
      */
@@ -799,14 +807,17 @@ OpenLayers.Layer.Vector = OpenLayers.Class(OpenLayers.Layer, {
      */
     getDataExtent: function () {
         var maxExtent = null;
-
-        if(this.features && (this.features.length > 0)) {
+        var features = this.features;
+        if(features && (features.length > 0)) {
             maxExtent = new OpenLayers.Bounds();
-            for(var i=0, len=this.features.length; i<len; i++) {
-                maxExtent.extend(this.features[i].geometry.getBounds());
+            var geometry = null;
+            for(var i=0, len=features.length; i<len; i++) {
+                geometry = features[i].geometry;
+                if (geometry) {
+                    maxExtent.extend(geometry.getBounds());
+                }
             }
         }
-
         return maxExtent;
     },
 

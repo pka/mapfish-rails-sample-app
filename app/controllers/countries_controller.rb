@@ -1,5 +1,7 @@
 class CountriesController < ApplicationController
 
+  SRID = Country.geometry_column.srid
+
   # GET /countries
   def index
     @countries = Country.find_by_mapfish_filter(params)
@@ -11,68 +13,63 @@ class CountriesController < ApplicationController
   def show
     @country = Country.find(params[:id])
 
-    render :json => @country.to_geojson(:only => [:gid, :country, :birth_rt, :death_rt, :fertility, :simplify])
-  end
-
-  # GET /countries/new
-  # GET /countries/new.xml
-  def new
-    @country = Country.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @country }
-    end
-  end
-
-  # GET /countries/1/edit
-  def edit
-    @country = Country.find(params[:id])
+    render :json => [@country].to_geojson
   end
 
   # POST /countries
-  # POST /countries.xml
   def create
-    @country = Country.new(params[:country])
+    @countries = []
+    feature_collection = Geometry.from_geojson(request.raw_post, SRID)
+    if feature_collection.nil?
+      head :bad_request
+      return
+    end
 
-    respond_to do |format|
-      if @country.save
-        flash[:notice] = 'Country was successfully created.'
-        format.html { redirect_to(@country) }
-        format.xml  { render :xml => @country, :status => :created, :location => @country }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @country.errors, :status => :unprocessable_entity }
+    feature_collection.features.each do |feature|
+      if feature.id.is_a? Integer
+        country = Country.find_by_id(feature.id)
+      end
+      if country.nil?
+        country = Country.new()
+      end
+
+      if country.update_attributes_from_feature(feature)
+        @countries << country
       end
     end
+
+    render :json => @countries.to_geojson, :status => :created
   end
 
   # PUT /countries/1
-  # PUT /countries/1.xml
   def update
-    @country = Country.find(params[:id])
+    feature = Geometry.from_geojson(request.raw_post, SRID)
+    if feature.nil?
+      head :bad_request
+      return
+    end
 
-    respond_to do |format|
-      if @country.update_attributes(params[:country])
-        flash[:notice] = 'Country was successfully updated.'
-        format.html { redirect_to(@country) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @country.errors, :status => :unprocessable_entity }
-      end
+    if feature.id.is_a? Integer
+      @country = Country.find_by_id(feature.id)
+    end
+    if @country.nil?
+      head :not_found
+      return
+    end
+
+    if @country.update_attributes_from_feature(feature)
+      render :json => @country.to_geojson, :status => :created
+    else
+      head :unprocessable_entity
     end
   end
 
   # DELETE /countries/1
-  # DELETE /countries/1.xml
   def destroy
     @country = Country.find(params[:id])
     @country.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(countries_url) }
-      format.xml  { head :ok }
-    end
+    head :no_content
   end
+
 end

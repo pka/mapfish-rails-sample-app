@@ -12,26 +12,25 @@ Create a MapFish project
 
 Create a new Rails project::
 
-  rails --database=pogresql MyMapFishProject
-  cd MyMapFishProject
+    rails --database=postgresql MyMapFishProject
+    cd MyMapFishProject
 
 Install the latest version of the Mapfish plugin::
 
-  ./script/plugin install http://www.mapfish.org/svn/mapfish/trunk/MapFish/server/ruby/mapfish
+  ./script/plugin install http://www.mapfish.org/svn/mapfish/implementations/rails-plugin/mapfish/trunk
 
 Install the latest version of the Mapfish client libraries::
 
   rake mapfish:install_client
 
-Build the deployment libs::
-
-  rake mapfish:build_scripts
-
 Install the required plugins and gems::
 
   sudo gem install GeoRuby
   ./script/plugin install git://github.com/fragility/spatial_adapter.git
-
+  #For printing:
+  sudo gem install Platform
+  sudo gem install open4 #Unix only
+  sudo gem install win-open3 #Windows only
 
 Set up the PostGIS database
 ---------------------------
@@ -65,9 +64,9 @@ Set up layers
 
 You now need to create layers. In effect, a layer corresponds to a PostGIS table.
 
-Create a model::
+Create a resource (model and controller)::
 
-  ./script/generate model --skip-timestamps --skip-fixture WeatherStation name:string geom:point
+  ./script/generate mapfish_resource --skip-timestamps --skip-fixture WeatherStation name:string geom:point
   rake db:migrate
 
 Import some data::
@@ -76,188 +75,16 @@ Import some data::
 
 (needs lib/geonames.rb from http://github.com/pka/map_layers/tree in lib/)
 
-Add a new controller with a the default actions for mapfish::
+Create a resource for an existing table::
 
-  class WeatherStationsController < ApplicationController
-
-    # GET /weather_stations
-    def index
-      @weather_stations = WeatherStation.find_by_mapfish_filter(params)
-
-      render :json => @weather_stations.to_geojson
-    end
-
-    # GET /weather_stations/1
-    # GET /weather_stations/1.xml
-    def show
-      @weather_station = WeatherStation.find(params[:id])
-
-      respond_to do |format|
-        format.html # show.html.erb
-        format.xml  { render :xml => @weather_station }
-      end
-    end
-
-    # GET /weather_stations/new
-    # GET /weather_stations/new.xml
-    def new
-      @weather_station = WeatherStation.new
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.xml  { render :xml => @weather_station }
-      end
-    end
-
-    # GET /weather_stations/1/edit
-    def edit
-      @weather_station = WeatherStation.find(params[:id])
-    end
-
-    # POST /weather_stations
-    # POST /weather_stations.xml
-    def create
-      @weather_station = WeatherStation.new(params[:weather_station])
-
-      respond_to do |format|
-        if @weather_station.save
-          flash[:notice] = 'WeatherStation was successfully created.'
-          format.html { redirect_to(@weather_station) }
-          format.xml  { render :xml => @weather_station, :status => :created, :location => @weather_station }
-        else
-          format.html { render :action => "new" }
-          format.xml  { render :xml => @weather_station.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-
-    # PUT /weather_stations/1
-    # PUT /weather_stations/1.xml
-    def update
-      @weather_station = WeatherStation.find(params[:id])
-
-      respond_to do |format|
-        if @weather_station.update_attributes(params[:weather_station])
-          flash[:notice] = 'WeatherStation was successfully updated.'
-          format.html { redirect_to(@weather_station) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @weather_station.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-
-    # DELETE /weather_stations/1
-    # DELETE /weather_stations/1.xml
-    def destroy
-      @weather_station = WeatherStation.find(params[:id])
-      @weather_station.destroy
-
-      respond_to do |format|
-        format.html { redirect_to(weather_stations_url) }
-        format.xml  { head :ok }
-      end
-    end
-  end
-
-Create a model for an existing table::
-
-  ./script/generate model --skip-migration --skip-fixture Country
+  ./script/generate mapfish_resource --skip-migration --skip-fixture Country
 
 Insert table name and custom id in ``app/models/country.rb``::
 
   set_table_name "world_factbk_simplified"
   set_primary_key "gid"
 
-Add the controller::
 
-  class CountriesController < ApplicationController
-
-    # GET /countries
-    def index
-      @countries = Country.find_by_mapfish_filter(params)
-
-      render :json => @countries.to_geojson
-    end
-
-    # GET /countries/1
-    def show
-      @country = Country.find(params[:id])
-
-      render :json => @country.to_geojson(:only => [:gid, :country, :birth_rt, :death_rt, :fertility, :simplify])
-    end
-
-    # GET /countries/new
-    # GET /countries/new.xml
-    def new
-      @country = Country.new
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.xml  { render :xml => @country }
-      end
-    end
-
-    # GET /countries/1/edit
-    def edit
-      @country = Country.find(params[:id])
-    end
-
-    # POST /countries
-    # POST /countries.xml
-    def create
-      @country = Country.new(params[:country])
-
-      respond_to do |format|
-        if @country.save
-          flash[:notice] = 'Country was successfully created.'
-          format.html { redirect_to(@country) }
-          format.xml  { render :xml => @country, :status => :created, :location => @country }
-        else
-          format.html { render :action => "new" }
-          format.xml  { render :xml => @country.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-
-    # PUT /countries/1
-    # PUT /countries/1.xml
-    def update
-      @country = Country.find(params[:id])
-
-      respond_to do |format|
-        if @country.update_attributes(params[:country])
-          flash[:notice] = 'Country was successfully updated.'
-          format.html { redirect_to(@country) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @country.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-
-    # DELETE /countries/1
-    # DELETE /countries/1.xml
-    def destroy
-      @country = Country.find(params[:id])
-      @country.destroy
-
-      respond_to do |format|
-        format.html { redirect_to(countries_url) }
-        format.xml  { head :ok }
-      end
-    end
-  end
-
-  end
-
-
-Add the layers to ``routes.rb``::
-
-  map.resources :weather_stations
-  map.resources :countries
 
 
 Starting the web server
@@ -272,6 +99,38 @@ and checkout ``http://localhost:3000/countries?maxfeatures=10``
 Your browser should be displaying a nice GeoJSON object!
 
 You can now go back to your webpage and configure MapFish widgets to access your layer through the URL ``http://localhost:3000/countries``.
+
+
+For running in production mode you should build and install the compressed runtime libraries::
+
+   rake mapfish:build_scripts
+   rake mapfish:copy_scripts
+
+The development libraries in public/mfbase are not needed in a production deployment and the
+CSS and Javascript files can be included from public/javascripts::
+
+   <link rel="stylesheet" type="text/css" href="javascripts/ext/resources/css/ext-all.css" />
+   <link rel="stylesheet" type="text/css" href="javascripts/mapfish/mapfish.css" />
+
+   <script type="text/javascript" src="javascripts/ext/adapter/ext/ext-base.js"></script>
+   <script type="text/javascript" src="javascripts/ext/ext-all.js"></script>
+   <script type="text/javascript" src="javascripts/mapfish/MapFish.js"></script>
+
+
+Using the print module
+----------------------
+
+The Rails MapFish plugin can generate a controller for the `MapFish print protocol <http://trac.mapfish.org/trac/mapfish/wiki/PrintModuleDoc#Protocol>`_, to produce PDF outputs of your maps. (see `MapFish PrintModuleDoc <http://trac.mapfish.org/trac/mapfish/wiki/PrintModuleDoc>`_)::
+
+  ./script/generate print_controller Print
+
+You'll need to have `Sun's JRE <http://www.java.com/download/>`_ installed to make this working.
+
+* The print module should be ready & responding to /print/info to get print configuration. 
+  Don't forget to adapt config/print.yaml (see `configuration <http://trac.mapfish.org/trac/mapfish/wiki/PrintModuleServer>`_. For instance, you should at least allow the print service to access the WMS services you're using.
+  If you're getting errors, check your log file to get debug information.
+
+* Once this is done, you can integrate the `MapFish print widgets <http://www.mapfish.org/svn/mapfish/trunk/MapFish/client/mfbase/mapfish/widgets/print/>`_ into your client application, which give you the ability to output nice customizable PDF with your maps. Examples can be `found here <http://demo.mapfish.org/mapfishsample/trunk/examples/print/>`_.
 
 
 License

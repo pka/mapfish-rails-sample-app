@@ -6,12 +6,20 @@
  * of the license.
  */
 
+/** api: example[toolbar]
+ *  Toolbar with Actions
+ *  --------------------
+ *  Create a toolbar with GeoExt Actions.
+ */
+
 Ext.onReady(function() {
+    Ext.QuickTips.init();
+
     var map = new OpenLayers.Map();
     var wms = new OpenLayers.Layer.WMS(
         "Global Imagery",
-        "http://demo.opengeo.org/geoserver/wms",
-        {layers: 'bluemarble'}
+        "http://maps.opengeo.org/geowebcache/service/wms",
+        {layers: "bluemarble"}
     );
     var vector = new OpenLayers.Layer.Vector("vector");
     map.addLayers([wms, vector]);
@@ -22,7 +30,8 @@ Ext.onReady(function() {
     action = new GeoExt.Action({
         control: new OpenLayers.Control.ZoomToMaxExtent(),
         map: map,
-        text: "max extent"
+        text: "max extent",
+        tooltip: "zoom to max extent"
     });
     actions["max_extent"] = action;
     toolbarItems.push(action);
@@ -38,6 +47,7 @@ Ext.onReady(function() {
         toggleGroup: "draw",
         allowDepress: false,
         pressed: true,
+        tooltip: "navigate",
         // check item options
         group: "draw",
         checked: true
@@ -54,6 +64,7 @@ Ext.onReady(function() {
         // button options
         toggleGroup: "draw",
         allowDepress: false,
+        tooltip: "draw polygon",
         // check item options
         group: "draw"
     });
@@ -69,6 +80,7 @@ Ext.onReady(function() {
         // button options
         toggleGroup: "draw",
         allowDepress: false,
+        tooltip: "draw line",
         // check item options
         group: "draw"
     });
@@ -85,7 +97,8 @@ Ext.onReady(function() {
         }),
         map: map,
         // button options
-        enableToggle: true
+        enableToggle: true,
+        tooltip: "select feature"
     });
     actions["select"] = action;
     toolbarItems.push(action);
@@ -98,7 +111,8 @@ Ext.onReady(function() {
     action = new GeoExt.Action({
         text: "previous",
         control: ctrl.previous,
-        disabled: true
+        disabled: true,
+        tooltip: "previous in history"
     });
     actions["previous"] = action;
     toolbarItems.push(action);
@@ -106,7 +120,8 @@ Ext.onReady(function() {
     action = new GeoExt.Action({
         text: "next",
         control: ctrl.next,
-        disabled: true
+        disabled: true,
+        tooltip: "next in history"
     });
     actions["next"] = action;
     toolbarItems.push(action);

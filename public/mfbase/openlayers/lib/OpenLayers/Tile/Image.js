@@ -110,12 +110,12 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         if (this.imgDiv != null)  {
             if (this.layerAlphaHack) {
                 // unregister the "load" handler
-                OpenLayers.Event.stopObservingElement(this.imgDiv.childNodes[0].id);                
+                OpenLayers.Event.stopObservingElement(this.imgDiv.childNodes[0]);                
             }
 
             // unregister the "load" and "error" handlers. Only the "error" handler if
             // this.layerAlphaHack is true.
-            OpenLayers.Event.stopObservingElement(this.imgDiv.id);
+            OpenLayers.Event.stopObservingElement(this.imgDiv);
             
             if (this.imgDiv.parentNode == this.frame) {
                 this.frame.removeChild(this.imgDiv);
@@ -263,7 +263,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
                 this.backBufferTile.position = this.position;
                 this.backBufferTile.bounds = this.bounds;
                 this.backBufferTile.size = this.size;
-                this.backBufferTile.imageSize = this.layer.imageSize || this.size;
+                this.backBufferTile.imageSize = this.layer.getImageSize(this.bounds) || this.size;
                 this.backBufferTile.imageOffset = this.layer.imageOffset;
                 this.backBufferTile.resolution = this.layer.getResolution();
                 this.backBufferTile.renderTile();
@@ -324,7 +324,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
         OpenLayers.Util.modifyDOMElement(this.frame, 
                                           null, this.position, this.size);   
 
-        var imageSize = this.layer.getImageSize(); 
+        var imageSize = this.layer.getImageSize(this.bounds); 
         if (this.layerAlphaHack) {
             OpenLayers.Util.modifyAlphaImageDiv(this.imgDiv,
                     null, null, imageSize, this.url);
@@ -356,7 +356,7 @@ OpenLayers.Tile.Image = OpenLayers.Class(OpenLayers.Tile, {
     initImgDiv: function() {
         
         var offset = this.layer.imageOffset; 
-        var size = this.layer.getImageSize(); 
+        var size = this.layer.getImageSize(this.bounds); 
      
         if (this.layerAlphaHack) {
             this.imgDiv = OpenLayers.Util.createAlphaImageDiv(null,

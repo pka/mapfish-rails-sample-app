@@ -555,12 +555,17 @@ OpenLayers.Layer = OpenLayers.Class({
     
     /**
      * APIMethod: getImageSize
+     *
+     * Parameters:
+     * bounds - {<OpenLayers.Bounds>} optional tile bounds, can be used
+     *     by subclasses that have to deal with different tile sizes at the
+     *     layer extent edges (e.g. Zoomify)
      * 
      * Returns:
      * {<OpenLayers.Size>} The size that the image should be, taking into 
      *     account gutters.
      */ 
-    getImageSize: function() { 
+    getImageSize: function(bounds) { 
         return (this.imageSize || this.tileSize); 
     },    
   
@@ -1108,6 +1113,12 @@ OpenLayers.Layer = OpenLayers.Class({
                 var element = this.div.childNodes[i].firstChild;
                 OpenLayers.Util.modifyDOMElement(element, null, null, null, 
                                                  null, null, null, opacity);
+            }
+            if (this.map != null) {
+                this.map.events.triggerEvent("changelayer", {
+                    layer: this,
+                    property: "opacity"
+                });
             }
         }
     },

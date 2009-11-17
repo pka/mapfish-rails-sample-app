@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -24,6 +24,10 @@ Ext.namespace('mapfish.widgets');
  *
  * A map container in order to be able to insert a map into a complex layout
  * Its main interest is to update the map size when the container is resized
+ *
+ * Deprecated:
+ * This widget is deprecated and will be removed in next mapfish version.
+ * Please use <http://geoext.org/lib/GeoExt/widgets/MapPanel.html> instead.
  *
  * Simple example usage:
  * > var mapcomponent = new mapfish.widgets.MapComponent({map: map});

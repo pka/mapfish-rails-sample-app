@@ -231,8 +231,8 @@
                 ]},
                 {text: "label-1", expanded: true, children: [
                     {text: "label-1-0", checked: true, radio: true, radioGrp: "group-1", layerName:"C2C Objects:refuges"},
-                    {text: "label-1-1", checked: false, radio: true, radioGrp: "group-1", layerName:"C2C Objects:sites"},
-                ]},
+                    {text: "label-1-1", checked: false, radio: true, radioGrp: "group-1", layerName:"C2C Objects:sites"}
+                ]}
             ];
             c2cwmsLayers = ['parkings', 'summits', 'refuges', 'sites'];
             c2cwms = new OpenLayers.Layer.WMS("C2C Objects",
@@ -271,7 +271,7 @@
                 {text: "label-0-2", attr_checked: false, radio: true, attr_radio:true, attr_radioGrp: "group-0"},
                 {text: "label-1"},
                 {text: "label-1-0", attr_checked: true, radio: true, attr_radio:true, attr_radioGrp: "group-1"},
-                {text: "label-1-1", attr_checked: false, radio: true, attr_radio:true, attr_radioGrp: "group-1"},
+                {text: "label-1-1", attr_checked: false, radio: true, attr_radio:true, attr_radioGrp: "group-1"}
             ];
 
             checkStatus(t, tree, expectedStatus); // 29 tests
@@ -292,7 +292,7 @@
                 {text: "label-0-2", attr_checked: true, radio: true, attr_radio:true, attr_radioGrp: "group-0"},
                 {text: "label-1"},
                 {text: "label-1-0", attr_checked: false, radio: true, attr_radio:true, attr_radioGrp: "group-1"},
-                {text: "label-1-1", attr_checked: true, radio: true, attr_radio:true, attr_radioGrp: "group-1"},
+                {text: "label-1-1", attr_checked: true, radio: true, attr_radio:true, attr_radioGrp: "group-1"}
             ];
 
             checkStatus(t, tree, expectedStatus); // 29 tests

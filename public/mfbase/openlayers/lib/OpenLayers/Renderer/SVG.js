@@ -368,8 +368,8 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      */
     dashStyle: function(style, widthFactor) {
         var w = style.strokeWidth * widthFactor;
-
-        switch (style.strokeDashstyle) {
+        var str = style.strokeDashstyle;
+        switch (str) {
             case 'solid':
                 return 'none';
             case 'dot':
@@ -383,7 +383,7 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             case 'longdashdot':
                 return [8 * w, 4 * w, 1, 4 * w].join();
             default:
-                return style.strokeDashstyle.replace(/ /g, ",");
+                return OpenLayers.String.trim(str).replace(/\s+/g, ",");
         }
     },
     
@@ -673,7 +673,6 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
 
         label.setAttributeNS(null, "x", x);
         label.setAttributeNS(null, "y", -y);
-        label.setAttributeNS(null, "pointer-events", "none");
         
         if (style.fontColor) {
             label.setAttributeNS(null, "fill", style.fontColor);
@@ -686,6 +685,15 @@ OpenLayers.Renderer.SVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
         }
         if (style.fontWeight) {
             label.setAttributeNS(null, "font-weight", style.fontWeight);
+        }
+        if(style.labelSelect === true) {
+            label.setAttributeNS(null, "pointer-events", "visible");
+            label._featureId = featureId;
+            tspan._featureId = featureId;
+            tspan._geometry = location;
+            tspan._geometryClass = location.CLASS_NAME;
+        } else {
+            label.setAttributeNS(null, "pointer-events", "none");
         }
         var align = style.labelAlign || "cm";
         label.setAttributeNS(null, "text-anchor",

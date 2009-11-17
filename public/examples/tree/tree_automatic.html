@@ -23,11 +23,21 @@
       // reference local blank image
       Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
 
-      Ext.onReady(function() {
-        var map = c2corgCreateMap("map");
+      var map, tree; // make these references available from FireBug
 
-        var tree = new mapfish.widgets.LayerTree({map: map, el: 'tree', 
-                                                  showWmsLegend: true});
+      Ext.onReady(function() {
+        map = c2corgCreateMap("map");
+
+        tree = new mapfish.widgets.LayerTree({
+          map: map, el: 'tree', 
+          showWmsLegend: true,
+          plugins: [
+            mapfish.widgets.LayerTree.createContextualMenuPlugin([
+              'opacitySlide',
+              'remove'
+            ])
+          ]
+        });
         tree.render();
 
       }, this);
@@ -56,6 +66,9 @@
   </head>
 
   <body>
+    <div id="north">
+       <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: automatically generated tree</p>
+    </div>
     <div id="right">
       <div id="tree"></div>
     </div>

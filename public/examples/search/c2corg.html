@@ -8,8 +8,7 @@
     <script type="text/javascript" src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
 
     <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
-                    
+    <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>                
 
     <script type="text/javascript">
       // Because of a bug in Firefox 2 we need to specify the MapFish base path.
@@ -92,22 +91,16 @@
             map.setCenter(new OpenLayers.LonLat(5,45), 6);
             map.addControl(new OpenLayers.Control.PanZoomBar());
 
-            // we need to wrap the MapFish protocol in a trigger event
-            // decorator protocol so that the default popup can be 
-            // displayed by the searcher
-            var protocol = mapfish.Protocol.decorateProtocol({
-                protocol: new mapfish.Protocol.MapFish({
-                    url: mapfish.SERVER_BASE_URL + 'summits',
-                    params: {
-                        maxfeatures: 10
-                    }
-                }),
-                TriggerEventDecorator: null
-            });
-
             searcher = new mapfish.Searcher.Map({
                 mode: mapfish.Searcher.Map.BOX,
-                protocol: protocol,
+                url: mapfish.SERVER_BASE_URL + 'summits',
+                protocol: {
+                    params: {
+                        limit: 10,
+                        attrs: "name,elevation",
+                        no_geom: true
+                    }
+                },
                 displayDefaultPopup: true
             });
 
@@ -163,7 +156,10 @@
   </head>
 
   <body>
-    <h1 class="page-title">Search Example</h1>
+
+    <div id="north">
+      <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: search</p>
+    </div>
     <div id="content">
       <div id="map" class="float-left"></div>
       <div class="float-left">

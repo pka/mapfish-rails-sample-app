@@ -6,14 +6,20 @@
  * of the license.
  */
 
+/** api: example[mappanel-div]
+ *  Map Panel
+ *  ---------
+ *  Render a map panel in any block level page element.
+ */
+
 var mapPanel;
 
 Ext.onReady(function() {
     var map = new OpenLayers.Map();
     var layer = new OpenLayers.Layer.WMS(
         "Global Imagery",
-        "http://demo.opengeo.org/geoserver/wms",
-        {layers: 'bluemarble'}
+        "http://maps.opengeo.org/geowebcache/service/wms",
+        {layers: "bluemarble"}
     );
     map.addLayer(layer);
 

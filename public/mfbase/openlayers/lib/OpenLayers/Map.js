@@ -61,12 +61,13 @@ OpenLayers.Map = OpenLayers.Class({
      *  - *removelayer* triggered after a layer has been removed.  The event
      *      object will include a *layer* property that references the removed
      *      layer.
-     *  - *changelayer* triggered after a layer name change, order change, or
-     *      visibility change (due to resolution thresholds).  Listeners will
-     *      receive an event object with *layer* and *property* properties.  The
-     *      *layer* property will be a reference to the changed layer.  The
-     *      *property* property will be a key to the changed property (name,
-     *      visibility, or order).
+     *  - *changelayer* triggered after a layer name change, order change,
+     *      opacity change, params change or visibility change
+     *      (due to resolution thresholds). Listeners will receive an event
+     *      object with *layer* and *property* properties. The *layer*
+     *      property will be a reference to the changed layer. 
+     *      The *property* property will be a key to the
+     *      changed property (name, order, opacity, params or visibility).
      *  - *movestart* triggered after the start of a drag, pan, or zoom
      *  - *move* triggered after each drag, pan, or zoom
      *  - *moveend* triggered after a drag, pan, or zoom completes
@@ -496,7 +497,7 @@ OpenLayers.Map = OpenLayers.Class({
         OpenLayers.Element.addClass(this.div, 'olMap');
 
         // the viewPortDiv is the outermost div we modify
-        var id = this.div.id + "_OpenLayers_ViewPort";
+        var id = this.id + "_OpenLayers_ViewPort";
         this.viewPortDiv = OpenLayers.Util.createDiv(id, null, null, null,
                                                      "relative", null,
                                                      "hidden");
@@ -506,7 +507,7 @@ OpenLayers.Map = OpenLayers.Class({
         this.div.appendChild(this.viewPortDiv);
 
         // the layerContainerDiv is the one that holds all the layers
-        id = this.div.id + "_OpenLayers_Container";
+        id = this.id + "_OpenLayers_Container";
         this.layerContainerDiv = OpenLayers.Util.createDiv(id);
         this.layerContainerDiv.style.zIndex=this.Z_INDEX_BASE['Popup']-1;
         
@@ -631,6 +632,11 @@ OpenLayers.Map = OpenLayers.Class({
         // if unloadDestroy is null, we've already been destroyed
         if (!this.unloadDestroy) {
             return false;
+        }
+        
+        // make sure panning doesn't continue after destruction
+        if(this.panTween && this.panTween.playing) {
+            this.panTween.stop();
         }
 
         // map has been destroyed. dont do it again!
@@ -900,7 +906,9 @@ OpenLayers.Map = OpenLayers.Class({
             layer.isBaseLayer = false;
         }
 
-        this.events.triggerEvent("preaddlayer", {layer: layer});
+        if (this.events.triggerEvent("preaddlayer", {layer: layer}) === false) {
+            return;
+        }
         
         layer.div.className = "olLayerDiv";
         layer.div.style.overflow = "";
@@ -1192,6 +1200,9 @@ OpenLayers.Map = OpenLayers.Class({
                 this.viewPortDiv.appendChild( div );
             }
         }
+        if(control.autoActivate) {
+            control.activate();
+        }
     },
     
     /**
@@ -1338,12 +1349,12 @@ OpenLayers.Map = OpenLayers.Class({
                 this.layers[i].onMapResize();                
             }
 
-            if (this.baseLayer != null) {
-                var center = new OpenLayers.Pixel(newSize.w /2, newSize.h / 2);
-                var centerLL = this.getLonLatFromViewPortPx(center);
+            var center = this.getCenter();
+
+            if (this.baseLayer != null && center != null) {
                 var zoom = this.getZoom();
                 this.zoom = null;
-                this.setCenter(this.getCenter(), zoom);
+                this.setCenter(center, zoom);
             }
 
         }

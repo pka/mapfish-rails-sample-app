@@ -14,7 +14,7 @@
  * Class: OpenLayers.Control.GetFeature
  * Gets vector features for locations underneath the mouse cursor. Can be
  *     configured to act on click, hover or dragged boxes. Uses an
- *     <OpenLayers.Protocol> that supports spatial filters (BBOX) to retrieve
+ *     <OpenLayers.Protocol> that supports spatial filters to retrieve
  *     features from a server and fires events that notify applications of the
  *     selected features. 
  *
@@ -80,10 +80,11 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
 
     /**
      * APIProperty: clickTolerance
-     * {Integer} Tolerance for the BBOX query in pixels. This has the
+     * {Integer} Tolerance for the filter query in pixels. This has the
      *     same effect as the tolerance parameter on WMS GetFeatureInfo
      *     requests.  Will be ignored for box selections.  Applies only if
-     *     <click> is true.  Default is 5.
+     *     <click> or <hover> is true.  Default is 5.  Note that this not
+     *     only affects requests on click, but also on hover.
      */
     clickTolerance: 5,
     
@@ -141,6 +142,15 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
      */
     hoverResponse: null,
     
+    /**
+     * Property: filterType
+     * {<String>} The type of filter to use when sending off a request. 
+     *     Possible values: 
+     *     OpenLayers.Filter.Spatial.<BBOX|INTERSECTS|WITHIN|CONTAINS>
+     *     Defaults to: OpenLayers.Filter.Spatial.BBOX
+     */
+    filterType: OpenLayers.Filter.Spatial.BBOX,
+
     /**
      * Constant: EVENT_TYPES
      *
@@ -248,25 +258,6 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
     },
     
     /**
-     * Method: unselectAll
-     * Unselect all selected features.  To unselect all except for a single
-     *     feature, set the options.except property to the feature.
-     *
-     * Parameters:
-     * options - {Object} Optional configuration object.
-     */
-    unselectAll: function(options) {
-        // we'll want an option to supress notification here
-        var feature;
-        for(var i=this.features.length-1; i>=0; --i) {
-            feature = this.features[i];
-            if(!options || options.except != feature) {
-                this.unselect(feature);
-            }
-        }
-    },
-
-    /**
      * Method: selectSingle
      * Called on click
      *
@@ -291,6 +282,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
      * position - {<OpenLayers.Bounds>}  
      */
     selectBox: function(position) {
+        var bounds;
         if (position instanceof OpenLayers.Bounds) {
             var minXY = this.map.getLonLatFromPixel(
                 new OpenLayers.Pixel(position.left, position.bottom)
@@ -298,13 +290,15 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
             var maxXY = this.map.getLonLatFromPixel(
                 new OpenLayers.Pixel(position.right, position.top)
             );
-            var bounds = new OpenLayers.Bounds(
+            bounds = new OpenLayers.Bounds(
                 minXY.lon, minXY.lat, maxXY.lon, maxXY.lat
             );
             
-            this.setModifiers(this.handlers.box.dragHandler.evt);
-            this.request(bounds);
+        } else {
+            bounds = this.pixelToBounds(position); 
         }
+        this.setModifiers(this.handlers.box.dragHandler.evt);
+        this.request(bounds);
     },
     
     /**
@@ -347,7 +341,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
     request: function(bounds, options) {
         options = options || {};
         var filter = new OpenLayers.Filter.Spatial({
-            type: OpenLayers.Filter.Spatial.BBOX,
+            type: this.filterType, 
             value: bounds
         });
         
@@ -355,7 +349,7 @@ OpenLayers.Control.GetFeature = OpenLayers.Class(OpenLayers.Control, {
             maxFeatures: options.single == true ? this.maxFeatures : undefined,
             filter: filter,
             callback: function(result) {
-                if(result.code == 1) {
+                if(result.success()) {
                     if(result.features.length) {
                         if(options.single == true) {
                             this.selectBestFeature(result.features,

@@ -22,10 +22,8 @@
   </style>
 </head>
 <body>
-  <div id="title">
-    <h1 style="font-size:20px">MapFish, FeatureList example</h1>
-  </div>
-  <div id="olmap">
+  <div id="north">
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: feature list</p>
   </div>
   <div id="help">
     <!-- if somebody can tell me why the squares are not shown, I'll be happy! -->
@@ -46,6 +44,8 @@
 
 <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+
+<script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
 
 <script type="text/javascript">
   // Because of a bug in Firefox 2 we need to specify the MapFish base path.
@@ -111,14 +111,12 @@ Ext.onReady(function() {
     /*
      * Define OpenLayers map.
      */
-    var map = new OpenLayers.Map($('olmap'));
+    var map = new OpenLayers.Map();
 
     var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
         "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
 
-    map.addLayers([wms]);
     map.addControl(new OpenLayers.Control.LayerSwitcher());
-    map.setCenter(new OpenLayers.LonLat(17, 2), 2);
 
     /*
      * Define record type.
@@ -301,7 +299,7 @@ Ext.onReady(function() {
                 frame: true,
                 border: true,
                 region: 'north',
-                contentEl: 'title'
+                contentEl: 'north'
             }, {
                 region: 'east',
                 title: 'Feature editing',
@@ -345,7 +343,8 @@ Ext.onReady(function() {
             }, {
                 region:'center',
                 title: 'Map',
-                xtype: 'mapcomponent',
+                xtype: 'gx_mappanel',
+                layers: [wms],
                 map: map
         }]
     });

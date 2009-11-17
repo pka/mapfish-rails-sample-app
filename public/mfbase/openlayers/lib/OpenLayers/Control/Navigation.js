@@ -46,7 +46,14 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      * APIProperty: zoomWheelEnabled
      * {Boolean} Whether the mousewheel should zoom the map
      */
-    zoomWheelEnabled: true, 
+    zoomWheelEnabled: true,
+    
+    /**
+     * Property: mouseWheelOptions
+     * {Object} Options passed to the MouseWheel control (only useful if
+     *     <zoomWheelEnabled> is set to true)
+     */
+    mouseWheelOptions: null,
 
     /**
      * APIProperty: handleRightClicks
@@ -65,6 +72,13 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      */
     zoomBoxKeyMask: OpenLayers.Handler.MOD_SHIFT,
     
+    /**
+     * APIProperty: autoActivate
+     * {Boolean} Activate the control when it is added to a map.  Default is
+     *     true.
+     */
+    autoActivate: true,
+
     /**
      * Constructor: OpenLayers.Control.Navigation
      * Create a new navigation control
@@ -129,7 +143,7 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
     draw: function() {
         // disable right mouse context menu for support of right click events
         if (this.handleRightClicks) {
-            this.map.viewPortDiv.oncontextmenu = function () { return false;};
+            this.map.viewPortDiv.oncontextmenu = OpenLayers.Function.False;
         }
 
         var clickCallbacks = { 
@@ -152,8 +166,8 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
         this.zoomBox.draw();
         this.handlers.wheel = new OpenLayers.Handler.MouseWheel(
                                     this, {"up"  : this.wheelUp,
-                                           "down": this.wheelDown} );
-        this.activate();
+                                           "down": this.wheelDown},
+                                    this.mouseWheelOptions );
     },
 
     /**
@@ -186,8 +200,11 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      * deltaZ - {Integer}
      */
     wheelChange: function(evt, deltaZ) {
+        var currentZoom = this.map.getZoom();
         var newZoom = this.map.getZoom() + deltaZ;
-        if (!this.map.isValidZoomLevel(newZoom)) {
+        newZoom = Math.max(newZoom, 0);
+        newZoom = Math.min(newZoom, this.map.getNumZoomLevels());
+        if (newZoom === currentZoom) {
             return;
         }
         var size    = this.map.getSize();
@@ -207,9 +224,10 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      * 
      * Parameters:
      * evt - {Event}
+     * delta - {Integer}
      */
-    wheelUp: function(evt) {
-        this.wheelChange(evt, 1);
+    wheelUp: function(evt, delta) {
+        this.wheelChange(evt, delta || 1);
     },
 
     /** 
@@ -218,9 +236,10 @@ OpenLayers.Control.Navigation = OpenLayers.Class(OpenLayers.Control, {
      * 
      * Parameters:
      * evt - {Event}
+     * delta - {Integer}
      */
-    wheelDown: function(evt) {
-        this.wheelChange(evt, -1);
+    wheelDown: function(evt, delta) {
+        this.wheelChange(evt, delta || -1);
     },
     
     /**

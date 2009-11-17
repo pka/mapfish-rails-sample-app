@@ -1,4 +1,7 @@
 class CitiesController < ApplicationController
+
+  SRID = City.geometry_column.srid
+
   # GET /cities
   def index
     @cities = City.find_by_mapfish_filter(params)
@@ -10,63 +13,63 @@ class CitiesController < ApplicationController
   def show
     @city = City.find(params[:id])
 
-    render :json => @city.to_geojson(:only => [:id, :ufi, :admin_code, :mgcc, :name, :attrib, :population, :the_geom])
-  end
-
-  # GET /cities/new
-  # GET /cities/new.xml
-  def new
-    @city = City.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @city }
-    end
-  end
-
-  # GET /cities/1/edit
-  def edit
-    @city = City.find(params[:id])
+    render :json => [@city].to_geojson
   end
 
   # POST /cities
-  # POST /cities.xml
   def create
-    params.update(City.params_from_geojson(params))
-    @city = City.new(params[:city])
+    @cities = []
+    feature_collection = Geometry.from_geojson(request.raw_post, SRID)
+    if feature_collection.nil?
+      head :bad_request
+      return
+    end
 
-    respond_to do |format|
-      if @city.save
-        format.json { render :json => @city.to_geojson }
-      else
-        format.xml  { render :xml => @city.errors, :status => :unprocessable_entity }
+    feature_collection.features.each do |feature|
+      if feature.id.is_a? Integer
+        city = City.find_by_id(feature.id)
+      end
+      if city.nil?
+        city = City.new()
+      end
+
+      if city.update_attributes_from_feature(feature)
+        @cities << city
       end
     end
+
+    render :json => @cities.to_geojson, :status => :created
   end
 
   # PUT /cities/1
-  # PUT /cities/1.xml
   def update
-    params.update(City.params_from_geojson(params))
-    @city = City.find(params[:id])
-    respond_to do |format|
-      if @city.update_attributes(params[:city])
-        format.json { render :json => @city.to_geojson }
-      else
-        format.xml { render :xml => @city.errors, :status => :unprocessable_entity }
-      end
+    feature = Geometry.from_geojson(request.raw_post, SRID)
+    if feature.nil?
+      head :bad_request
+      return
+    end
+
+    if feature.id.is_a? Integer
+      @city = City.find_by_id(feature.id)
+    end
+    if @city.nil?
+      head :not_found
+      return
+    end
+
+    if @city.update_attributes_from_feature(feature)
+      render :json => @city.to_geojson, :status => :created
+    else
+      head :unprocessable_entity
     end
   end
 
   # DELETE /cities/1
-  # DELETE /cities/1.xml
   def destroy
     @city = City.find(params[:id])
     @city.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(cities_url) }
-      format.xml  { head :ok }
-    end
+    head :no_content
   end
+
 end

@@ -22,7 +22,7 @@ OpenLayers.Control.Attribution =
      * {String} String used to seperate layers.
      */
     separator: ", ",
-       
+    
     /**
      * Constructor: OpenLayers.Control.Attribution 
      * 
@@ -81,9 +81,13 @@ OpenLayers.Control.Attribution =
             for(var i=0, len=this.map.layers.length; i<len; i++) {
                 var layer = this.map.layers[i];
                 if (layer.attribution && layer.getVisibility()) {
-                    attributions.push( layer.attribution );
+                    // add attribution only if attribution text is unique
+                    if (OpenLayers.Util.indexOf(
+                                    attributions, layer.attribution) === -1) {
+                        attributions.push( layer.attribution );
+                    }
                 }
-            }  
+            } 
             this.div.innerHTML = attributions.join(this.separator);
         }
     },

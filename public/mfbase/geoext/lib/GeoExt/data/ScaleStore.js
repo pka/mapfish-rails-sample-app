@@ -22,7 +22,7 @@ Ext.namespace("GeoExt.data");
  *
  *      Records have the following fields:
  *
- *      * zoom - ``Number``  The zoom level.
+ *      * level - ``Number``  The zoom level.
  *      * scale - ``Number`` The scale denominator.
  *      * resolution - ``Number`` The map units per pixel.
  */
@@ -55,7 +55,7 @@ GeoExt.data.ScaleStore = Ext.extend(Ext.data.Store, {
     },
 
     /** api: method[bind]
-     *  :param map: :class`GeoExt.MapPanel` or ``OpenLayers.Map`` Panel or map
+     *  :param map: :class:`GeoExt.MapPanel` or ``OpenLayers.Map`` Panel or map
      *      to which we should bind.
      *  
      *  Bind this store to a map; that is, maintain the zoom list in sync with

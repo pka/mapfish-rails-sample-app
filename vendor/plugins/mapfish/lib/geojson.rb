@@ -44,16 +44,16 @@ module GeoRuby
           MultiPolygon.from_coordinates(coords, srid)
         when "GeometryCollection"
           geometriesJson=data['geometries'] || data[:geometries]
-          geometries=geometriesJson.collect { |cur| from_geojson(cur) }
+          geometries=geometriesJson.collect { |cur| from_geojson(cur, srid) }
           GeometryCollection.from_geometries(geometries, srid)
         when "Feature"
           geometryJson=data['geometry'] || data[:geometry]
           properties=data['properties'] || data[:properties]
           id=data['id'] || data[:id]
-          Feature.new(from_geojson(geometryJson), properties, id)   
+          Feature.new(from_geojson(geometryJson, srid), properties, id)
         when "FeatureCollection"
           features=data['features'] || data[:features]
-          FeatureCollection.new(features.collect { |cur| from_geojson(cur) })
+          FeatureCollection.new(features.collect { |cur| from_geojson(cur, srid) })
         end
       end
     end  

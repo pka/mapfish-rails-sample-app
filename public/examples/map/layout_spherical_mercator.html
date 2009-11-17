@@ -10,6 +10,8 @@
     <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
 
+    <script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
+
     <script type="text/javascript">
       // Because of a bug in Firefox 2 we need to specify the MapFish base path.
       // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
@@ -18,7 +20,6 @@
     <script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
     <script type="text/javascript" src="../examples.js"></script>
     
-    <script src='http://dev.virtualearth.net/mapcontrol/v3/mapcontrol.js'></script>
     <script src='http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAA05C9249WzNJ_bo8JW1_d1RR4mkyLzoxNxIarp_9bfNMlpzk1lBTKyrzDeVpecEf3n5k8eLOy20OHKg'></script>
     <script src="http://api.maps.yahoo.com/ajaxymap?v=3.0&appid=euzuro-openlayers"></script>
     
@@ -38,7 +39,7 @@
     Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
   
     Ext.onReady(function() {
-        
+
         var options = {
             projection: "EPSG:900913",
             units: "m",
@@ -46,7 +47,8 @@
             maxExtent: new OpenLayers.Bounds(-20037508, -20037508,
                                              20037508, 20037508.34)
         };
-        map = new OpenLayers.Map('center', options);
+
+        var map = new OpenLayers.Map(options);
 
         // create Google Mercator layers
         var gmap = new OpenLayers.Layer.Google(
@@ -79,11 +81,6 @@
         );
 
         map.addLayers([gmap, yahoo, yahoosat, yahoohyb, mapnik]);
-                           
-        map.setCenter(new OpenLayers.LonLat(17, 2), 2);
-
-        
-        var mapcomponent = new mapfish.widgets.MapComponent({map: map});
        
         var viewport = new Ext.Viewport({
             layout:'border',
@@ -91,7 +88,8 @@
                 new Ext.BoxComponent({ // raw
                     region: 'north',
                     el: 'north',
-                    height: 32
+                    height: 32,
+                    margins: {left: 5,top: 5}
                 }),{
                     region: 'south',
                     contentEl: 'south',
@@ -117,9 +115,8 @@
                         animate: true
                     },
                     items: [{
-                        title: 'Layers',
-                        region: 'north',
-                        height: 100,
+                        title: 'Layer Tree',
+                        border: false,
                         xtype: 'layertree',
                         map: map
                     },{
@@ -131,8 +128,8 @@
                 },{
                     region: 'center',
                     title: 'Map',
-                    layout: 'fit',
-                    items: mapcomponent
+                    xtype: 'gx_mappanel',
+                    map: map
                 }
              ]
         });
@@ -152,17 +149,17 @@
             x = ((x % limit) + limit) % limit;            
             return this.url + z + "/" + x + "/" + y + "." + this.type;
         }
-    }
+    };
 	</script>
 </head>
 <body>
   <div id="north">
-    <p>MapFish</p>
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: usage of maps in spherical mercator</p>
   </div>
   <div id="center">
   </div>
   <div id="south">
-    <p>south - generally for informational stuff, also could be for status bar</p>
+    <p></p>
   </div>
 
  </body>

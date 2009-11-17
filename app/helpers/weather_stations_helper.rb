@@ -1,0 +1,2 @@
+module WeatherStationsHelper
+end

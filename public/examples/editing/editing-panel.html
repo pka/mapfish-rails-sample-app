@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feature editing panel example</title>
+    <link rel="stylesheet" type="text/css" href="../../mfbase/ext/resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="../../mfbase/mapfish/mapfish.css" />
+
+    <script type="text/javascript" src="../../mfbase/openlayers/lib/Firebug/firebug.js"></script>
+    <script type="text/javascript" src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
+
+    <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+
+    <script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
+
+    <script type="text/javascript">
+      // Because of a bug in Firefox 2 we need to specify the MapFish base path.
+      // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
+      var gMfLocation = "../../mfbase/mapfish/";
+    </script>
+    <script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
+    <script type="text/javascript" src="../examples.js"></script>
+    
+    <style type="text/css">
+	html, body {
+        font:normal 12px verdana;
+        margin: 0;
+        padding:0;
+    }
+    ul.list {
+      list-style-type: disc;
+      font-size: 11px;
+      padding: 0 0 0 16px;
+    }
+    /* change the modal window z-index so that the combobox of the editing panel
+       is still active when the attributes form is disabled */
+    .ext-el-mask {
+      z-index: 10999;
+    }
+    </style>
+	<script type="text/javascript">
+  
+    // reference local blank image
+    Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
+  
+    Ext.onReady(function() {
+        Ext.QuickTips.init();
+        
+        var map = new OpenLayers.Map();
+
+        var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
+            "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
+
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        
+       var layerConfig = {
+            polygons: {
+                text: 'Polygons',
+                protocol: new mapfish.Protocol.MapFish({
+                    url: mapfish.Util.formatURL(
+                        mapfish.SERVER_BASE_URL + 'polygons'
+                    )
+                }),
+                featuretypes: {
+                    geometry: {
+                        type: OpenLayers.Geometry.Polygon
+                    },
+                    properties: [
+                        new mapfish.widgets.editing.StringProperty(
+                            {name: 'name', showInGrid: true})
+                    ]
+                }
+            },
+            lines: {
+                text: 'Lines',
+                protocol: new mapfish.Protocol.MapFish({
+                    url: mapfish.Util.formatURL(
+                        mapfish.SERVER_BASE_URL + 'lines'
+                    )
+                }),
+                featuretypes: {
+                    geometry: {
+                        type: OpenLayers.Geometry.LineString
+                    },
+                    properties: [
+                        new mapfish.widgets.editing.StringProperty(
+                            {name: 'name', showInGrid: true})
+                    ]
+                    
+                }
+            },
+            points: {
+                text: 'Points',
+                protocol: new mapfish.Protocol.MapFish({
+                    url: mapfish.Util.formatURL(
+                        mapfish.SERVER_BASE_URL + 'points'
+                    )
+                }),
+                featuretypes: {
+                    geometry: {
+                        type: OpenLayers.Geometry.Point
+                    },
+                    properties: [
+                        new mapfish.widgets.editing.StringProperty(
+                            {name: 'name', showInGrid: true})
+                    ]
+                    
+                }
+            }
+        };
+
+        new Ext.Viewport({
+            layout: 'border',
+            items: [
+                new Ext.BoxComponent({
+                    region: 'north',
+                    el: 'north',
+                    height: 32,
+                    margins: {left: 5,top: 5}
+                }), {
+                    region: 'east',
+                    id: 'east-panel',
+                    title: 'Tools',
+                    width: 400,
+                    items: [{
+                            title: 'Editing',
+                            id: 'editing-panel',
+                            bodyStyle: 'padding: 3px',
+                            layerConfig: layerConfig,
+                            map: map,
+                            xtype: 'featureediting'
+                        }, {
+                            title: 'Help',
+                            id: 'help',
+                            contentEl: 'helptext'
+                    }]
+                }, {
+                    region: 'center',
+                    title: 'Map',
+                    map: map,
+                    xtype: 'gx_mappanel',
+                    layers: [wms]
+                }
+            ]
+        });
+    });
+	</script>
+</head>
+<body>
+  <div id="north">
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: feature editing panel</p>
+  </div>
+  <div id="helptext">
+    <ul class="list">
+      <li class="list">Choose a layer in the list of layers to edit</li>
+      <li>Import data for the current extent to edit existing data</li>
+      <li>Select a feature by clicking on it, modify its vertices and/or attributes</li>
+      <li>To delete a feature, click on it and hit the Delete button</li>
+      <li>To create a feature, select the drawing tool and draw the feature</li>
+      <li>Modified/Inserted/Deleted features appear in the grouping grid</li>
+      <li>When done with editing, click on commit to save modifications</li>
+    </ul>
+  </div>
+ </body>
+</html>

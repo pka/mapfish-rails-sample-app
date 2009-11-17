@@ -67,6 +67,13 @@ OpenLayers.Feature.Vector = OpenLayers.Class(OpenLayers.Feature, {
      * {Object} 
      */
     style: null,
+
+    /**
+     * APIProperty: url
+     * {String} If this property is set it will be taken into account by
+     *     {<OpenLayers.HTTP>} when upadting or deleting the feature.
+     */
+    url: null,
     
     /**
      * Property: renderIntent
@@ -349,6 +356,10 @@ OpenLayers.Feature.Vector = OpenLayers.Class(OpenLayers.Feature, {
  *     alignment. Valid values for horizontal alignment: "l"=left, "c"=center, "r"=right. Valid values for vertical
  *     alignment: "t"=top, "m"=middle, "b"=bottom. Example values: "lt", "cm", "rb". The canvas renderer does not
  *     support vertical alignment, it will always use "b".
+ * labelXOffset - {Number} Pixel offset along the positive x axis for displacing the label.
+ * labelYOffset - {Number} Pixel offset along the positive y axis for displacing the label.
+ * labelSelect - {Boolean} If set to true, labels will be selectable using SelectFeature or similar controls.
+ *     Default is false.
  * fontColor - {String} The font color for the label, to be provided like CSS.
  * fontFamily - {String} The font family for the label, to be provided like in CSS.
  * fontSize - {String} The font size for the label, to be provided like in CSS.

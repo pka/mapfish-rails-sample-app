@@ -6,7 +6,14 @@
  * of the license.
  */
 
-var mapPanel;
+/** api: example[legendpanel]
+ *  Legend Panel
+ *  ------------
+ *  Display a layer legend in a panel.
+ */
+
+
+var mapPanel, legendPanel;
 
 Ext.onReady(function() {
     var map = new OpenLayers.Map({allOverlays: true});
@@ -68,7 +75,7 @@ Ext.onReady(function() {
         zoom: 7
     });
 
-    var legendPanel = new GeoExt.LegendPanel({
+    legendPanel = new GeoExt.LegendPanel({
         labelCls: 'mylabel',
         bodyStyle: 'padding:5px',
         width: 350,

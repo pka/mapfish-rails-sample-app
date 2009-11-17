@@ -31,11 +31,10 @@
                 {
                     layers: "bathymetry,land_fn,park,drain_fn,drainage," +
                             "prov_bound,fedlimit,rail,road,popplace",
-                    transparent: "true", format: "image/png"},
-                {
-                    minResolution: 0.17578125,
-                    maxResolution: 0.703125
-                }
+                    transparent: "true",
+                    format: "image/png"
+                },
+                {isBaseLayer: false}
             );
 
             map.addLayers([ol_wms, jpl_wms, dm_wms]);

@@ -9,6 +9,8 @@
     <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
 
+    <script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
+
     <script type="text/javascript">
       // Because of a bug in Firefox 2 we need to specify the MapFish base path.
       // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
@@ -34,14 +36,12 @@
   
     Ext.onReady(function(){
         
-        var map = new OpenLayers.Map($('olmap'));
+        var map = new OpenLayers.Map();
 
         var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
             "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
 
-        map.addLayers([wms]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.setCenter(new OpenLayers.LonLat(17, 2), 2);
             
         var window = new Ext.Window({
             title: 'Map',
@@ -53,8 +53,9 @@
             plain: true,
             bodyStyle: 'padding:5px;',
             items: [{
-                xtype: 'mapcomponent',
-                map: map
+                xtype: 'gx_mappanel',
+                map: map,
+                layers: [wms]
             }]
         });
         window.show();
@@ -100,9 +101,9 @@
       body element must not start with text to prevent IE bug
       http://extjs.com/forum/showthread.php?t=7912&highlight=createRange
   -->
-  <h1>MapFish example</h1>
-  This example shows how to use the MapComponent class to integrate a OL map into a window layout.
-  <div id="olmap">
+  <div id="north">
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: simple map in complex layout</p>
+  </div>
   </div>
 
  </body>

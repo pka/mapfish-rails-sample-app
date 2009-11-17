@@ -2,8 +2,11 @@
 <html>
 <head>
 <title>Map printing with a simple form</title>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css"
       href="../../mfbase/ext/resources/css/ext-all.css"/>
+<link rel="stylesheet" type="text/css"
+      href="../../mfbase/mapfish/mapfish.css"/>
 
 <script type="text/javascript"
         src="../../mfbase/openlayers/lib/Firebug/firebug.js"></script>
@@ -13,6 +16,8 @@
 <script type="text/javascript"
         src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+
+<script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
 
 <script type="text/javascript">
   // Because of a bug in Firefox 2 we need to specify the MapFish base path.
@@ -42,7 +47,6 @@
 
     var wms = new OpenLayers.Layer.WMS("OpenLayers WMS",
             "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
-    map.addLayers([wms]);
 
     var summits = new OpenLayers.Layer.WMS("Summits",
             "http://demo.mapfish.org/mapfishsample/trunk/wms?",
@@ -53,7 +57,7 @@
 
     var countries = new OpenLayers.Layer.WMS("Countries",
             "http://demo.mapfish.org/mapfishsample/trunk/wms?",
-            {layers: ['countries'], format: 'image/png', transparent: true},
+            {layers: ['countries'], format:  OpenLayers.Util.alphaHack()?'image/gif':'image/png', transparent: true},
             {visibility: true, singleTile: true}
     );
     map.addLayer(countries);
@@ -61,8 +65,29 @@
     map.addControl(new OpenLayers.Control.LayerSwitcher());
 
     var layerOverrides={
-        'Countries': { format: 'image/svg+xml' }
+        "OpenLayers WMS": {overview: true},
+        Countries: { format: 'image/svg+xml' }
     };
+
+    var printConfigUrl = mapfish.SERVER_BASE_URL + 'print/info.json';
+    //var printConfigUrl = '/tomcat/print-servlet-1.1-SNAPSHOT/pdf/info.json';
+
+    var toolbar = new mapfish.widgets.toolbar.Toolbar({
+        map: map,
+        configurable: false,
+        items: [new mapfish.widgets.print.PrintAction({
+            map: map,
+            configUrl: printConfigUrl,
+            overrides: layerOverrides,
+            fillSpec: function(printCommand) {
+                mapfish.widgets.print.PrintAction.prototype.fillSpec.call(this, printCommand);
+
+                //our layout needs two fields... hard code them here
+                printCommand.spec.comment = "No comment";
+                printCommand.spec.mapTitle = "PrintControl";
+            }
+        })]
+    });
 
     var viewport = new Ext.Viewport({
       layout:'border',
@@ -70,14 +95,15 @@
         new Ext.BoxComponent({ // raw
           region: 'north',
           el: 'north',
-          height: 32
+          height: 32,
+          margins: {left: 5,top: 5}
         }),
         {
           region: 'west',
           id: 'west-panel',
           title: 'West',
           split: true,
-          width: 250,
+          width: 280,
           minSize: 175,
           maxSize: 400,
           collapsible: true,
@@ -92,6 +118,14 @@
           },
           items: [
             {
+              contentEl: 'help',
+              collapsed: false,
+              title: 'Help',
+              autoScroll: true,
+              bodyStyle: 'padding: 7px;',
+              border: false
+            },
+            {
               xtype: 'print-simple',
               title: 'Print single page',
               bodyStyle: 'padding: 7px;',
@@ -104,13 +138,13 @@
                 items: [
                   {
                     xtype: 'textfield',
-                    fieldLabel: 'Map title',
+                    fieldLabel: OpenLayers.Lang.translate('mf.print.mapTitle'),
                     name: 'mapTitle',
                     value: 'Map title'
                   },
                   {
                     xtype: 'textarea',
-                    fieldLabel: 'Comments',
+                    fieldLabel: OpenLayers.Lang.translate('mf.print.comment'),
                     name: 'comment',
                     height: 100,
                     value: 'Some comments'
@@ -119,7 +153,7 @@
               },
               border: false,
               map: map,
-              configUrl: mapfish.SERVER_BASE_URL + 'print/info.json',
+              configUrl: printConfigUrl,
               overrides: layerOverrides
             },
             {
@@ -143,32 +177,34 @@
               },
               columns: [
                   {
-                      header: 'Title',
+                      header: OpenLayers.Lang.translate('mf.print.mapTitle'),
                       dataIndex: 'mapTitle',
                       editor: new Ext.form.TextField()
                   },
                   {
-                      header: 'Comment',
+                      header: OpenLayers.Lang.translate('mf.print.comment'),
                       dataIndex: 'comment',
                       editor: new Ext.form.TextField()
                   }
               ],
               border: false,
               map: map,
-              configUrl: mapfish.SERVER_BASE_URL + 'print/info.json',
+              configUrl: printConfigUrl,
               overrides: layerOverrides
             }
           ]
         },{
-        region: 'center',
-        title: 'Map',
-        layout: 'fit',
-        xtype: 'mapcomponent',
-        map: map
-      }]
+            region: 'center',
+            title: 'Map',
+            layout: 'fit',
+            xtype: 'gx_mappanel',
+            layers: [wms],
+            map: map,
+            tbar: toolbar,
+            zoom: 3,
+            center:new OpenLayers.LonLat(8.5, 0) 
+        }]
     });
-    
-    map.setCenter(new OpenLayers.LonLat(8.5, 0), 3);
 
   });
 </script>
@@ -176,8 +212,27 @@
 <body>
   <div id="west"></div>
   <div id="north">
-    <p style="font-size:14pt" align="center">MapFish printer</p>
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: advanced print</p>
   </div>
   <div id="center"></div>
+  <div id="help">
+      There are 3 tools available for the PDF generation (printing):<br/><br/>
+      <ul style="list-style: disc outside; padding-left: 20px;">
+          <li><b>mapfish.widgets.print.SimpleForm</b>:<br />
+              Shows a form and let the user choose the extent of a single page.<br/>
+              You can find it in the West panel.<br/><br/>
+          </li>
+          <li><b>mapfish.widgets.print.MultiPage</b>:<br />
+              Show a table and a form and let the user choose the extent of multiple pages.<br/>
+              You can find it in the West panel.<br/><br/>
+          </li>
+          <li><b>mapfish.PrintAction</b>:<br />
+              An Ext.Action that prints a single page with an extent that fits as good as possible the current map's extent.<br/>
+              You can find it in the toolbar over the map.<br/><br/>
+          </li>
+      </ul>
+      <p>You can enable the "summit" layer (click on the "+" on the right of the map) and it will shown on the PDF as well.</p>
+      <p>Don't hesitate to play with the Layout and DPI fields in the forms.</p>      
+  </div>
 </body>
 </html>

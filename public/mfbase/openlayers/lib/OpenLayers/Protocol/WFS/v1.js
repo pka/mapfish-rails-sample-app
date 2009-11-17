@@ -64,6 +64,15 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
      *     this property can be used to extend the default format options.
      */
     formatOptions: null,
+
+    /** 
+     * Property: readFormat 
+     * {<OpenLayers.Format>} For WFS requests it is possible to get a  
+     *     different output format than GML. In that case, we cannot parse  
+     *     the response with the default format (WFST) and we need a different 
+     *     format for reading. 
+     */ 
+    readFormat: null,     
     
     /**
      * Constructor: OpenLayers.Protocol.WFS
@@ -96,7 +105,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
                 schema: this.schema
             }, this.formatOptions));
         }
-        if(!this.featureNS) {
+        if(!this.featureNS && this.featurePrefix) {
             // featureNS autodetection
             var readNode = this.format.readNode;
             this.format.readNode = function(node, obj) {
@@ -105,7 +114,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
                     this.setNamespace("feature", this.featureNS);
                 }
                 return readNode.apply(this, arguments);
-            }
+            };
         }
     },
     
@@ -147,6 +156,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
      *     responses).
      */
     read: function(options) {
+        OpenLayers.Protocol.prototype.read.apply(this, arguments);
         options = OpenLayers.Util.extend({}, options);
         OpenLayers.Util.applyDefaults(options, this.options || {});
         var response = new OpenLayers.Protocol.Response({requestType: "read"});
@@ -187,7 +197,7 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
                 response.code = OpenLayers.Protocol.Response.FAILURE;
             }
             options.callback.call(options.scope, response);
-        }; 
+        }
     },
 
     /**
@@ -209,7 +219,8 @@ OpenLayers.Protocol.WFS.v1 = OpenLayers.Class(OpenLayers.Protocol, {
         if(!doc || doc.length <= 0) {
             return null;
         }
-        return this.format.read(doc);
+        return (this.readFormat !== null) ? this.readFormat.read(doc) : 
+            this.format.read(doc);
     },
 
     /**

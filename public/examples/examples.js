@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -19,14 +19,20 @@
 
 (function() {
 
-    // Some examples, like geostat and search, use XMLHttpRequest's. If those
-    // XMLHttpRequest's target a different domain that the serving the page,
-    // some proxy is needed. So do not set ProxyHost (and comment this line) if
-    // the example pages are served by the same domain than that responding to
-    // the XMLHttpRequest's. Otherwise set up a proxy script (for example using
-    // the provided proxy.cgi script) and adjust the OpenLayers.ProxyHost
-    // variable accordingly.
+    // The geostat and search examples use XMLHttpRequest to read features from
+    // the server. If those XMLHttpRequest's target a different domain than
+    // that serving the page, some proxy is needed. So do not set ProxyHost
+    // (and comment this line) if the example pages are served by the same
+    // domain than that responding to the XMLHttpRequest's. Otherwise set up a
+    // proxy script (for example using the provided proxy.cgi script) and
+    // adjust the OpenLayers.ProxyHost variable accordingly.
     OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+
+    // The editing-panel example also uses XMLHttpRequest to create, read,
+    // update and delete features. Because proxy.cgi does not support other
+    // HTTP verbs than GET and POST another proxy is needed for this example to
+    // work correctly. Such a proxy is provided in the examples/ directory.
+    mapfish.PROXY_HOST = '/proxy/http-proxy.py';
 
     // Define a constant with the base url to the MapFish web service. If you
     // want to rely on the MapFish services provided on demo.mapfish.org/trunk,

@@ -6,6 +6,12 @@
  * of the license.
  */
 
+/** api: example[mappanel-window]
+ *  Map Panel (in a Window)
+ *  -------------------------
+ *  Render a map panel in a Window.
+ */
+
 var mapPanel;
 
 Ext.onReady(function() {
@@ -19,8 +25,8 @@ Ext.onReady(function() {
             id: "mappanel",
             layers: [new OpenLayers.Layer.WMS(
                 "Global Imagery",
-                "http://demo.opengeo.org/geoserver/wms",
-                {layers: 'bluemarble'}
+                "http://maps.opengeo.org/geowebcache/service/wms",
+                {layers: "bluemarble"}
             )],
             extent: "-5,35,15,55"
         }]

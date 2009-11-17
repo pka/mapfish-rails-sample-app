@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../../mfbase/ext/resources/css/ext-all.css" />
+
+    <script type="text/javascript" src="../../mfbase/openlayers/lib/Firebug/firebug.js"></script>
+    <script type="text/javascript" src="../../mfbase/openlayers/lib/OpenLayers.js"></script>
+
+    <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
+
+    <script type="text/javascript">
+      // Because of a bug in Firefox 2 we need to specify the MapFish base path.
+      // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
+      var gMfLocation = "../../mfbase/mapfish/";
+    </script>
+    <script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
+    <script type="text/javascript" src="../examples.js"></script>
+
+    <script type="text/javascript" src="c2corgCreateMap.js"></script>
+
+    <script type="text/javascript"><!--
+
+      Ext.onReady(function() {
+
+        var map = c2corgCreateMap("map");
+
+        olLayer = [
+                      new OpenLayers.Layer("void-layer", {
+                          isBaseLayer: false,
+                          visibility: false
+                          })
+                  ];
+
+        map.addLayers(olLayer);
+
+
+        var model = [
+                    {
+                        text: "World map",
+                        leaf: false,
+                        expanded: true,
+                        checked: true,
+                        href: "http://www.google.com/search?q=world+map",
+                        hrefTarget: "_blank", 
+                        layerName: "World Map",
+                        children: [
+                            {
+                                text: "Country boundaries",
+                                icon: "icons/img1.png",
+                                leaf: true
+                            },
+                            {
+                                text: "Sample class",
+                                icon: "icons/img2.png",
+                                leaf: true
+                            }
+                         ]
+                    },
+                    {
+                        text: "Some Objects in group 1",
+                        leaf: false,
+                        expanded: true,
+                        icon: "icons/img3.png",
+                        children: [
+                            {
+                                text: "Refuges",
+                                icon: "icons/img3.png",
+                                leaf: true,
+                                radio: true,
+                                radioGrp: 'group1',
+                                layerNames: ["C2C Objects:refuges"],
+                                checked: false
+                            }, {
+                                text: "Sites",
+                                icon: "icons/img1.png",
+                                leaf: true,
+                                radio: true,
+                                radioGrp: 'group1',
+                                layerNames: ["C2C Objects:sites"],
+                                checked: true
+                            }
+                        ]
+                    }, {
+                        text: "Some Objects in group 2",
+                        leaf: false,
+                        expanded: true,
+                        icon: "icons/img3.png",
+                        children: [
+                            {
+                                text: "Parkings",
+                                icon: "icons/img2.png",
+                                leaf: true,
+                                radio: true,
+                                radioGrp: 'group2',
+                                layerNames: ["C2C Objects:parkings"],
+                                checked: true
+                            }, {
+                                text: "Summits",
+                                icon: "icons/img1.png",
+                                leaf: true,
+                                radio: true,
+                                radioGrp: 'group2',
+                                layerNames: ["C2C Objects:summits"],
+                                checked: false
+                            }, {
+                                text: "Void layer",
+                                radio: true,
+                                radioGrp: 'group2',
+                                layerNames: ['void-layer'],
+                                checked: false
+                            }
+                        ]
+                    }
+                ];
+
+        var tree = new mapfish.widgets.LayerTree({map: map, el: 'tree', model: model});
+        tree.render();
+
+      }, this);
+
+     --></script>
+
+    <style type="text/css">
+        #map {
+          width: 600px;
+          height: 400px;
+          border: 1px solid #999;
+        }
+        #right {
+          font-size: 11px;
+          position: absolute;
+          left: 620px;
+        }
+        #tree {
+          height: 400px;
+          width: 200px;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div id="north">
+       <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: tree with radio button</p>
+    </div>
+    <div id="right">
+      <div id="tree"></div>
+    </div>
+    <div id="map"></div>
+  </body>
+</html>

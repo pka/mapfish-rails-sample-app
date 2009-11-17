@@ -91,6 +91,7 @@
             "OpenLayers/Popup.js",
             "OpenLayers/Tile.js",
             "OpenLayers/Tile/Image.js",
+            "OpenLayers/Tile/Image/IFrame.js",
             "OpenLayers/Tile/WFS.js",
             "OpenLayers/Layer/Image.js",
             "OpenLayers/Layer/SphericalMercator.js",
@@ -113,6 +114,7 @@
             "OpenLayers/Layer/ArcGIS93Rest.js",
             "OpenLayers/Layer/WMS.js",
             "OpenLayers/Layer/WMS/Untiled.js",
+            "OpenLayers/Layer/WMS/Post.js",
             "OpenLayers/Layer/ArcIMS.js",
             "OpenLayers/Layer/GeoRSS.js",
             "OpenLayers/Layer/Boxes.js",
@@ -166,6 +168,7 @@
             "OpenLayers/Control/NavigationHistory.js",
             "OpenLayers/Control/Measure.js",
             "OpenLayers/Control/WMSGetFeatureInfo.js",
+            "OpenLayers/Control/Graticule.js",
             "OpenLayers/Geometry.js",
             "OpenLayers/Geometry/Rectangle.js",
             "OpenLayers/Geometry/Collection.js",
@@ -191,6 +194,7 @@
             "OpenLayers/Strategy/Paging.js",
             "OpenLayers/Strategy/BBOX.js",
             "OpenLayers/Strategy/Save.js",
+            "OpenLayers/Strategy/Refresh.js",
             "OpenLayers/Protocol.js",
             "OpenLayers/Protocol/HTTP.js",
             "OpenLayers/Protocol/SQL.js",
@@ -237,7 +241,10 @@
             "OpenLayers/Format/SLD.js",
             "OpenLayers/Format/SLD/v1.js",
             "OpenLayers/Format/SLD/v1_0_0.js",
-            "OpenLayers/Format/SLD/v1.js",
+            "OpenLayers/Format/CSWGetDomain.js",
+            "OpenLayers/Format/CSWGetDomain/v2_0_2.js",
+            "OpenLayers/Format/CSWGetRecords.js",
+            "OpenLayers/Format/CSWGetRecords/v2_0_2.js",
             "OpenLayers/Format/WFST.js",
             "OpenLayers/Format/WFST/v1.js",
             "OpenLayers/Format/WFST/v1_0_0.js",
@@ -296,4 +303,4 @@
 /**
  * Constant: VERSION_NUMBER
  */
-OpenLayers.VERSION_NUMBER="OpenLayers 2.8 -- $Revision: 9492 $";
+OpenLayers.VERSION_NUMBER="$Revision: 9790 $";

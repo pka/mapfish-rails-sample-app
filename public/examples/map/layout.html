@@ -10,6 +10,8 @@
     <script type="text/javascript" src="../../mfbase/ext/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="../../mfbase/ext/ext-all-debug.js"></script>
 
+    <script type="text/javascript" src="../../mfbase/geoext/lib/GeoExt.js"></script>
+
     <script type="text/javascript">
       // Because of a bug in Firefox 2 we need to specify the MapFish base path.
       // See https://bugzilla.mozilla.org/show_bug.cgi?id=351282
@@ -18,8 +20,8 @@
     <script type="text/javascript" src="../../mfbase/mapfish/MapFish.js"></script>
     <script type="text/javascript" src="../examples.js"></script>
     
-	<style type="text/css">
-	html, body {
+    <style type="text/css">
+    html, body {
         font: normal 12px verdana;
         margin: 0;
         padding: 0;
@@ -28,21 +30,19 @@
         height: 100%;
     }
     </style>
-	<script type="text/javascript">
+    <script type="text/javascript">
   
     // reference local blank image
     Ext.BLANK_IMAGE_URL = '../../mfbase/ext/resources/images/default/s.gif';
   
     Ext.onReady(function() {
         
-        var map = new OpenLayers.Map($('center'));
-
+        var map = new OpenLayers.Map();
         var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
             "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
+        map.addLayer(wms);
 
-        map.addLayers([wms]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.setCenter(new OpenLayers.LonLat(17, 2), 2);
 
         var viewport = new Ext.Viewport({
             layout:'border',
@@ -50,7 +50,8 @@
                 new Ext.BoxComponent({ // raw
                     region: 'north',
                     el: 'north',
-                    height: 32
+                    height: 32,
+                    margins: {left: 5,top: 5}
                 }),{
                     region: 'south',
                     contentEl: 'south',
@@ -85,27 +86,39 @@
                         title: 'Settings',
                         html: '<p>Some settings in here.</p>',
                         border: false
+                    },{
+                        id: 'recenter-widget',
+                        title: 'Recenter',
+                        xtype: 'coordsrecenter',
+                        map: map,
+                        labelAlign: 'top',
+                        hideMode: 'offsets',
+                        showCenter: true,      // boolean, indicates if a symbol must be shown at the new center
+                        scales: [1000000, 2500000, 5000000, 10000000, 25000000],
+                        bodyStyle: 'padding: 5px',
+                        defaults: {
+                           width: 170
+                        }
                     }]
                 },{
                     region: 'center',
                     title: 'Map',
                     layout: 'fit',
-                    xtype: 'mapcomponent',
+                    xtype: 'gx_mappanel',
                     map: map
                 }
              ]
         });
     });
-	</script>
+    </script>
 </head>
 <body>
   <div id="west"></div>
   <div id="north">
-    <p>MapFish</p>
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: map in complex layout</p>
   </div>
-  <div id="center"></div>
   <div id="south">
-    <p>south - generally for informational stuff, also could be for status bar</p>
+    <p></p>
   </div>
 
  </body>

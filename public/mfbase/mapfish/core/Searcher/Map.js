@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -41,14 +41,12 @@
  * (start code)
  *         var searcher = new mapfish.Searcher.Map({
  *             mode: mapfish.Searcher.Map.HOVER,
- *             protocol: new mapfish.Protocol.TriggerEventDecorator({
- *                 protocol: new mapfish.Protocol.MapFish({
- *                     url: "countries",
- *                     params: {
- *                         limit: 10
- *                     }
- *                 })
- *             }),
+ *             url: "countries",
+ *             protocol: {
+ *                 params: {
+ *                     limit: 10
+ *                 }
+ *             },
  *             displayDefaultPopup: true,
  *             delay: 400
  *         });
@@ -63,10 +61,35 @@
 mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
 
     /**
+     * Constant: EVENT_TYPES
+     * {Array(String)} Supported event types.
+     *
+     * Supported events:
+     *  - *searchcomplete* triggered when the search response is received,
+     *      listeners receive an object with a "response" property
+     *      referencing the <OpenLayers.Protocol.Response> object.
+     *  - *searchcanceled* triggered when the search request is canceled,
+     *      listeners receive an object with a "response" property
+     *      referencing the <OpenLayers.Protocol.Response> object
+     *      representing the ongoing request.
+     */
+    EVENT_TYPES: ["searchcomplete", "searchcanceled"],
+
+    /**
      * APIProperty: protocol
-     * {<OpenLayers.Protocol>} - The protocol.
+     * {<OpenLayers.Protocol>} A protocol instance, if not set in the config
+     *     passed to the constructor, and if the url option is set, a MapFish
+     *     protocol is created using the url option.
      */
     protocol: null,
+
+    /**
+     * APIProprerty: url
+     * {String} A URL string, used to configure the MapFish protocol this
+     *     class' constructor creates if no protocol is set in the
+     *     config object.
+     */
+    url: null,
 
     /**
      * APIProperty: mode
@@ -143,9 +166,8 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     /**
      * APIProperty: displayDefaultPopup
      * {Boolean} Display a default popup with the search results,
-     *      does not apply if mode is set to <mapfish.Searcher.Map.EXTENT>,
-     *      defaults to false, or if the protocol used isn't of type
-     *      <mapfish.Protocol.TriggerEventDecorator>.
+     *      does not apply if mode is set to <mapfish.Searcher.Map.EXTENT>;
+     *      defaults to false.
      */
     displayDefaultPopup: false,
 
@@ -205,12 +227,21 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     initialize: function(options) {
         this.mode = mapfish.Searcher.Map.CLICK;
 
+        // concatenate events specific to this control with those from the base
+        this.EVENT_TYPES =
+            mapfish.Searcher.Map.prototype.EVENT_TYPES.concat(
+            OpenLayers.Control.prototype.EVENT_TYPES
+        );
+
         mapfish.Searcher.prototype.initialize.call(this, options);
         OpenLayers.Control.prototype.initialize.call(this, options);
 
-        if (!this.protocol) {
-            OpenLayers.Console.error("no protocol set");
-            return;
+        if (!(this.protocol instanceof OpenLayers.Protocol)) {
+            this.protocol = new mapfish.Protocol.MapFish(
+                OpenLayers.Util.extend({
+                    url: this.url
+                }, this.protocol)
+            );
         }
 
         switch(this.mode) {
@@ -257,13 +288,6 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
             if (this.mode == mapfish.Searcher.Map.EXTENT) {
                 this.map.events.register(
                     "moveend", this, this.handleMoveend);
-            } else if (this.displayDefaultPopup &&
-                       this.protocol.CLASS_NAME ==
-                           "mapfish.Protocol.TriggerEventDecorator") {
-                this.protocol.events.on({
-                    crudfinished: this.displayPopup,
-                    scope: this
-                });
             }
         }
         return activated;
@@ -283,13 +307,6 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
             if (this.mode == mapfish.Searcher.Map.EXTENT) {
                 this.map.events.unregister(
                     "moveend", this, this.handleMoveend);
-            } else if (this.displayDefaultPopup &&
-                       this.protocol.CLASS_NAME ==
-                           "mapfish.Protocol.TriggerEventDecorator") {
-                this.protocol.events.un({
-                    crudfinished: this.displayPopup,
-                    scope: this
-                });
             }
         }
         return deactivated;
@@ -348,7 +365,11 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
 
         var filter = this.getFilter();
         filter = this.isFilter(filter) ? {filter: filter} : {params: filter};
-        var options = OpenLayers.Util.extend({searcher: this}, filter);
+        var options = OpenLayers.Util.extend({
+            searcher: this,
+            callback: this.handleResponse,
+            scope: this
+        }, filter);
             
         this.response = this.protocol.read(options);
     },
@@ -363,6 +384,7 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
      */
     cancelSearch: function(evt) {
         this.protocol.abort(this.response);
+        this.events.triggerEvent("searchcanceled", {response: this.response});
         this.response = null;
         if (this.mode == mapfish.Searcher.Map.HOVER) {
             this.onMouseMove();
@@ -370,14 +392,26 @@ mapfish.Searcher.Map = OpenLayers.Class(mapfish.Searcher, OpenLayers.Control, {
     },
 
     /**
-     * Method: displayPopup
+     * Method: handleResponse
      *
      * Parameters:
      * response - {<OpenLayers.Protocol.Response>}
      */
-    displayPopup: function(response) {
-        var features = response.features;
+    handleResponse: function(response) {
+        this.events.triggerEvent("searchcomplete", {response: response});
+        if (this.displayDefaultPopup &&
+            this.mode != mapfish.Searcher.Map.EXTENT) {
+            this.displayPopup(response.features);
+        }
+    },
 
+    /**
+     * Method: displayPopup
+     *
+     * Parameters:
+     * features - {Array({<OpenLayers.Feature.Vector>})}
+     */
+    displayPopup: function(features) {
         if (features && features.length > 0) {
             var k;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2008  Camptocamp
+ * Copyright (C) 2009  Camptocamp
  *
  * This file is part of MapFish Client
  *
@@ -24,6 +24,10 @@ Ext.namespace('mapfish.widgets', 'mapfish.widgets.data');
  *      FeatureReader is a specific Ext.data.DataReader. When records are
  *      added to the store using this reader, specific fields like
  *      feature, state and fid are available.
+ *
+ * Deprecated:
+ * This widget is deprecated and will be removed in next mapfish version.
+ * Please use <http://geoext.org/lib/GeoExt/data/FeatureReader.html> instead.
  *
  * Typical usage in a store:
  * (start code)

@@ -7,14 +7,18 @@
             width: 90%;
             height: 300px;
         }
+
+        /* avoid pink tiles */
+        .olImageLoadError {
+            background-color: transparent !important;
+        }
     </style>
     <script src="../lib/Firebug/firebug.js"></script>
     <script src="../lib/OpenLayers.js"></script>
     <script type="text/javascript">
 
-        // no pink please
+        // increase reload attempts 
         OpenLayers.IMAGE_RELOAD_ATTEMPTS = 2;
-        OpenLayers.Util.onImageLoadErrorColor = "transparent";
         
         var format = new OpenLayers.Format.WMC({'layerOptions': {buffer: 0}});
         var doc, context, map;
@@ -101,7 +105,9 @@
             } else {
                 map.destroy();
                 try {
-                    map = format.read(text, {map: "map"});
+                    var jsonFormat = new OpenLayers.Format.JSON();
+                    var mapOptions = jsonFormat.read(OpenLayers.Util.getElement('mapOptions').value);
+                    map = format.read(text, {map: mapOptions});
                     map.addControl(new OpenLayers.Control.LayerSwitcher());
                 } catch(err) {
                     document.getElementById("wmc").value = err;
@@ -129,9 +135,10 @@
            Shows parsing of Web Map Context documents.
     </p>
     <div id="map" class="smallmap"></div>
-        <button onclick="writeWMC();">write</button>
-        <button onclick="readWMC();">read as new map</button>
-        <button onclick="readWMC(true);">read and merge</button>
+        <button onclick="writeWMC();">write</button><br />
+        <button onclick="readWMC();">read as new map</button> with the following extra map options : <input type="text" id="mapOptions" value='{"div": "map", "allOverlays": true}'/><br />
+        <button onclick="readWMC(true);">read and merge</button><br />
+        <button onclick="pasteWMC();">try with another WMC document</button><br />
         <textarea id="wmc">paste WMC doc here</textarea>
     <div id="docs">
         This is an example of parsing WMC documents. <br />

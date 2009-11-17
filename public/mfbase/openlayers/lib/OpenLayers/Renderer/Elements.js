@@ -109,7 +109,7 @@ OpenLayers.ElementsIndexer = OpenLayers.Class({
         // If the new node should be before another in the index
         // order, return the node before which we have to insert the new one;
         // else, return null to indicate that the new node can be appended.
-	return this.getNextElement(rightIndex);
+        return this.getNextElement(rightIndex);
     },
     
     /**
@@ -198,7 +198,7 @@ OpenLayers.ElementsIndexer = OpenLayers.Class({
             this.maxZIndex = zIndex;
         }
     },
-	
+
     /**
      * APIMethod: getNextElement
      * Get the next element in the order stack.
@@ -211,17 +211,17 @@ OpenLayers.ElementsIndexer = OpenLayers.Class({
      *     null.
      */
     getNextElement: function(index) {
-		var nextIndex = index + 1;
-        if (nextIndex < this.order.length){
-			var nextElement = OpenLayers.Util.getElement(this.order[nextIndex]);
-			if (nextElement == undefined){
-			  nextElement = this.getNextElement(nextIndex);
-			}
-			return nextElement;
-		} else {
-			return null;
-		} 
-    },	
+        var nextIndex = index + 1;
+        if (nextIndex < this.order.length) {
+            var nextElement = OpenLayers.Util.getElement(this.order[nextIndex]);
+            if (nextElement == undefined) {
+                nextElement = this.getNextElement(nextIndex);
+            }
+            return nextElement;
+        } else {
+            return null;
+        } 
+    },
     
     CLASS_NAME: "OpenLayers.ElementsIndexer"
 });
@@ -318,12 +318,9 @@ OpenLayers.ElementsIndexer.IndexingMethods = {
             nextNode
         );
         
-        if (nextNode && returnVal == 0) {
-            var newLat = newNode._geometry.getBounds().bottom;
-            var nextLat = nextNode._geometry.getBounds().bottom;
-            
-            var result = nextLat - newLat;
-            returnVal = (result ==0) ? 1 : result;
+        if (nextNode && returnVal === 0) {            
+            var result = nextNode._boundsBottom - newNode._boundsBottom;
+            returnVal = (result === 0) ? 1 : result;
         }
         
         return returnVal;       
@@ -560,7 +557,7 @@ OpenLayers.Renderer.Elements = OpenLayers.Class(OpenLayers.Renderer, {
         
         // Set the data for the node, then draw it.
         node._featureId = featureId;
-        node._geometry = geometry;
+        node._boundsBottom = geometry.getBounds().bottom;
         node._geometryClass = geometry.CLASS_NAME;
         node._style = style;
 
@@ -697,7 +694,6 @@ OpenLayers.Renderer.Elements = OpenLayers.Class(OpenLayers.Renderer, {
                 break;
         }
 
-        node._style = style; 
         node._options = options; 
 
         //set style

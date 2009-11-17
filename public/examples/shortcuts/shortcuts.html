@@ -41,7 +41,7 @@
     var map;
   
     Ext.onReady(function() {
-        map = new OpenLayers.Map($('olmap'));
+        map = new OpenLayers.Map('olmap');
 
         var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
             "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
@@ -49,6 +49,7 @@
         map.addLayers([wms]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.setCenter(new OpenLayers.LonLat(17, 2), 2);
+        
     
         var store = new Ext.data.SimpleStore({
             fields: ['value', 'text', 'bbox'],

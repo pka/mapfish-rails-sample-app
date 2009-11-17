@@ -6,7 +6,11 @@
  * of the license.
  */
 
-Ext.BLANK_IMAGE_URL = "../../../../ext/resources/images/default/s.gif"
+/** api: example[feature-grid]
+ *  Grid with Features
+ *  ------------------
+ *  Synchronize selection of features between a grid and a layer.
+ */
 
 var mapPanel, store, gridPanel, mainPanel;
 
@@ -64,7 +68,8 @@ Ext.onReady(function() {
             header: "Elevation",
             width: 100,
             dataIndex: "elevation"
-        }]
+        }],
+        sm: new GeoExt.grid.FeatureSelectionModel() 
     });
 
     // create a panel and add the map panel and grid panel

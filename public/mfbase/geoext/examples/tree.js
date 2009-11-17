@@ -6,24 +6,16 @@
  * of the license.
  */
 
+/** api: example[tree]
+ *  Tree Nodes
+ *  ----------
+ *  Create all kinds of tree nodes.
+ */
+
 var mapPanel;
 Ext.onReady(function() {
-    // using OpenLayers.Format.JSON to create a nice formatted string of the
-    // configuration for editing it in the UI
-    var treeConfig = new OpenLayers.Format.JSON().write([{
-        nodeType: "gx_baselayercontainer"
-    }, {
-        nodeType: "gx_overlaylayercontainer",
-        // render the nodes inside this container with a radio button,
-        // and assign them the group "foo"
-        defaults: {
-            radioGroup: "foo"
-        }
-    }, {
-        nodeType: "gx_layer",
-        layer: "Tasmania Roads"
-    }], true);
-
+    // create a map panel with some layers that we will show in our layer tree
+    // below.
     mapPanel = new GeoExt.MapPanel({
         border: true,
         region: "center",
@@ -33,18 +25,20 @@ Ext.onReady(function() {
         zoom: 6,
         layers: [
             new OpenLayers.Layer.WMS("Global Imagery",
-                "http://demo.opengeo.org/geoserver/wms", {
+                "http://maps.opengeo.org/geowebcache/service/wms", {
                     layers: "bluemarble"
                 }, {
                     buffer: 0,
                     visibility: false
-                }),
+                }
+            ),
             new OpenLayers.Layer.WMS("Tasmania State Boundaries",
                 "http://demo.opengeo.org/geoserver/wms", {
                     layers: "topp:tasmania_state_boundaries"
                 }, {
                     buffer: 0
-               }),
+                }
+            ),
             new OpenLayers.Layer.WMS("Water",
                 "http://demo.opengeo.org/geoserver/wms", {
                     layers: "topp:tasmania_water_bodies",
@@ -53,7 +47,8 @@ Ext.onReady(function() {
                 }, {
                     isBaseLayer: false,
                     buffer: 0
-                }),
+                }
+            ),
             new OpenLayers.Layer.WMS("Cities",
                 "http://demo.opengeo.org/geoserver/wms", {
                     layers: "topp:tasmania_cities",
@@ -62,7 +57,8 @@ Ext.onReady(function() {
                 }, {
                     isBaseLayer: false,
                     buffer: 0
-                }),
+                }
+            ),
             new OpenLayers.Layer.WMS("Tasmania Roads",
                 "http://demo.opengeo.org/geoserver/wms", {
                     layers: "topp:tasmania_roads",
@@ -70,13 +66,105 @@ Ext.onReady(function() {
                     format: "image/gif"
                 }, {
                     isBaseLayer: false,
+                    buffer: 0
+                }
+            ),
+            // create a group layer (with several layers in the "layers" param)
+            // to show how the LayerParamLoader works
+            new OpenLayers.Layer.WMS("Tasmania (Group Layer)",
+                "http://demo.opengeo.org/geoserver/wms", {
+                    layers: [
+                        "topp:tasmania_state_boundaries",
+                        "topp:tasmania_water_bodies",
+                        "topp:tasmania_cities",
+                        "topp:tasmania_roads"
+                    ],
+                    transparent: true,
+                    format: "image/gif"
+                }, {
+                    isBaseLayer: false,
                     buffer: 0,
                     // exclude this layer from layer container nodes
-                    displayInLayerSwitcher: false
-                })
+                    displayInLayerSwitcher: false,
+                    visibility: false
+                }
+            )
         ]
     });
+        
+    // using OpenLayers.Format.JSON to create a nice formatted string of the
+    // configuration for editing it in the UI
+    var treeConfig = new OpenLayers.Format.JSON().write([{
+        nodeType: "gx_baselayercontainer"
+    }, {
+        nodeType: "gx_overlaylayercontainer",
+        expanded: true,
+        // render the nodes inside this container with a radio button,
+        // and assign them the group "foo". See the registerRadio function
+        // in the code that we use as handlers for the tree's insert and
+        // append events to make these radio buttons change the active layer.
+        loader: {
+            baseAttrs: {radioGroup: "foo"}
+        }
+    }, {
+        nodeType: "gx_layer",
+        layer: "Tasmania (Group Layer)",
+        isLeaf: false,
+        // create subnodes for the layers in the LAYERS param. If we assign
+        // a loader to a LayerNode and do not provide a loader class, a
+        // LayerParamLoader will be assumed.
+        loader: {
+            param: "LAYERS"
+        }
+    }], true);
+
+    // the layer node's radio button with its radiochange event can be used
+    // to set an active layer.
+    var registerRadio = function(node){
+        if(!node.hasListener("radiochange")) {
+            node.on("radiochange", function(node){
+                alert(node.layer.name + " is now the the active layer.");
+            });
+        }
+    }
     
+    // create the tree with the configuration from above
+    var tree = new Ext.tree.TreePanel({
+        border: true,
+        region: "west",
+        title: "Layers",
+        width: 200,
+        split: true,
+        collapsible: true,
+        collapseMode: "mini",
+        autoScroll: true,
+        loader: new Ext.tree.TreeLoader({
+            // applyLoader has to be set to false to not interfer with loaders
+            // of nodes further down the tree hierarchy
+            applyLoader: false
+        }),
+        root: {
+            nodeType: "async",
+            // the children property of an Ext.tree.AsyncTreeNode is used to
+            // provide an initial set of layer nodes. We use the treeConfig
+            // from above, that we created with OpenLayers.Format.JSON.write.
+            children: Ext.decode(treeConfig)
+        },
+        listeners: {
+            "insert": registerRadio,
+            "append": registerRadio
+        },
+        rootVisible: false,
+        lines: false,
+        bbar: [{
+            text: "Show/Edit Tree Config",
+            handler: function() {
+                treeConfigWin.show();
+                Ext.getCmp("treeconfig").setValue(treeConfig);
+            }
+        }]
+    });
+
     // dialog for editing the tree configuration
     var treeConfigWin = new Ext.Window({
         layout: "fit",
@@ -114,52 +202,6 @@ Ext.onReady(function() {
                 }
             }]
         }]
-    });
-    
-    var toolbar = new Ext.Toolbar({
-        items: [{
-            text: "Show/Edit Tree Config",
-            handler: function() {
-                treeConfigWin.show();
-                Ext.getCmp("treeconfig").setValue(treeConfig);
-            }
-        }]
-    });
-    
-    var tree = new Ext.tree.TreePanel({
-        border: true,
-        region: "west",
-        title: "Layers",
-        width: 200,
-        split: true,
-        collapsible: true,
-        collapseMode: "mini",
-        autoScroll: true,
-        loader: new Ext.tree.TreeLoader({
-            clearOnLoad: true
-        }),
-        root: {
-            nodeType: "async",
-            children: Ext.decode(treeConfig)
-        },
-        rootVisible: false,
-        lines: false,
-        bbar: toolbar
-    });
-    
-    // the layer node's radio button with its radiochange event can be used
-    // to set an active layer.
-    var registerRadio = function(node){
-        if(!node.hasListener("radiochange")) {
-            node.on("radiochange", function(node){
-                alert(node.layer.name + " is now the the active layer.");
-            });
-        }
-    }
-    tree.on({
-        "insert": registerRadio,
-        "append": registerRadio,
-        scope: this
     });
     
     new Ext.Viewport({

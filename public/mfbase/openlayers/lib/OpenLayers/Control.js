@@ -105,6 +105,13 @@ OpenLayers.Control = OpenLayers.Class({
     */ 
     title: "",
 
+    /**
+     * APIProperty: autoActivate
+     * {Boolean} Activate the control when it is added to a map.  Default is
+     *     false.
+     */
+    autoActivate: false,
+
     /** 
      * Property: active 
      * {Boolean} The control is active.
@@ -258,7 +265,7 @@ OpenLayers.Control = OpenLayers.Class({
             if (!this.allowSelection) {
                 this.div.className += " olControlNoSelect";
                 this.div.setAttribute("unselectable", "on", 0);
-                this.div.onselectstart = function() { return(false); }; 
+                this.div.onselectstart = OpenLayers.Function.False; 
             }    
             if (this.title != "") {
                 this.div.title = this.title;

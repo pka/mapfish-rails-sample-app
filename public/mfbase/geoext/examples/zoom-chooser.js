@@ -6,14 +6,20 @@
  * of the license.
  */
 
+/** api: example[zoom-chooser]
+ *  Scale Chooser
+ *  -------------
+ *  Use a ComboBox to display available map scales.
+ */
+
 var mapPanel;
 
 Ext.onReady(function() {
     var map = new OpenLayers.Map();
     var layer = new OpenLayers.Layer.WMS(
         "Global Imagery",
-        "http://demo.opengeo.org/geoserver/wms",
-        {layers: 'bluemarble'}
+        "http://maps.opengeo.org/geowebcache/service/wms",
+        {layers: "bluemarble"}
     );
     map.addLayer(layer);
 

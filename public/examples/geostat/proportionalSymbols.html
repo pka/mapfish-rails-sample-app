@@ -23,7 +23,7 @@
       var propSymbol;
 
       function createMap(mapDiv) {
-          var map = new OpenLayers.Map($('olmap'));
+          var map = new OpenLayers.Map('olmap');
 
           var wms = new OpenLayers.Layer.WMS("OpenLayers WMS", 
               "http://labs.metacarta.com/wms/vmap0", {layers: 'basic'}, {buffer: 0});
@@ -67,7 +67,9 @@
     </style>
   </head>
   <body>
-    <h1 class="page-title">Proportional symbols Example</h1>
+   <div id="north">
+    <p style="font-size:16pt;color:#15428B;font-weight:bold">MapFish example: proportional symbols</p>
+  </div>
 
     <div id="content">
       <div id="right">

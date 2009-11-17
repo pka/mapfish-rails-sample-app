@@ -38,6 +38,12 @@ module MapfishCoreExtensions
         geoson.to_json
       end
 
+      def update_attributes_from_feature(feature)
+        attr = feature.properties
+        attr[self.class.geometry_column.name] = feature.geometry
+        update_attributes(attr)
+      end
+
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -78,7 +84,7 @@ module MapfishCoreExtensions
           #Add attribute filter
           attrfilter = []
           params.each do |key, value|
-            next if value.nil? || value.empty?
+            next if value.nil? || !value.respond_to?(:empty?) || value.empty?
             field, op = key.split('__')
             case op
             when 'eq'
@@ -100,7 +106,12 @@ module MapfishCoreExtensions
           end
           unless attrfilter.empty?
             sql, sqlparams = attrfilter.transpose
-            conditions << " AND " + sanitize_sql_for_conditions([sql.join(' AND ')] + sqlparams)
+            if conditions.nil?
+              conditions = ''
+            else
+              conditions << " AND "
+            end
+            conditions << sanitize_sql_for_conditions([sql.join(' AND ')] + sqlparams)
           end
 
           #Create finder arguments

@@ -1,5 +1,5 @@
 /**
- * @requires OpenLayers/Format.js
+ * @requires OpenLayers/Format/XML.js
  */
 
 /**
@@ -7,7 +7,7 @@
  * Read WMS Capabilities.
  * 
  * Inherits from:
- *  - <OpenLayers.Format>
+ *  - <OpenLayers.Format.XML>
  */
 OpenLayers.Format.WMSCapabilities = OpenLayers.Class(OpenLayers.Format.XML, {
     
@@ -38,7 +38,7 @@ OpenLayers.Format.WMSCapabilities = OpenLayers.Class(OpenLayers.Format.XML, {
      *     this instance.
      */
     initialize: function(options) {
-        OpenLayers.Format.prototype.initialize.apply(this, [options]);
+        OpenLayers.Format.XML.prototype.initialize.apply(this, [options]);
         this.options = options;
     },
 

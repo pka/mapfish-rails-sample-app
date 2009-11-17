@@ -119,7 +119,9 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             data = data.documentElement;
         }
         var obj = {};
-        this.readNode(data, obj);
+        if(data) {
+            this.readNode(data, obj);
+        }
         if(obj.features) {
             obj = obj.features;
         }
@@ -179,36 +181,12 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
                     attributes: {
                         service: "WFS",
                         version: this.version,
+                        outputFormat: options && options.outputFormat,
                         maxFeatures: options && options.maxFeatures,
                         "xsi:schemaLocation": this.schemaLocationAttr(options)
                     }
                 });
                 this.writeNode("Query", options, node);
-                return node;
-            },
-            "Query": function(options) {
-                options = OpenLayers.Util.extend({
-                    featureNS: this.featureNS,
-                    featurePrefix: this.featurePrefix,
-                    featureType: this.featureType,
-                    srsName: this.srsName
-                }, options);
-                // TODO: this is still version specific and should be separated out
-                // v1.0.0 does not allow srsName on wfs:Query
-                var node = this.createElementNSPlus("wfs:Query", {
-                    attributes: {
-                        typeName: (options.featureNS ? options.featurePrefix + ":" : "") +
-                            options.featureType,
-                        srsName: options.srsName
-                    }
-                });
-                if(options.featureNS) {
-                    node.setAttribute("xmlns:" + options.featurePrefix, options.featureNS);
-                }
-                if(options.filter) {
-                    this.setFilterProperty(options.filter);
-                    this.writeNode("ogc:Filter", options.filter, node);
-                }
                 return node;
             },
             "Transaction": function(features) {
@@ -254,9 +232,11 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
         
                 // add in attributes
                 for(var key in feature.attributes) {
-                    this.writeNode(
-                        "Property", {name: key, value: feature.attributes[key]}, node
-                    );
+                    if(feature.attributes[key] !== undefined) {
+                        this.writeNode(
+                            "Property", {name: key, value: feature.attributes[key]}, node
+                        );
+                    }
                 }
                 
                 // add feature id filter
@@ -269,7 +249,9 @@ OpenLayers.Format.WFST.v1 = OpenLayers.Class(OpenLayers.Format.XML, {
             "Property": function(obj) {
                 var node = this.createElementNSPlus("wfs:Property");
                 this.writeNode("Name", obj.name, node);
-                this.writeNode("Value", obj.value, node);
+                if(obj.value !== null) {
+                    this.writeNode("Value", obj.value, node);
+                }
                 return node;
             },
             "Name": function(name) {

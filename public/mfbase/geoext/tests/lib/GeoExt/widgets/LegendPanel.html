@@ -8,16 +8,7 @@
 
     <script type="text/javascript">
 
-        function createMap() {
-            var map = new OpenLayers.Map({allOverlays: true});
-            var layer = new OpenLayers.Layer.WMS("test", '/ows', {layers: 'a'});
-            map.addLayer(layer);
-            return map;
-        }
-
         function loadMapPanel() {
-            var map = createMap();
-
             mapPanel = new GeoExt.MapPanel({
                 // panel options
                 id: "map-panel",
@@ -26,7 +17,9 @@
                 height: 400,
                 width: 600,
                 // map panel-specific options
-                map: map,
+                layers: [
+                    new OpenLayers.Layer.WMS("test", '/ows', {layers: 'a'})
+                ],
                 center: new OpenLayers.LonLat(5, 45),
                 zoom: 4
             });
@@ -35,18 +28,30 @@
         }
 
         function test_legendurl(t) {
-            t.plan(1);
+            t.plan(3);
             var mapPanel = loadMapPanel();
             var lp  = new GeoExt.LegendPanel({
                 renderTo: 'legendpanel'});
             lp.render();
 
-            var newUrl = "http://www.geoext.org//trac/geoext/chrome/site/img/GeoExt.png";
+            var newUrl = "http://trac.geoext.org/chrome/site/img/GeoExt.png";
             mapPanel.layers.getAt(0).set("legendURL", newUrl);
 
             var item = lp.getComponent(mapPanel.map.layers[0].id);
             var url = item.items.get(1).items.get(0).getEl().dom.src;
             t.eq(url, newUrl, "Update the image with the provided legendURL");
+
+            var vectorLayer = new OpenLayers.Layer.Vector("vector layer");
+            mapPanel.map.addLayer(vectorLayer);
+
+            vectorLayer.setVisibility(false);
+
+            t.eq(lp.items.length, 1, "Currently there are no legends for non WMS layers");
+
+            var wms = new OpenLayers.Layer.WMS("testArray", '/ows', {layers: ['a', 'b', 'c']});
+            mapPanel.map.addLayer(wms);
+
+            t.eq(lp.items.length, 2, "The legend panel can deal with WMS layers which have a LAYERS params which is an array");
 
             lp.destroy();
             mapPanel.destroy();
@@ -104,19 +109,24 @@
         }
 
         function test_wms(t) {
-            t.plan(1);
+            t.plan(3);
             var mapPanel = loadMapPanel();
+            var LegendWMS = GeoExt.LegendWMS;
+            GeoExt.LegendWMS = function(config) {
+                t.ok(config.record == mapPanel.layers.getAt(0), "layer record passed correctly");
+                t.ok(config.layer == mapPanel.map.layers[0], "layer passed correctly");
+                t.eq(config.foo, "bar", "legendOptions passed correctly");
+                return new Ext.Panel();
+            }
             var lp  = new GeoExt.LegendPanel({
-                renderTo: 'legendpanel'});
+                renderTo: 'legendpanel',
+                legendOptions: {foo: "bar"}
+            });
             lp.render();
-
-            var item = lp.getComponent(mapPanel.map.layers[0].id);
-            var url = item.items.get(1).items.get(0).url;
-            var expectedUrl = "/ows?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&STYLES=&EXCEPTIONS=application%2Fvnd.ogc.se_xml&FORMAT=image%2Fgif&LAYER=a";
-            t.eq(url, expectedUrl, "GetLegendGraphic url is generated correctly");
 
             lp.destroy();
             mapPanel.destroy();
+            GeoExt.LegendWMS = LegendWMS;
         }
 
         function test_addremove(t) {
@@ -175,6 +185,83 @@
 
             lp.destroy();
 
+            mapPanel.destroy();
+        }
+
+        function test_filter(t) {
+            t.plan(2);
+
+            var map = new OpenLayers.Map();
+            var layer = new OpenLayers.Layer.WMS("test", '/ows', {layers: 'a'}, {isBaseLayer: true});
+            map.addLayer(layer);
+            layer = new OpenLayers.Layer.WMS("test2", '/ows', {layers: 'b'}, {isBaseLayer: false});
+            map.addLayer(layer);
+
+            var mapPanel = new GeoExt.MapPanel({
+                map: map,
+                id: "map-panel",
+                title: "GeoExt MapPanel",
+                renderTo: "mappanel",
+                height: 400,
+                width: 600
+            });
+
+            var lp = new GeoExt.LegendPanel({
+                filter: function(record) { return !record.get("layer").isBaseLayer; },
+                renderTo: 'legendpanel'});
+            lp.render();
+
+            t.eq(lp.items.length, 1, "Using the filter function only the non base layers will be shown in the legend");
+
+            lp.destroy();
+
+            var lp = new GeoExt.LegendPanel({
+                renderTo: 'legendpanel'});
+            lp.render();
+
+            t.eq(lp.items.length, 2, "With no filter both layers are drawn");
+
+            lp.destroy();
+            map.destroy();
+            mapPanel.destroy();
+
+        }
+
+        function test_changelayerparams(t) {
+            t.plan(2);
+
+            var mapPanel = loadMapPanel();
+            var lp = new GeoExt.LegendPanel({
+                renderTo: "legendpanel"
+            });
+            var layer = mapPanel.map.layers[0];
+            var cmp = lp.getComponent(layer.id);
+
+            layer.mergeNewParams({
+                layers: "a,b"
+            });
+            t.eq(cmp.items.get(1).items.getCount(), 2,
+                 "mergeNewParams caused addition of a legend image");
+
+            layer.mergeNewParams({
+                layers: "b"
+            });
+            t.eq(cmp.items.get(1).items.getCount(), 1,
+                 "mergeNewParams caused removal of a legend image");
+        }
+
+        function test_scaledependency(t) {
+            t.plan(1);
+            var mapPanel = loadMapPanel();
+            mapPanel.map.layers[0].inRange = false;
+            var lp  = new GeoExt.LegendPanel({
+                renderTo: 'legendpanel'});
+            lp.render();
+
+            var id = mapPanel.layers.getAt(0).get('layer').id;
+            t.eq(lp.getComponent(id).hidden, true, "Layer has been hidden in legend because it is not in scale");
+
+            lp.destroy();
             mapPanel.destroy();
         }
 

@@ -9,11 +9,19 @@ The Mapfish server for Ruby is implemented as a plugin for the `Ruby on Rails <h
 Preparation
 -----------
 
-Setup the sample db with the scripts in db/sample-db/
+Setup the sample db with the scripts in db/sample-db/::
+
+  export DBNAME=mapfishsample
+  export DBUSER=mapfish
+  psql -c "CREATE ROLE $DBUSER LOGIN PASSWORD 'mapfish'" postgres
+  createdb --template template_postgis --owner $DBUSER -E unicode $DBNAME
+  for i in import_c2corg.bash import_geostat.bash import_epfl.bash import_editing.bash; do
+    bash $i
+  done
 
 Install the required gems::
 
-  sudo gem install GeoRuby
+  bundle install
 
 
 Starting the web server
@@ -21,10 +29,10 @@ Starting the web server
 
 Start the web server::
 
-  ./script/server
+  rails server
 
 and checkout ``http://localhost:3000/demos/``
 
 
 
-*Copyright (c) 2009 Pirmin Kalberer, Sourcepole AG*
+*Copyright (c) 2008-20010 Pirmin Kalberer, Sourcepole AG*

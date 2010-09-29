@@ -2,8 +2,9 @@ development:
   adapter: postgresql
   database: mapfishsample
   encoding: UTF8
+  host: localhost
   username: mapfish
-  password:
+  password: mapfish
   template: template_postgis
 
 # Warning: The database defined as "test" will be erased and
@@ -13,14 +14,13 @@ test:
   adapter: postgresql
   database: mapfish_test
   encoding: UTF8
-  username: postgres
-  password:
   template: template_postgis
 
 production:
   adapter: postgresql
   database: mapfishsample
   encoding: UTF8
+  host: localhost
   username: mapfish
-  password:
+  password: mapfish
   template: template_postgis
